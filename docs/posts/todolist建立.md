@@ -9,13 +9,21 @@ tag:
 
 # 基于外部Vue.js库实现的一个文件的ToDoList功能页面
 
-只需要一个html文件
 
 
-
+## 只需要一个html文件
+项目较为简单，主要是基本的值的调度方式等联系。
 以下是完整的HTML和JavaScript代码，用于创建一个基本的To do list前端页面，实现添加任务、切换任务状态和删除任务的功能，并且利用Vue动态绑定类名来改变已完成任务的样式。
 
 ### 完整的HTML和JavaScript代码
+
+     功能总结为：
+   
+     1. 从CDN引入Vue.js库，以便在网页中使用Vue.js的功能。
+     2. 引入本地的`app.js`文件，该文件包含了使用Vue.js实现To do list应用的具体代码。
+
+将上述代码保存为一个HTML文件，然后在浏览器中打开，即可看到一个基本的To do list应用。
+
 
 ```html
 <!DOCTYPE html>
@@ -223,10 +231,4 @@ tag:
      - `src`属性的值是`app.js`，表示该文件位于当前HTML文件所在目录下的`app.js`文件。
      - `app.js`文件通常是我们自己编写的JavaScript代码文件，用于实现网页的特定功能。在前面的To do list示例中，`app.js`文件包含了使用Vue.js创建To do list应用的JavaScript代码，比如定义Vue实例、数据和方法等。
    
-     功能总结：
-   
-     1. 从CDN引入Vue.js库，以便在网页中使用Vue.js的功能。
-     2. 引入本地的`app.js`文件，该文件包含了使用Vue.js实现To do list应用的具体代码。
-
-将上述代码保存为一个HTML文件，然后在浏览器中打开，即可看到一个基本的To do list应用。
 

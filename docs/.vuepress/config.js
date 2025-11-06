@@ -2,6 +2,7 @@ import { blogPlugin } from '@vuepress/plugin-blog'
 import { defaultTheme } from '@vuepress/theme-default'
 import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
+import { searchPlugin } from '@vuepress/plugin-search'
 
 export default defineUserConfig({
   lang: 'en-US',
@@ -11,9 +12,9 @@ export default defineUserConfig({
 
   theme: defaultTheme({
     logo: 'https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png',
-// +++ 新增搜索配置 +++
-    search: true, // 启用内置搜索
-    searchMaxSuggestions: 10, // 将最大搜索结果数量调整为10个[1,5](@ref)
+    // +++ 新增搜索配置 +++
+    // search: true, // 启用内置搜索
+    // searchMaxSuggestions: 10, // 将最大搜索结果数量调整为10个[1,5](@ref)
     // +++ 新增搜索配置结束 +++
     navbar: [
       {
@@ -135,11 +136,25 @@ export default defineUserConfig({
           }),
         },
       ],
-
+      
      
       hotReload: true,
     }),
-  
+    searchPlugin({
+      searchMaxSuggestions: 10, // 最多显示10条建议
+      searchHotkeys: ['s', '/'], // 按 's' 或 '/' 键即可搜索
+      isSearchable: (page) => page.path !== '/', // 排除首页
+      locales: {
+        '/': {
+          placeholder: '搜索', // 中文站点的占位符
+        },
+        '/en/': {
+          placeholder: 'Search', // 英文站点的占位符
+        },
+      },
+      // 你还可以自定义匹配和排序逻辑
+      // getSearchIndex: async (app) => { ... }
+    }),
    
   ],
 

@@ -7,7 +7,7 @@ tag:
   - SSR
 ---
 
-# 创建项目
+# Nust项目创建
 
 > 官方自带英文文档：[README](/zh-cn/Nuxt4.md)
 

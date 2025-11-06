@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: "./public/head.jpg"
+heroImage: https://pic1.zhimg.com/v2-e75db3af3f5519bf8f95a6d61866f0e7_r.jpg
 actions:
   - text: 开始
     link: /get-started.html
