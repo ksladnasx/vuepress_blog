@@ -1,0 +1,31 @@
+# 依赖目录，禁止提交庞大的 node_modules
+node_modules/ 
+
+# VuePress 2 的临时缓存目录
+.temp/ 
+.cache/ 
+
+# VuePress 构建输出的静态文件目录（通常由部署脚本处理，无需提交）
+docs/.vuepress/dist/ 
+# 通用系统文件
+.DS_Store 
+Thumbs.db
+
+# 编辑器文件和目录
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
