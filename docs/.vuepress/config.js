@@ -5,32 +5,31 @@ import { viteBundler } from '@vuepress/bundler-vite'
 
 export default defineUserConfig({
   lang: 'en-US',
-  title: 'VuePress',
+  title: "xh's blog ",
   base: '/vuepress_blog/',
-  description: 'My first VuePress Site',
+  description: 'A VuePress bolg Site for personal useage',
 
   theme: defaultTheme({
-    logo: 'https://vuejs.press/images/hero.png',
+    logo: 'https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png',
 // +++ 新增搜索配置 +++
     search: true, // 启用内置搜索
     searchMaxSuggestions: 10, // 将最大搜索结果数量调整为10个[1,5](@ref)
     // +++ 新增搜索配置结束 +++
     navbar: [
-      '/',
       {
-        text: 'Article',
+        text: '文章',
         link: '/article/',
       },
       {
-        text: 'Category',
+        text: '分类',
         link: '/category/',
       },
       {
-        text: 'Tag',
+        text: '标签',
         link: '/tag/',
       },
       {
-        text: 'Timeline',
+        text: '时间线',
         link: '/timeline/',
       }
     ],

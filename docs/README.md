@@ -1,33 +1,24 @@
 ---
 home: true
-title: Home
-heroImage: https://vuejs.press/images/hero.png
+heroImage: "./public/head.jpg"
 actions:
-  - text: Get Started
+  - text: 开始
     link: /get-started.html
     type: primary
 
-  - text: Introduction
+  - text: 介绍
     link: https://vuejs.press/guide/introduction.html
     type: secondary
 
 features:
-  - title: Simplicity First
-    details: Minimal setup with markdown-centered project structure helps you focus on writing.
-  - title: Vue-Powered
-    details: Enjoy the dev experience of Vue, use Vue components in markdown, and develop custom themes with Vue.
-  - title: Performant
-    details: VuePress generates pre-rendered static HTML for each page, and runs as an SPA once a page is loaded.
-  - title: Themes
-    details: Providing a default theme out of the box. You can also choose a community theme or create your own one.
-  - title: Plugins
-    details: Flexible plugin API, allowing plugins to provide lots of plug-and-play features for your site.
-  - title: Bundlers
-    details: Default bundler is Vite, while Webpack is also supported. Choose the one you like!
+  - title: 简洁至上
+    details: 以 Markdown 为中心的项目结构，帮助您专注于创作。
+  - title: Vue 驱动
+    details: 享受 Vue 的开发体验，可以在 Markdown 中使用 Vue 组件。
+  - title: 高性能
+    details: VuePress 会为每个页面预渲染生成静态的 HTML。
 
-footer: MIT Licensed | Copyright © 2018-present VuePress Community
+footer: MIT Licensed | Copyright © 2025-present VuePress Community
 ---
-
-This is the content of home page. Check [Home Page Docs][default-theme-home] for more details.
 
 [default-theme-home]: https://vuejs.press/reference/default-theme/frontmatter.html#home-page
