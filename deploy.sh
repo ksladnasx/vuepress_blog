@@ -3,19 +3,22 @@
 # 确保脚本抛出遇到的错误
 set -e
 
-# 生成静态文件
+echo "开始构建静态文件..."
 npm run docs:build
 
-# 进入生成的文件夹
+echo "进入生成的文件夹..."
 cd docs/.vuepress/dist
 
-# 初始化Git并提交
+echo "初始化Git仓库..."
 git init
 git add -A
 git commit -m 'deploy'
 
-# 推送到gh-pages分支
-# 将下面的<USERNAME>和<REPO>替换为你的GitHub用户名和仓库名
-git push -f git@github.com:ksladnasx/vuepress_blog.git master:gh-pages
+echo "添加远程仓库..."
+git remote add origin git@github.com:ksladnasx/vuepress_blog.git || true
 
+echo "强制推送到gh-pages分支..."
+git push -f origin master:gh-pages
+
+echo "部署成功！"
 cd -
