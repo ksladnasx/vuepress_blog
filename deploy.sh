@@ -16,6 +16,6 @@ git commit -m 'deploy'
 
 # 推送到gh-pages分支
 # 将下面的<USERNAME>和<REPO>替换为你的GitHub用户名和仓库名
-git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
+git push -f git@github.com:ksladnasx/vuepress_blog.git master:gh-pages
 
 cd -
