@@ -1,5 +1,5 @@
 # <i class="fas fa-laptop-code"></i> 个人技术知识库
-
+GithubPages站点地址：[xh's blog](https://ksladnasx.github.io/vuepress_blog/)
 > **简洁高效 | 实时更新 | 全栈技术 | 开发笔记**  
 > 本个人博客知识库使用Vuepress构建，托管于GitHub Pages，专注于前端开发和全栈技术实践。
 > 
@@ -12,6 +12,11 @@
 ---
 
 ## <i class="fas fa-bookmark"></i> 内容索引
+### 大体分类
+- [全部文章](./article)
+- [按类型分](./category)
+- [按标签分](./tag)
+- [按时间分](./timeline)
 
 ### <i class="fas fa-list-check"></i> 开发实践
 - [<i class="fas fa-sitemap"></i> 让我们从docsify的创建开始](./posts/todolist建立.md) - docsify项目创建与部署
@@ -32,6 +37,7 @@
 
 ### <i class="fas fa-cogs"></i> 站点信息
 - [<i class="fab fa-github"></i> GitHub个人主页](https://github.com/ksladnasx)
+- [本项目地址](https://github.com/ksladnasx/vuepress_blog)
 - [<i class="fas fa-code-branch"></i> 站点构建说明](#)
 
 ---
