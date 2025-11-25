@@ -1,4 +1,11 @@
-# 入门 
+---
+date: 2025-11-06
+category:
+  - 说明文档
+tag:
+  - Vitest
+---
+# Vitest入门 
 
 ## 基本测试
 

@@ -34,6 +34,8 @@ export default defineUserConfig({
         link: '/timeline/',
       }
     ],
+    sidebarDepth: 2,
+    displayAllHeaders: false,
   }),
 
   plugins: [

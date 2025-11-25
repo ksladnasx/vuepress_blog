@@ -1,7 +1,7 @@
 # <i class="fas fa-laptop-code"></i> 个人技术知识库
 
 > **简洁高效 | 实时更新 | 全栈技术 | 开发笔记**  
-> 本个人博客知识库使用Docsify构建，托管于GitHub Pages，专注于前端开发和全栈技术实践。
+> 本个人博客知识库使用Vuepress构建，托管于GitHub Pages，专注于前端开发和全栈技术实践。
 > 
 > 🚀 **特点优势**：
 > - 极简内容，一步到位
@@ -14,19 +14,25 @@
 ## <i class="fas fa-bookmark"></i> 内容索引
 
 ### <i class="fas fa-list-check"></i> 开发实践
-- [<i class="fas fa-sitemap"></i> 让我们从docsify的创建开始](zh-cn/todolist建立.md) - docsify项目创建与部署
-- [<i class="fas fa-check-circle"></i> 最基本的todolist实现](zh-cn/todolist建立.md) - Vue3 + Composition API实现
+- [<i class="fas fa-sitemap"></i> 让我们从docsify的创建开始](./posts/todolist建立.md) - docsify项目创建与部署
+- [<i class="fas fa-check-circle"></i> 最基本的todolist实现](./posts/todolist建立.md) - Vue3 + Composition API实现
 - [<i class="fas fa-layer-group"></i> ElementPlus组件库指南](zh-cn/element-plus.md) - 最佳实践与问题排查
-- [<i class="fas fa-sitemap"></i> 项目经验总结](zh-cn/项目经验.md) - 架构设计 & 性能优化方案
+- [<i class="fas fa-sitemap"></i> 项目经验总结](./posts/项目经验.md) - 架构设计 & 性能优化方案
 
 ### <i class="fas fa-graduation-cap"></i> 学习笔记
-- [<i class="fas fa-infinity"></i> 全栈开发学习路径](zh-cn/全栈开发经验总结.md) - 前后端整合方案
-- [<i class="fas fa-calculator"></i> 算法刷题笔记](zh-cn/算法刷题.md) - LeetCode精选题解
-- [<i class="fas fa-square-root-alt"></i> 公式插件测试](zh-cn/插件公式示例.md) - LaTeX数学公式展示
+- [<i class="fas fa-infinity"></i> 全栈开发学习路径](./posts/全栈开发经验总结.md) - 前后端整合方案
+- [<i class="fas fa-calculator"></i> 算法刷题笔记](./posts/算法刷题.md) - LeetCode精选题解
+- [<i class="fas fa-square-root-alt"></i> 公式插件测试](./posts/插件公式示例.md) - LaTeX数学公式展示
+
+### <i class="fas fort-awesome"></i> 实习经验
+- [<i class="fas fa-file-alt"></i> 实习经验总结](./posts/实习经验.md)- 实习整体经验与收获
+- [<i class="fas fa-calendar-week"></i> 实习周总结](./posts/实习周总结1.md)- 第一周工作内容与心得
+- [<i class="fas fa-calendar-week"></i> 实习周总结](./posts/实习周总结2.md)- 第二周工作内容与心得
+- [<i class="fas fa-calendar-week"></i> 实习周总结](./posts/实习周总结3.md)- 第三周工作内容与心得
 
 ### <i class="fas fa-cogs"></i> 站点信息
-- [<i class="fab fa-github"></i> GitHub项目主页](https://github.com/ksladnasx)
-- [<i class="fas fa-code-branch"></i> 站点构建说明](#/README.md)
+- [<i class="fab fa-github"></i> GitHub个人主页](https://github.com/ksladnasx)
+- [<i class="fas fa-code-branch"></i> 站点构建说明](#)
 
 ---
 
