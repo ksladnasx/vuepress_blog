@@ -1,7 +1,7 @@
 ---
 date: 2025-11-27
 category:
-  - 说明文档
+  - 代码解读
 tag:
   - SSE
   - BroadcastChannel
