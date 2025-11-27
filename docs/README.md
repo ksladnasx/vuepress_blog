@@ -11,12 +11,12 @@ actions:
     type: secondary
 
 features:
-  - title: 简洁至上
-    details: 以 Markdown 为中心的项目结构，帮助您专注于创作。
-  - title: Vue 驱动
-    details: 享受 Vue 的开发体验，可以在 Markdown 中使用 Vue 组件。
+  - title: 高简洁
+    details: 文章以 Markdown 为中心的项目结构，帮助您专注于阅读。
   - title: 高性能
-    details: VuePress 会为每个页面预渲染生成静态的 HTML。
+    details: 所使用的VuePress 会为每个页面预渲染生成静态的 HTML。
+  - title: 高速度
+    details: 网站在初次加载之后，再进行访问速度快如闪电。
 
 footer: MIT Licensed | Copyright © 2025-present VuePress Community
 ---
