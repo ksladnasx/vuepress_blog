@@ -67,18 +67,6 @@ channel.onmessage = (event) => {
 3. **确定主节点**：按特定规则（如ID最小）选出主标签页
 4. **公布结果**：将选举结果广播给所有标签页
 
-```mermaid
-graph TD
-    A[标签页A启动] --> B[宣布参选]
-    C[标签页B启动] --> D[宣布参选]
-    B --> E[等待收集候选]
-    D --> E
-    E --> F[确定主标签页A]
-    F --> G[公布选举结果]
-    G --> H[标签页A成为主]
-    G --> I[标签页B成为从]
-```
-
 
 
 ### 3. 消息广播机制
@@ -94,23 +82,7 @@ graph TD
 - 监听主标签页的广播消息
 - 触发本地的事件处理器
 
-```mermaid
-sequenceDiagram
-    participant S as SSE服务器
-    participant M as 主标签页
-    participant B as BroadcastChannel
-    participant S1 as 从标签页1
-    participant S2 as 从标签页2
-    
-    S->>M: 设备上线事件
-    M->>B: 广播device-online事件
-    B->>S1: 传递事件
-    B->>S2: 传递事件
-    S1->>S1: 触发本地处理器
-    S2->>S2: 触发本地处理器
-```
-
-
+![BroadcastChannel主从模式消息传递演示](.\img\BroadcastChannel.png)
 
 ### 4. 故障转移机制
 

@@ -157,6 +157,14 @@ export default defineUserConfig({
       // 你还可以自定义匹配和排序逻辑
       // getSearchIndex: async (app) => { ... }
     }),
+    // mdEnhancePlugin({
+    //   // 明确启用Mermaid功能
+    //   mermaid: true,
+    //   // 可选：自定义Mermaid配置
+    //   mermaidOptions: {
+    //     theme: 'default',
+    //   },
+    // }),
    
   ],
 

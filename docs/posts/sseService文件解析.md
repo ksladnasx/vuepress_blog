@@ -457,7 +457,7 @@ this.listeners = new Map()
 >
 > *// 键(key): 事件类型(string)*  
 >
-> *// 值(value): 回调函数数组(Array<Function>)*    
+> *// 值(value): 回调函数数组(Array<函数>)*    
 >
 > ['device-online', [callback1, callback2, callback3]],  
 >
