@@ -8,7 +8,7 @@ tag:
 
 # SSE服务代码解读
 
-完整代码地址：[sseService.js](./sseService.md)
+完整代码地址：[sseService.js](sseService.md)
 
 这是一个功能完整的SSE（Server-Sent Events）客户端服务类，用于接收后端实时推送的设备状态变化通知。以下是对代码的详细解读：
 
@@ -188,11 +188,257 @@ sseService.disconnect()
 4. **可扩展**：事件机制便于功能扩展
 5. **生产就绪**：考虑多种边缘情况和网络环境
 
-# SSE服务事件监听器详解
 
-## 🎯 事件监听器设计原理
 
-### 为什么使用 `Map`存储监听器？
+## **事件监听器的注册机制**
+
+### 代码解析
+
+以以下代码为例：
+
+```ts
+ on(eventType, callback) { 
+    if (!this.listeners.has(eventType)) {
+      this.listeners.set(eventType, [])
+    }
+    this.listeners.get(eventType).push(callback)
+  }
+```
+
+
+
+### 1. 数据结构解析
+
+#### `this.listeners`是什么？
+
+```js
+// listeners 是一个 Map 数据结构，存储格式如下：
+this.listeners = new Map([
+  // 键(key): 事件类型(string)
+  // 值(value): 回调函数数组(Array<Function>)
+  
+  ['device-online', [callback1, callback2, callback3]],
+  ['device-offline', [callback4, callback5]],
+  ['device-alert', [callback6]],
+  // ...
+])
+```
+
+### 2. 代码执行步骤分解
+
+#### 步骤1：检查事件类型是否已存在
+
+```js
+if (!this.listeners.has(eventType)) {
+    this.listeners.set(eventType, [])
+}
+```
+
+**作用**：
+
+- 检查 `this.listeners`Map 中是否已经有这个 `eventType`的条目
+- 如果没有（即第一次注册该事件类型），就创建一个空数组作为值
+- 相当于初始化这个事件类型的监听器列表
+
+**示例**：
+
+```js
+// 第一次注册 'device-online' 事件
+this.listeners.has('device-online') // false
+// 执行后：创建空数组
+this.listeners.set('device-online', [])
+// 现在：listeners = Map { 'device-online' => [] }
+```
+
+#### 步骤2：添加回调函数到对应数组
+
+```js
+this.listeners.get(eventType).push(callback)
+```
+
+**作用**：
+
+get查找到其在字典中的字段，push将函数添加到该字段对应的值上
+
+- 通过 `eventType`获取对应的回调函数数组
+- 将新的 `callback`函数添加到数组末尾
+
+**示例**：
+
+```js
+// 注册第一个监听器
+sseService.on('device-online', callback1)
+// listeners = Map { 'device-online' => [callback1] }
+
+// 注册第二个监听器（同一事件类型）
+sseService.on('device-online', callback2)  
+// listeners = Map { 'device-online' => [callback1, callback2] }
+```
+
+### 3. 实际使用示例
+
+#### 场景：多个组件监听同一事件
+
+```js
+// 组件A - 设备列表
+sseService.on('device-online', (data) => {
+    console.log('组件A: 设备上线', data.deviceId)
+    // 更新设备列表的UI显示
+    updateDeviceStatus(data.deviceId, 'online')
+})
+
+// 组件B - 统计面板  
+sseService.on('device-online', (data) => {
+    console.log('组件B: 设备上线', data.deviceId)
+    // 更新在线设备计数
+    onlineCount.value++
+})
+
+// 组件C - 实时通知
+sseService.on('device-online', (data) => {
+    console.log('组件C: 设备上线', data.deviceId)
+    // 显示桌面通知
+    showNotification(`设备 ${data.deviceId} 已上线`)
+})
+
+// 当设备上线事件发生时，所有3个回调函数都会执行
+```
+
+#### 内存中的数据结构：
+
+```js
+this.listeners = Map {
+    'device-online' => [
+        (data) => { /* 组件A的回调 */ },
+        (data) => { /* 组件B的回调 */ }, 
+        (data) => { /* 组件C的回调 */ }
+    ],
+    'device-offline' => [
+        // 其他事件的回调函数...
+    ]
+}
+```
+
+### 4. 与 `emit`方法的配合
+
+#### 事件触发流程：
+
+```js
+// 当收到SSE消息时，调用emit触发事件
+emit(eventType, data) {
+    if (this.listeners.has(eventType)) {
+        // 获取该事件类型的所有回调函数
+        this.listeners.get(eventType).forEach(callback => {
+            try {
+                callback(data)  // 依次执行每个回调函数
+            } catch (error) {
+                console.error(`事件处理器执行错误:`, error)
+            }
+        })
+    }
+}
+
+// 使用示例：
+// 收到后端推送：执行 emit('device-online', deviceData)
+// 结果：组件A、B、C的回调函数都会收到deviceData并执行
+```
+
+### 5. 设计模式的优势
+
+#### 观察者模式（Observer Pattern）
+
+这种设计实现了经典的观察者模式：
+
+```js
+// 主题（Subject） - SSE服务
+class SSEService {
+    constructor() {
+        this.listeners = new Map()  // 观察者列表
+    }
+    
+    // 注册观察者
+    on(eventType, callback) {
+        // ... 上面的实现
+    }
+    
+    // 通知观察者
+    emit(eventType, data) {
+        // ... 触发所有回调
+    }
+}
+
+// 观察者（Observers） - 各个组件
+componentA.onDeviceOnline = (data) => { /* 处理逻辑 */ }
+componentB.onDeviceOnline = (data) => { /* 处理逻辑 */ }
+
+// 注册观察者
+sseService.on('device-online', componentA.onDeviceOnline)
+sseService.on('device-online', componentB.onDeviceOnline)
+```
+
+### 6. 实际业务场景
+
+#### 模块化的事件处理
+
+```js
+// 设备管理模块
+class DeviceManager {
+    constructor() {
+        this.setupEventHandlers()
+    }
+    
+    setupEventHandlers() {
+        sseService.on('device-online', this.handleDeviceOnline.bind(this))
+        sseService.on('device-offline', this.handleDeviceOffline.bind(this))
+        sseService.on('device-alert', this.handleDeviceAlert.bind(this))
+    }
+    
+    handleDeviceOnline(data) {
+        // 专门的设备上线处理逻辑
+        this.updateDeviceCache(data.deviceId, 'online')
+        this.refreshDeviceList()
+    }
+    
+    // ... 其他处理方法
+}
+
+// 告警管理模块  
+class AlertManager {
+    constructor() {
+        this.setupEventHandlers()
+    }
+    
+    setupEventHandlers() {
+        sseService.on('device-alert', this.handleNewAlert.bind(this))
+        sseService.on('device-online', this.handleDeviceRecovery.bind(this))
+    }
+    
+    handleNewAlert(data) {
+        // 专门的告警处理逻辑
+        this.storeAlert(data)
+        this.notifyUsers(data)
+    }
+    
+    // ... 其他处理方法
+}
+```
+
+### 7. 总结
+
+这个 `on`方法的核心作用：
+
+1. **事件注册**：允许不同的代码模块注册对特定事件的兴趣
+2. **多监听器支持**：同一事件类型可以注册多个回调函数
+3. **解耦设计**：事件源（SSE服务）和事件处理逻辑（各个组件）完全解耦
+4. **灵活扩展**：可以动态添加/移除事件监听器
+
+这种设计让SSE服务成为了一个**事件总线**，各个业务模块只需要关心自己感兴趣的事件，而不需要知道其他模块的存在，大大提高了代码的可维护性和可扩展性。
+
+## SSE服务事件监听器详解
+
+### 🎯 事件监听器设计原理
+
+#### 为什么使用 `Map`存储监听器？
 
 ```js
 this.listeners = new Map()
@@ -205,9 +451,27 @@ this.listeners = new Map()
 3. **快速查找** - Map的键查找时间复杂度O(1)
 4. **内存管理** - 便于精确添加/移除监听器
 
-## 🔧 事件系统实现解析
+> listeners 是一个 Map 数据结构，存储格式如下：
+>
+> this.listeners = new Map([  
+>
+> *// 键(key): 事件类型(string)*  
+>
+> *// 值(value): 回调函数数组(Array<Function>)*    
+>
+> ['device-online', [callback1, callback2, callback3]],  
+>
+> ['device-offline', [callback4, callback5]],
+>
+>   ['device-alert', [callback6]], 
+>
+>  *// ...*
+>
+>  ])
 
-### 1. 监听器注册机制
+### 🔧 事件系统实现解析
+
+#### 1. 监听器注册机制
 
 ```js
 on(eventType, callback) {
@@ -224,7 +488,7 @@ on(eventType, callback) {
 - **批量处理** - 同一事件的所有回调存储在数组中
 - **有序执行** - 回调按添加顺序执行
 
-### 2. 事件触发机制
+#### 2. 事件触发机制
 
 ```js
 emit(eventType, data) {
@@ -246,7 +510,7 @@ emit(eventType, data) {
 - **数据传递** - 统一的数据格式传递
 - **空安全** - 检查事件类型是否存在
 
-### 3. 监听器移除机制
+#### 3. 监听器移除机制
 
 ```js
 off(eventType, callback) {
@@ -266,9 +530,9 @@ off(eventType, callback) {
 - **内存友好** - 避免内存泄漏
 - **灵活管理** - 支持临时监听和永久监听
 
-## 🎪 实际调用方式
+### 🎪 实际调用方式
 
-### 在Vue组件中的使用示例
+#### 在Vue组件中的使用示例
 
 ```js
 // 在Vue组件中
@@ -321,7 +585,7 @@ export default {
 }
 ```
 
-### 为什么这样调用？
+#### 为什么这样调用？
 
 **1. 分离关注点**
 
@@ -381,9 +645,9 @@ if (this.userRole === 'admin') {
 }
 ```
 
-## 🔄 事件触发流程
+### 🔄 事件触发流程
 
-### 完整的事件流转
+#### 完整的事件流转
 
 ```markdown
 服务器发送事件 
@@ -401,7 +665,7 @@ EventSource接收到原始事件
 各组件处理自己的业务逻辑
 ```
 
-### 错误处理机制
+#### 错误处理机制
 
 ```js
 emit(eventType, data) {
@@ -420,7 +684,7 @@ emit(eventType, data) {
 }
 ```
 
-## 💡 设计优势总结
+### 💡 设计优势总结
 
 1. **解耦性强** - SSE服务不关心具体业务逻辑
 2. **扩展性好** - 新组件可以轻松添加监听
