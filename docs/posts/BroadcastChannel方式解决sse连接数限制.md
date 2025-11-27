@@ -3,8 +3,8 @@ date: 2025-11-27
 category:
   - 经验总结
 tag:
-  - BroadcastChannel 
-  - sse
+  - BroadcastChannel
+  - SSE
 ---
 
 # 最大连接次数突破

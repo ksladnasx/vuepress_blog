@@ -3,8 +3,8 @@ date: 2025-11-27
 category:
   - 杂项
 tag:
+  - BroadcastChannel
   - SSE
-  - BoradcastChannel
 excerpt: <p><h2>介绍</h2>这里是最后突破了sse连接数限制的源代码，应用了BoradcastChannel的主从模式进行突破。当然主标签页的选举逻辑是先到先得，最先进行加载的标签页为主标签页。若主标签页被删除或者刷新，会进行重新选举。LocalStorage中始终存储了已有标签页的id数组以及主标签页的id，便于快速选举。</p>
 ---
 
