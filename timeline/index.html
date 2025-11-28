@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.20" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const useChoice = localStorage.getItem('vuepress-color-scheme')
+      const systemStatus =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (useChoice === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (useChoice === 'dark' || systemStatus) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <title>Timeline | xh's blog </title><meta name="description" content="A VuePress bolg Site for personal useage">
+    <link rel="preload" href="/vuepress_blog/assets/style-rD0pYC4x.css" as="style"><link rel="stylesheet" href="/vuepress_blog/assets/style-rD0pYC4x.css">
+    <link rel="modulepreload" href="/vuepress_blog/assets/app-C8HDIWy3.js"><link rel="modulepreload" href="/vuepress_blog/assets/index.html-BJGGph20.js">
+    <link rel="prefetch" href="/vuepress_blog/assets/get-started.html-BcdlLl9j.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CbUU_lRL.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/BroadcastChannel方式解决sse连接数限制.html-TWIofZYI.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/BroadcastChannel版本sse解读.html-D11KIXsN.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/docsify项目创建与部署.html-CRXKR8U3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/element-plus.html-Pgm7GxbX.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Http.html-aEQbTz2A.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Nginx.html-D0R8x0h3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/nuxt.html-B2ocsMKk.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Nuxt4.html-Bd1QZWL3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseService.html-CoCVfNzv.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseServiceWithBroadcastChannel.html-Co7OsaZq.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseService文件解析.html-Kjr6KUEr.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/SSE简介.html-Cqi3AdyE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/todolist建立.html-D4r4lmBY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/vitest.html-B9Ftdpai.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Vue探索.html-WdVDxkRD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/全栈开发.html-Daleu7Hz.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结1.html-Cp1Yat0W.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结2.html-MxRQGet5.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结3.html-Cewa0JW2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结4.html-zdWUYcvN.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习经验.html-BJgFDAtr.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/插件公式示例.html-7ah-QDsO.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/流的处理.html-C50bKxQE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/硅谷甄选项目笔记.html-CeEfWHGb.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/算法刷题.html-BLZiw2bV.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/组件传值与代码规范.html-DWPH0Jqk.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/项目经验.html-DDvP5zMW.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/404.html-GLeTEtmY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DVoU6uqD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BDb0cuFZ.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-D9GavQPp.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DKst30C2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DbZmE64F.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-By_mY_gS.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-T_q3gyls.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CnpU7oXq.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CF3gPhCD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DSRgGhkU.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-a-rz4D69.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DhDecM-t.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-9cfDmq5b.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-SUKanDH_.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-D-Zsisbs.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BGGeVIqj.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-9WxB5AUt.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CxuDB04m.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-uYoZOjLG.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BEsJCIvC.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BgmRm-P9.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-xA7ghWoY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DjQ_BrP0.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CU-76Tyo.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-iXky30n2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-O1WF6UKX.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-f4egmIxs.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-GYwlkVzE.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container no-sidebar external-link-icon" vp-container><!--[--><header class="vp-navbar" vp-navbar><div class="vp-toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a class="route-link" href="/vuepress_blog/"><img class="vp-site-logo" src="https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png" alt="xh&#39;s blog "><span class="vp-site-name vp-hide-mobile" aria-hidden="true">xh&#39;s blog </span></a></span><div class="vp-navbar-items-wrapper" style=""><!--[--><!--]--><nav class="vp-navbar-items vp-hide-mobile" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/vuepress_blog/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><button type="button" class="vp-toggle-color-mode-button" title="toggle color mode"><svg class="light-icon" viewbox="0 0 32 32" style=""><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg class="dark-icon" viewbox="0 0 32 32" style="display:none;"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><form class="search-box" role="search"><input type="search" placeholder="搜索" autocomplete="off" spellcheck="false" value><!----></form></div></header><!--]--><div class="vp-sidebar-mask"></div><!--[--><aside class="vp-sidebar" vp-sidebar><nav class="vp-navbar-items" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/vuepress_blog/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><!----><!--[--><!--]--></aside><!--]--><!--[--><main class="page"><h1 class="timeline-title">Timeline</h1><div class="article-wrapper"><!----><!--[--><article class="article"><header class="title">2025/11/28: 实习周总结4</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, SSE, BroadcastChannel</span></div><div class="excerpt">
+<h2>详细总结</h2>
+<p>此处包含我个人对项目代码的一些详细解读，当然为了撰写效率，其包含了ai的总结部分，但基本思路和知识是对的就行。</p>
+<p>对于SSE的基本知识：<a href="https://ksladnasx.github.io/vuepress_blog/posts/SSE%E7%AE%80%E4%BB%8B.html" target="_blank" rel="noopener noreferrer">SSE简介 | xh's blog</a></p>
+<p>对于源项目代码的解读：<a href="https://ksladnasx.github.io/vuepress_blog/posts/sseService%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90.html" target="_blank" rel="noopener noreferrer">SSE服务代码解读 | xh's blog</a></p></div></article><article class="article"><header class="title">2025/11/27: SSE最大连接次数突破</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: BroadcastChannel, SSE</span></div><div class="excerpt">
+<h2>前言</h2>
+<p>在我们建立sse连接的时候，由于<strong>HTTP/1.1</strong>的限制，在该协议下，大多数现代浏览器（如Chrome、Firefox、Edge）对<strong>同一域名（协议+域名+端口）的并发连接数限制通常为6个</strong>。这意味着，同一个浏览器标签页（或同一浏览器实例）中，对相同域名最多只能同时建立约6个SSE连接，超出此数量的新连接会被浏览器阻塞，直到有连接被关闭。</p>
+<p>若需要突破此限制，可考虑以下方案：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">解决方案</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>升级至HTTP/2</strong></td>
+<td style="text-align:left">HTTP/2支持<strong>多路复用</strong>，可在单个TCP连接上并行处理多个请求和响应，从而从根本上解决连接数限制问题。</td>
+<td style="text-align:left"><strong>长远和推荐方案</strong>，需服务器和浏览器支持，通常要求使用HTTPS。</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>多域名/多端口策略</strong></td>
+<td style="text-align:left">将SSE连接分散到不同的子域（如<code>sse1.example.com</code>, <code>sse2.example.com</code>）或不同端口号。每个子域或端口享有独立的6个连接限额。</td>
+<td style="text-align:left"><strong>过渡方案</strong>，适用于暂无法升级HTTP/2的情况，但配置管理稍复杂。</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>优化连接使用</strong></td>
+<td style="text-align:left">利用标签页切换及时关闭不再需要的SSE连接，或尝试将多个数据流合并到一个SSE连接中传输（通过不同事件类型区分）。</td>
+<td style="text-align:left"><strong>基础优化</strong>，良好的连接管理习惯。</td>
+</tr>
+</tbody>
+</table></div></article><article class="article"><header class="title">2025/11/27: sseService文件解读(BroadcastChannel版)</header><hr><div class="article-info"><!----><!----><span class="category">Category: 代码解读</span><span class="tag">Tag: SSE, BroadcastChannel</span></div><div class="excerpt">
+<p>源文件地址：<a href="/vuepress_blog/posts/sseServiceWithBroadcastChannel.html" target="_blank">sseServiceWithBroadcastChannel.js</a></p>
+<p>相关文章：<a href="/vuepress_blog/posts/BroadcastChannel%E6%96%B9%E5%BC%8F%E8%A7%A3%E5%86%B3sse%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%99%90%E5%88%B6.html" target="_blank">BroadcastChannel方式解决sse连接数限制</a></p></div></article><article class="article"><header class="title">2025/11/27: sseService源代码（BroadcastChannel版）</header><hr><div class="article-info"><!----><!----><span class="category">Category: 杂项</span><span class="tag">Tag: BroadcastChannel, SSE</span></div><div class="excerpt"><p><h2>介绍</h2>这里是最后突破了sse连接数限制的源代码，应用了BoradcastChannel的主从模式进行突破。当然主标签页的选举逻辑是先到先得，最先进行加载的标签页为主标签页。若主标签页被删除或者刷新，会进行重新选举。LocalStorage中始终存储了已有标签页的id数组以及主标签页的id以及最大id的值，便于快速为新标签页添加id和快速的选举。同时也包含了主标签页的心跳检测机制，每30秒检查主标签页状态，发送ping消息后立即设置五秒的定时器，主标签页收到后回复pong，如果主标签页成功回复会自动清除定时器，如果回复超时进行重新选举。</p></div></article><article class="article"><header class="title">2025/11/26: 对基础 SSE 中流的处理的解读</header><hr><div class="article-info"><!----><!----><span class="category">Category: 代码解读</span><span class="tag">Tag: SSE, fetchApi</span></div><div class="excerpt">
+<h2>解析</h2>
+<p>这是一段实现前端流式接收和处理 SSE（Server-Sent Events）数据的代码，它没有使用浏览器原生的<code>EventSource</code>，而是采用<code>fetch</code>配合流式读取来获取并处理数据，从而实现了逐字输出的效果。下面我们来逐部分解析。</p>
+<p>🌟 注意核心是在<code>processStream</code>函数内部，当处理完一个数据块后，它再次调用<code>reader.read().then(processStream)</code>，从而形成一个递归调用链，直到流结束（<code>done</code>为<code>true</code>）</p></div></article><article class="article"><header class="title">2025/11/25: sseService.js</header><hr><div class="article-info"><!----><!----><span class="category">Category: 杂项</span><span class="tag">Tag: SSE</span></div><div class="excerpt"><p><h2>介绍</h2>显然这里是封装了一个类来实现SSE，其中开头的disabled是应用于全局禁用的，这个由实际环境进行配置。然后后续对类创建了全局的实例实现并进行了导出。</p></div></article><article class="article"><header class="title">2025/11/25: SSE服务代码解读</header><hr><div class="article-info"><!----><!----><span class="category">Category: 代码解读</span><span class="tag">Tag: SSE</span></div><div class="excerpt">
+<p>完整代码地址：<a href="/vuepress_blog/posts/sseService.html" target="_blank">sseService.js</a></p>
+<p>这是一个功能完整的SSE（Server-Sent Events）客户端服务类，用于接收后端实时推送的设备状态变化通知。以下是对代码的详细解读：</p>
+<h2>🏗️ 整体架构设计</h2>
+<h3>单例模式实现</h3>
+<div class="language-javascript line-numbers-mode" data-highlighter="prismjs" data-ext="js"><pre><code><span class="line"><span class="token comment">// 创建全局单例实例，确保整个应用只有一个SSE连接</span></span>
+<span class="line"><span class="token keyword">let</span> sseServiceInstance <span class="token operator">=</span> <span class="token keyword">null</span></span>
+<span class="line"><span class="token keyword">const</span> <span class="token function-variable function">getSseService</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span></span>
+<span class="line">  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>sseServiceInstance<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">    sseServiceInstance <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SSEService</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span>
+<span class="line">  <span class="token punctuation">}</span></span>
+<span class="line">  <span class="token keyword">return</span> sseServiceInstance</span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/11/24: SSE简介</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: SSE</span></div><div class="excerpt"><p>浏览器SSE（Server-Sent Events，服务器发送事件）是一种基于HTTP的技术，允许服务器主动将实时数据推送给客户端（如网页浏览器），而无需客户端反复请求。</p>
+<h1>SSE简介</h1>
+<h2>SSE基本介绍</h2>
+<h3>🔍 SSE的核心特性</h3>
+<p>SSE的核心工作机制是，客户端通过创建一个<code>EventSource</code>对象与服务器建立持久连接。服务器则通过发送具有特定<code>Content-Type: text/event-stream</code>头信息的响应，来保持此连接开放并持续推送数据。</p>
+<p>其关键特性包括：</p></div></article><article class="article"><header class="title">2025/11/24: 组件传值与代码规范</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: TypeScript, Vue3</span></div><div class="excerpt">
+<h2>组件传值</h2>
+<p>我上次所撰写的页面属于一个分步骤走的流程页面，因此每个步骤页面都有共同的父组件index.vue，因此各个步骤页面的 数据都是统一通过父组件进行请求和分发的，因此只有父子组件之间的数据流动。这里我是使用的 <code>defineProps</code>和 <code>defineEmits</code>来实现组件双向绑定（v-model）的标准且兼容性广泛的方法。其核心在于理解 <strong>v-model 本质上是语法糖</strong>，它自动处理了一个名为 <code>modelValue</code>的 prop 和一个名为 <code>update:modelValue</code>的自定义事件 。</p></div></article><article class="article"><header class="title">2025/11/18: 第三周周总结</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vue3</span></div><div class="excerpt">
+<p>本周主要是根据学长的安排进入了流量开发小组，主要是对接天翼云后端api进行监听器部分的功能点开发以及创建后端服务器组的功能点实现。</p>
+<h2>创建监听器</h2>
+<p>首先是创建监听器的页面，它包含五个步骤，每个步骤都分了单独的页面。由此我将文件分为主文件index.vue和五个步骤的页面文件。主文件便负责了各种页面的数据的请求以及最后创建监听器的请求。</p>
+<p>同时此功能点每个步骤间有各类数据的关联，其难点便在于对各组件之间传值的方式的书写。这里我使用的是defineProps结合 <code>defineEmits</code>的方式实现各个组件之间的数据同步的。因为本身Vue 3支持多个v-model绑定，因此可实现更简洁的双向数据流：</p></div></article><article class="article"><header class="title">2025/11/7: 实习周总结二</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vitest</span></div><div class="excerpt">
+<p>本周并未完全按照计划走，而是加上学长的建议进行了一些动态的调整。本周进行了HTTP底层逻辑的复习，Vitest的学习---也是最主要的，同时将我的个人githubpages站点更换为VuePress框架并进行了自动化的githubpages打包上传部署</p>
+<h2>HTTP</h2>
+<p>HTTP（超文本传输协议）是一种详细规定了浏览器和万维网服务器之间互相通信规则的应用层协议。它基于TCP/IP通信协议来传递数据，如HTML文件、图片文件、查询结果等。同时它是一种无连接，无状态并媒体独立的协议。</p>
+<h3>请求报文格式</h3>
+<div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">请求行（方法、URL、协议版本）</span>
+<span class="line">请求头（多个键值对）</span>
+<span class="line">空行</span>
+<span class="line">请求体（可选，如POST提交的数据）</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/11/6: Vitest入门</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: Vitest</span></div><div class="excerpt">
+<h2>基本测试</h2>
+<h3>📝 理解测试文件的基本结构</h3>
+<p>一个 Vitest 测试文件通常包含以下几个核心部分，它们共同构成了测试的基本骨架：</p>
+<table>
+<thead>
+<tr>
+<th>组成部分</th>
+<th>描述</th>
+<th>代码示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>导入语句</strong></td>
+<td>引入测试框架的功能和待测试对象。</td>
+<td><code>import { describe, it, expect } from 'vitest';``import { sum } from './math';</code></td>
+</tr>
+<tr>
+<td><strong>测试套件 (Test Suite)</strong></td>
+<td>使用 <code>describe</code>将一系列相关的测试用例组织在一起。</td>
+<td><code>describe('数学工具函数', () =&gt; { ... });</code></td>
+</tr>
+<tr>
+<td><strong>测试用例 (Test Case)</strong></td>
+<td>使用 <code>it</code>或 <code>test</code>定义单个具体的测试场景。</td>
+<td><code>it('应该能正确计算两个数字的和', () =&gt; { ... });</code></td>
+</tr>
+<tr>
+<td><strong>断言 (Assertion)</strong></td>
+<td>使用 <code>expect</code>来验证代码的行为和输出是否符合预期。</td>
+<td><code>expect(sum(1, 2)).toBe(3);</code></td>
+</tr>
+</tbody>
+</table></div></article><article class="article"><header class="title">2025/11/3: 实习周总结一</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vue3</span></div><div class="excerpt">
+<p>本周按照计划的那样，进行了基本的git学习以及一些Echart的实操。同时修复了一些项目的代码具体的修复想法都写在了之前的文件里了，这里不再赘述。同时也尝试了熟悉了VueX的代码。</p>
+<h2>项目代码学习</h2>
+<p>对于项目代码的阅览，我主要包括动态路由，VueX中的commit，以及&amp;&amp;运算符的巧用的学习</p>
+<h3>Dynamic Router</h3>
+<p>动态路由是一种根据用户权限动态控制前端页面访问权限的技术方案。其核心原理是将后端返回的用户菜单权限数据与前端预定义的路由配置进行映射和匹配。</p>
+<p>具体的实现流程是：用户登录成功后，前端根据其权限标识（如角色或权限列表）从后端接口获取对应的菜单数据。随后，前端通过一个转换函数（如 <code>filterAsyncRoutes</code>）将这些菜单数据加工成符合 Vue Router 规范的路由配置对象。这个过程通常涉及组件的动态解析（例如使用 <code>() =&gt; import(...)</code>实现懒加载）和路由层级的递归处理。生成的有效路由配置会通过 <code>router.addRoute</code>（Vue Router 4）或 <code>router.addRoutes</code>（Vue Router 3）方法动态注入到路由实例中。同时，侧边栏导航菜单会根据处理后的权限数据，利用递归组件或 <code>v-for</code>指令动态渲染，确保用户界面与其权限实时同步。</p></div></article><article class="article"><header class="title">2025/11/2: 实习应该掌握的知识</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vue3</span></div><div class="excerpt"><p>实习产生的经验总结</p></div></article><article class="article"><header class="title">2025/10/3: Http协议详解</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: 网络基础</span></div><div class="excerpt">
+<p>HTTP协议是万维网数据通信的基础，理解它以及浏览器与服务器如何交互，是掌握现代Web技术的关键。下面我将为你深入解析。</p>
+<h1>🌐 HTTP协议核心解析与浏览器-服务器交互全流程</h1>
+<h2>1️⃣ HTTP协议的基本认识</h2>
+<p>HTTP（超文本传输协议）是一种详细规定了浏览器和万维网服务器之间互相通信规则的应用层协议。它基于TCP/IP通信协议来传递数据，如HTML文件、图片文件、查询结果等。</p>
+<p><strong>关键特性</strong>：</p>
+<ul>
+<li><strong>无连接</strong>：早期HTTP协议每次连接只处理一个请求，服务器处理完请求并收到应答后即断开连接。HTTP/1.1支持持久连接（Keep-Alive），允许连接在一段时间内保持打开状态，以便继续发送其他请求。</li>
+<li><strong>无状态</strong>：协议对于事务处理没有记忆能力，每个请求都是独立的。为了解决无状态带来的问题，HTTP/1.1引入了Cookie技术。</li>
+<li><strong>媒体独立</strong>：只要客户端和服务器知道如何处理数据内容，任何类型的数据都可以通过HTTP发送，通过MIME-type指定内容类型。</li>
+</ul></div></article><article class="article"><header class="title">2025/9/22: 项目创建</header><hr><div class="article-info"><!----><!----><span class="category">Category: 经验总结</span><span class="tag">Tag: Vue3, ElementPlus, TypeScript</span></div><div class="excerpt"><p><h1>Vue3项目探索</h1>Vue的学习是一个循序渐进的过程，这里我会从最基本的项目创建部分开始进行讲解，慢慢深入，直到掌握基本的Vue3代码书写流程</p></div></article><article class="article"><header class="title">2025/9/22: 全栈开发总结</header><hr><div class="article-info"><!----><!----><span class="category">Category: 项目笔记</span><span class="tag">Tag: Vue3, ElementPlus, TypeScript, MongoDB</span></div><div class="excerpt">
+<p>这是对于计算机设计大赛的项目进行的简略撰写以及技巧记录</p>
+<h1>前提准备</h1>
+<h2>数据库格式</h2>
+<p>数据库user-list中的存储方式类似于：</p>
+<div class="language-typescript line-numbers-mode" data-highlighter="prismjs" data-ext="ts"><pre><code><span class="line"><span class="token punctuation">{</span></span>
+<span class="line">  <span class="token string-property property">"username"</span><span class="token operator">:</span> <span class="token string">"aaa"</span><span class="token punctuation">,</span></span>
+<span class="line">  <span class="token string-property property">"password"</span><span class="token operator">:</span> <span class="token string">"123"</span><span class="token punctuation">,</span></span>
+<span class="line">  <span class="token string-property property">"love"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span></span>
+<span class="line">  <span class="token string-property property">"commit"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/9/22: 硅谷甄选运营平台</header><hr><div class="article-info"><!----><!----><span class="category">Category: 项目笔记</span><span class="tag">Tag: Vue3, ElementPlus, TypeScript</span></div><div class="excerpt">
+<p>此次教学课程为硅谷甄选运营平台项目,包含运营平台项目模板从0到1开发，以及数据大屏幕、权限等业务。</p>
+<p>此次教学课程涉及到技术栈包含 <strong>:vue3+TypeScript+vue-router+pinia+element-plus+axios+echarts</strong> 等技术栈。</p>
+<h2>一、vue3组件通信方式</h2>
+<p><strong>通信仓库地址:https://gitee.com/jch1011/vue3_communication.git</strong></p>
+<p>不管是vue2还是vue3,组件通信方式很重要,不管是项目还是面试都是经常用到的知识点。</p></div></article><article class="article"><header class="title">2025/9/17: Nignx</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: Nignx, 前端部署</span></div><div class="excerpt">
+<p>Nginx 是一款高性能的开源 Web 服务器、反向代理服务器和负载均衡器，以其高效、稳定和低资源消耗而闻名。下面我将详细解释 Nginx 的核心功能，并为你提供前端项目在本地和 Linux 服务器上的部署指南，包括常用命令和需要注意的关键点。</p>
+<p>🌐 Nginx 详解与前端部署指南</p>
+<p>✨ Nginx 核心功能</p>
+<p>Nginx 采用事件驱动和异步非阻塞架构，使其能够高效处理大量并发连接，非常适合现代高流量网站和应用。</p>
+<p>主要功能</p>
+<p>Nginx 的核心功能可以归纳为以下三类，具体对比见下表：</p>
+<p>功能类别 具体功能 描述</p></div></article><article class="article"><header class="title">2025/8/26: Nust项目创建</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: Nuxt, SSR</span></div><div class="excerpt">
+<blockquote>
+<p>官方自带英文文档：<a href="/vuepress_blog/zh-cn/Nuxt4.html" target="_blank">README</a></p>
+</blockquote>
+<div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre><code><span class="line"><span class="token function">pnpm</span> create nuxt@latest nuxt4-project</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/8/26: Nuxt Minimal Starter</header><hr><div class="article-info"><!----><!----><span class="category">Category: 杂项</span><span class="tag">Tag: Nuxt, SSR</span></div><div class="excerpt">
+<p>Look at the <a href="https://nuxt.com/docs/getting-started/introduction" target="_blank" rel="noopener noreferrer">Nuxt documentation</a> to learn more.</p>
+<h2>Setup</h2>
+<p>Make sure to install dependencies:</p>
+<div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre><code><span class="line"><span class="token comment"># npm</span></span>
+<span class="line"><span class="token function">npm</span> <span class="token function">install</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment"># pnpm</span></span>
+<span class="line"><span class="token function">pnpm</span> <span class="token function">install</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment"># yarn</span></span>
+<span class="line"><span class="token function">yarn</span> <span class="token function">install</span></span>
+<span class="line"></span>
+<span class="line"><span class="token comment"># bun</span></span>
+<span class="line">bun <span class="token function">install</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/8/25: Docsify创建流程</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: Vue3, Docsify</span></div><div class="excerpt">
+<h3>📦 1. <strong>环境准备</strong></h3>
+<ul>
+<li></li>
+</ul>
+<p>安装 Node.js 和 npm</p>
+<ul>
+<li>
+<p>从 <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">Node.js 官网</a> 下载安装包（建议 LTS 版本）</p>
+</li>
+<li>
+<p>安装后验证是否成功：</p>
+<div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">node -v   # 检查 Node.js 版本</span>
+<span class="line">npm -v    # 检查 npm 版本</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div></div></div></li>
+</ul></div></article><article class="article"><header class="title">2025/7/25: 数学公式测试文档</header><hr><div class="article-info"><!----><!----><span class="category">Category: 杂项</span><span class="tag">Tag: Latex</span></div><div class="excerpt">
+<p>此文档用于验证docsify-latex公式渲染功能，包含行内公式、矩阵、方程组等常见数学场景。
+具体的在docsify中实现LaTex公式的文档 <a href="https://scruel.github.io/docsify-latex/#/" target="_blank" rel="noopener noreferrer">docsify-latex</a></p>
+<blockquote>
+<p>注意docsify-latex 插件依赖 katex 对象，必须在其​​之后加载​​，具体配置如下：</p>
+</blockquote>
+<div class="language-html line-numbers-mode" data-highlighter="prismjs" data-ext="html"><pre><code><span class="line"><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span> Docsify + docsify-latex<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>app<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>//cdn.jsdelivr.net/npm/docsify@4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript"></span>
+<span class="line">      window<span class="token punctuation">.</span>$docsify <span class="token operator">=</span> <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span></span>
+<span class="line">        <span class="token literal-property property">repo</span><span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span></span>
+<span class="line">        <span class="token literal-property property">loadSidebar</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span></span>
+<span class="line">        <span class="token literal-property property">subMaxLevel</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> </span>
+<span class="line">        <span class="token literal-property property">coverpage</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span></span>
+<span class="line">        <span class="token literal-property property">auto2top</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span></span>
+<span class="line">      <span class="token punctuation">}</span><span class="token punctuation">;</span></span>
+<span class="line">  </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token comment">&lt;!-- 此处 --&gt;</span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>//cdn.jsdelivr.net/npm/docsify-latex@0<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/7/25: 算法刷题</header><hr><div class="article-info"><!----><!----><span class="category">Category: 算法学习</span><span class="tag">Tag: Python</span></div><div class="excerpt">
+<p>备战算法国赛ing</p>
+<h1>Day 1 背包问题</h1>
+<h2>01背包问题</h2>
+<blockquote>
+<p>有一个箱子容量为 <em>V</em>，同时有 <em>n</em> 个物品，每个物品有一个体积。</p>
+<p>现在从 <em>n</em> 个物品中，任取若干个装入箱内（也可以不取），使箱子的剩余空间最小。输出这个最小值。</p>
+</blockquote>
+<p><em><strong>DP核心：找变量之间的状态转移方程</strong></em></p>
+<div class="language-tex line-numbers-mode" data-highlighter="prismjs" data-ext="tex"><pre><code><span class="line">代码：</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">2025/4/17: 如何集成Elementplus?</header><hr><div class="article-info"><!----><!----><span class="category">Category: 说明文档</span><span class="tag">Tag: Vue3, ElementPlus</span></div><div class="excerpt">
+<p>在Vue3项目中集成Element Plus的流程可分为以下步骤，结合多个官方文档和社区实践总结：</p>
+<h3>一、环境准备</h3>
+<ol>
+<li>
+<p><strong>创建Vue3项目</strong><br>
+使用Vite或Vue CLI创建项目（推荐Vite）：</p>
+<div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre><code><span class="line"><span class="token function">npm</span> create vite@latest my-app <span class="token parameter variable">--template</span> vue</span>
+<span class="line"><span class="token builtin class-name">cd</span> my-app</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div></div></div></li>
+<li>
+<p><strong>安装依赖</strong><br>
+确保Node.js版本≥14，执行：</p>
+<div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre><code><span class="line"><span class="token function">npm</span> <span class="token function">install</span> element-plus <span class="token parameter variable">--save</span></span>
+<span class="line"><span class="token comment"># 若需要图标库</span></span>
+<span class="line"><span class="token function">npm</span> <span class="token function">install</span> @element-plus/icons-vue</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li>
+</ol></div></article><article class="article"><header class="title">2025/4/12: 零零散散的项目经验</header><hr><div class="article-info"><!----><!----><span class="category">Category: 项目笔记</span><span class="tag">Tag: Vue3, ElementPlus, 网络请求</span></div><div class="excerpt">
+<h1>@error处理异常，调用函数</h1>
+<p>在 Vue 3 中，<code>@error</code> 是用于监听 DOM 元素或组件上的错误事件的一种方式。当绑定的元素或组件发生错误时，可以触发一个回调函数来处理异常。以下是关于 <code>@error</code> 处理异常和调用函数的详细解释和示例。</p>
+<h3><strong>1. 使用 <code>@error</code> 监听 DOM 元素的错误事件</strong></h3>
+<p><code>@error</code> 可以直接绑定到 HTML 元素（如 <code>&lt;img&gt;</code>、<code>&lt;video&gt;</code> 等）上，用于捕获加载失败或其他错误事件。</p></div></article><article class="article"><header class="title">2025/1/11: 基于外部Vue.js库实现的一个文件的ToDoList功能页面</header><hr><div class="article-info"><!----><!----><span class="category">Category: 项目笔记</span><span class="tag">Tag: Vue3, JavaScript</span></div><div class="excerpt">
+<h2>只需要一个html文件</h2>
+<p>项目较为简单，主要是基本的值的调度方式等联系。
+以下是完整的HTML和JavaScript代码，用于创建一个基本的To do list前端页面，实现添加任务、切换任务状态和删除任务的功能，并且利用Vue动态绑定类名来改变已完成任务的样式。</p>
+<h3>完整的HTML和JavaScript代码</h3>
+<pre><code> 功能总结为：
+
+ 1. 从CDN引入Vue.js库，以便在网页中使用Vue.js的功能。
+ 2. 引入本地的`app.js`文件，该文件包含了使用Vue.js实现To do list应用的具体代码。
+</code></pre></div></article><!--]--></div></main><!--]--></div><!--[--><!----><!--]--><!--]--></div>
+    <script type="module" src="/vuepress_blog/assets/app-C8HDIWy3.js" defer></script>
+  </body>
+</html>

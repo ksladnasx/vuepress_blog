@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.20" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const useChoice = localStorage.getItem('vuepress-color-scheme')
+      const systemStatus =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (useChoice === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (useChoice === 'dark' || systemStatus) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <title>Tag Vitest | xh's blog </title><meta name="description" content="A VuePress bolg Site for personal useage">
+    <link rel="preload" href="/vuepress_blog/assets/style-rD0pYC4x.css" as="style"><link rel="stylesheet" href="/vuepress_blog/assets/style-rD0pYC4x.css">
+    <link rel="modulepreload" href="/vuepress_blog/assets/app-C8HDIWy3.js"><link rel="modulepreload" href="/vuepress_blog/assets/index.html-BEsJCIvC.js">
+    <link rel="prefetch" href="/vuepress_blog/assets/get-started.html-BcdlLl9j.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CbUU_lRL.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/BroadcastChannel方式解决sse连接数限制.html-TWIofZYI.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/BroadcastChannel版本sse解读.html-D11KIXsN.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/docsify项目创建与部署.html-CRXKR8U3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/element-plus.html-Pgm7GxbX.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Http.html-aEQbTz2A.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Nginx.html-D0R8x0h3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/nuxt.html-B2ocsMKk.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Nuxt4.html-Bd1QZWL3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseService.html-CoCVfNzv.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseServiceWithBroadcastChannel.html-Co7OsaZq.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseService文件解析.html-Kjr6KUEr.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/SSE简介.html-Cqi3AdyE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/todolist建立.html-D4r4lmBY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/vitest.html-B9Ftdpai.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Vue探索.html-WdVDxkRD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/全栈开发.html-Daleu7Hz.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结1.html-Cp1Yat0W.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结2.html-MxRQGet5.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结3.html-Cewa0JW2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结4.html-zdWUYcvN.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习经验.html-BJgFDAtr.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/插件公式示例.html-7ah-QDsO.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/流的处理.html-C50bKxQE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/硅谷甄选项目笔记.html-CeEfWHGb.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/算法刷题.html-BLZiw2bV.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/组件传值与代码规范.html-DWPH0Jqk.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/项目经验.html-DDvP5zMW.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/404.html-GLeTEtmY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DVoU6uqD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BDb0cuFZ.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-D9GavQPp.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DKst30C2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DbZmE64F.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-By_mY_gS.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-T_q3gyls.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CnpU7oXq.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CF3gPhCD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DSRgGhkU.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-a-rz4D69.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DhDecM-t.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-9cfDmq5b.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-SUKanDH_.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-D-Zsisbs.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BGGeVIqj.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-9WxB5AUt.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CxuDB04m.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-uYoZOjLG.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BgmRm-P9.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-xA7ghWoY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DjQ_BrP0.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CU-76Tyo.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-iXky30n2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-O1WF6UKX.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-f4egmIxs.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-GYwlkVzE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BJGGph20.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container no-sidebar external-link-icon" vp-container><!--[--><header class="vp-navbar" vp-navbar><div class="vp-toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a class="route-link" href="/vuepress_blog/"><img class="vp-site-logo" src="https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png" alt="xh&#39;s blog "><span class="vp-site-name vp-hide-mobile" aria-hidden="true">xh&#39;s blog </span></a></span><div class="vp-navbar-items-wrapper" style=""><!--[--><!--]--><nav class="vp-navbar-items vp-hide-mobile" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/vuepress_blog/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><button type="button" class="vp-toggle-color-mode-button" title="toggle color mode"><svg class="light-icon" viewbox="0 0 32 32" style=""><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg class="dark-icon" viewbox="0 0 32 32" style="display:none;"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><form class="search-box" role="search"><input type="search" placeholder="搜索" autocomplete="off" spellcheck="false" value><!----></form></div></header><!--]--><div class="vp-sidebar-mask"></div><!--[--><aside class="vp-sidebar" vp-sidebar><nav class="vp-navbar-items" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/vuepress_blog/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><!----><!--[--><!--]--></aside><!--]--><!--[--><main class="page"><div class="tag-wrapper"><!--[--><a class="route-link tag" href="/vuepress_blog/tag/broadcastchannel/">BroadcastChannel <span class="tag-num">4</span></a><a class="route-link tag" href="/vuepress_blog/tag/sse/">SSE <span class="tag-num">8</span></a><a class="route-link tag" href="/vuepress_blog/tag/vue3/">Vue3 <span class="tag-num">11</span></a><a class="route-link tag" href="/vuepress_blog/tag/docsify/">Docsify <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/elementplus/">ElementPlus <span class="tag-num">5</span></a><a class="route-link tag" href="/vuepress_blog/tag/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">网络基础 <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/nignx/">Nignx <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/">前端部署 <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/nuxt/">Nuxt <span class="tag-num">2</span></a><a class="route-link tag" href="/vuepress_blog/tag/ssr/">SSR <span class="tag-num">2</span></a><a class="route-link tag" href="/vuepress_blog/tag/javascript/">JavaScript <span class="tag-num">1</span></a><a class="route-link route-link-active tag" href="/vuepress_blog/tag/vitest/">Vitest <span class="tag-num">2</span></a><a class="route-link tag" href="/vuepress_blog/tag/typescript/">TypeScript <span class="tag-num">4</span></a><a class="route-link tag" href="/vuepress_blog/tag/mongodb/">MongoDB <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/%E5%AE%9E%E4%B9%A0/">实习 <span class="tag-num">5</span></a><a class="route-link tag" href="/vuepress_blog/tag/latex/">Latex <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/fetchapi/">fetchApi <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/python/">Python <span class="tag-num">1</span></a><a class="route-link tag" href="/vuepress_blog/tag/%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">网络请求 <span class="tag-num">1</span></a><!--]--></div><div class="article-wrapper"><!----><!--[--><article class="article"><header class="title">实习周总结二</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/7</span><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vitest</span></div><div class="excerpt">
+<p>本周并未完全按照计划走，而是加上学长的建议进行了一些动态的调整。本周进行了HTTP底层逻辑的复习，Vitest的学习---也是最主要的，同时将我的个人githubpages站点更换为VuePress框架并进行了自动化的githubpages打包上传部署</p>
+<h2>HTTP</h2>
+<p>HTTP（超文本传输协议）是一种详细规定了浏览器和万维网服务器之间互相通信规则的应用层协议。它基于TCP/IP通信协议来传递数据，如HTML文件、图片文件、查询结果等。同时它是一种无连接，无状态并媒体独立的协议。</p>
+<h3>请求报文格式</h3>
+<div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">请求行（方法、URL、协议版本）</span>
+<span class="line">请求头（多个键值对）</span>
+<span class="line">空行</span>
+<span class="line">请求体（可选，如POST提交的数据）</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">Vitest入门</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/6</span><span class="category">Category: 说明文档</span><span class="tag">Tag: Vitest</span></div><div class="excerpt">
+<h2>基本测试</h2>
+<h3>📝 理解测试文件的基本结构</h3>
+<p>一个 Vitest 测试文件通常包含以下几个核心部分，它们共同构成了测试的基本骨架：</p>
+<table>
+<thead>
+<tr>
+<th>组成部分</th>
+<th>描述</th>
+<th>代码示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>导入语句</strong></td>
+<td>引入测试框架的功能和待测试对象。</td>
+<td><code>import { describe, it, expect } from 'vitest';``import { sum } from './math';</code></td>
+</tr>
+<tr>
+<td><strong>测试套件 (Test Suite)</strong></td>
+<td>使用 <code>describe</code>将一系列相关的测试用例组织在一起。</td>
+<td><code>describe('数学工具函数', () =&gt; { ... });</code></td>
+</tr>
+<tr>
+<td><strong>测试用例 (Test Case)</strong></td>
+<td>使用 <code>it</code>或 <code>test</code>定义单个具体的测试场景。</td>
+<td><code>it('应该能正确计算两个数字的和', () =&gt; { ... });</code></td>
+</tr>
+<tr>
+<td><strong>断言 (Assertion)</strong></td>
+<td>使用 <code>expect</code>来验证代码的行为和输出是否符合预期。</td>
+<td><code>expect(sum(1, 2)).toBe(3);</code></td>
+</tr>
+</tbody>
+</table></div></article><!--]--></div></main><!--]--></div><!--[--><!----><!--]--><!--]--></div>
+    <script type="module" src="/vuepress_blog/assets/app-C8HDIWy3.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.20" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const useChoice = localStorage.getItem('vuepress-color-scheme')
+      const systemStatus =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (useChoice === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (useChoice === 'dark' || systemStatus) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <title>Category 经验总结 | xh's blog </title><meta name="description" content="A VuePress bolg Site for personal useage">
+    <link rel="preload" href="/vuepress_blog/assets/style-rD0pYC4x.css" as="style"><link rel="stylesheet" href="/vuepress_blog/assets/style-rD0pYC4x.css">
+    <link rel="modulepreload" href="/vuepress_blog/assets/app-C8HDIWy3.js"><link rel="modulepreload" href="/vuepress_blog/assets/index.html-BDb0cuFZ.js">
+    <link rel="prefetch" href="/vuepress_blog/assets/get-started.html-BcdlLl9j.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CbUU_lRL.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/BroadcastChannel方式解决sse连接数限制.html-TWIofZYI.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/BroadcastChannel版本sse解读.html-D11KIXsN.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/docsify项目创建与部署.html-CRXKR8U3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/element-plus.html-Pgm7GxbX.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Http.html-aEQbTz2A.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Nginx.html-D0R8x0h3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/nuxt.html-B2ocsMKk.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Nuxt4.html-Bd1QZWL3.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseService.html-CoCVfNzv.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseServiceWithBroadcastChannel.html-Co7OsaZq.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/sseService文件解析.html-Kjr6KUEr.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/SSE简介.html-Cqi3AdyE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/todolist建立.html-D4r4lmBY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/vitest.html-B9Ftdpai.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/Vue探索.html-WdVDxkRD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/全栈开发.html-Daleu7Hz.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结1.html-Cp1Yat0W.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结2.html-MxRQGet5.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结3.html-Cewa0JW2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习周总结4.html-zdWUYcvN.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/实习经验.html-BJgFDAtr.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/插件公式示例.html-7ah-QDsO.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/流的处理.html-C50bKxQE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/硅谷甄选项目笔记.html-CeEfWHGb.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/算法刷题.html-BLZiw2bV.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/组件传值与代码规范.html-DWPH0Jqk.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/项目经验.html-DDvP5zMW.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/404.html-GLeTEtmY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DVoU6uqD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-D9GavQPp.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DKst30C2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DbZmE64F.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-By_mY_gS.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-T_q3gyls.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CnpU7oXq.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CF3gPhCD.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DSRgGhkU.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-a-rz4D69.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DhDecM-t.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-9cfDmq5b.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-SUKanDH_.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-D-Zsisbs.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BGGeVIqj.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-9WxB5AUt.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CxuDB04m.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-uYoZOjLG.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BEsJCIvC.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BgmRm-P9.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-xA7ghWoY.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-DjQ_BrP0.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-CU-76Tyo.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-iXky30n2.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-O1WF6UKX.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-f4egmIxs.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-GYwlkVzE.js" as="script"><link rel="prefetch" href="/vuepress_blog/assets/index.html-BJGGph20.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container no-sidebar external-link-icon" vp-container><!--[--><header class="vp-navbar" vp-navbar><div class="vp-toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a class="route-link" href="/vuepress_blog/"><img class="vp-site-logo" src="https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png" alt="xh&#39;s blog "><span class="vp-site-name vp-hide-mobile" aria-hidden="true">xh&#39;s blog </span></a></span><div class="vp-navbar-items-wrapper" style=""><!--[--><!--]--><nav class="vp-navbar-items vp-hide-mobile" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/vuepress_blog/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><button type="button" class="vp-toggle-color-mode-button" title="toggle color mode"><svg class="light-icon" viewbox="0 0 32 32" style=""><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg class="dark-icon" viewbox="0 0 32 32" style="display:none;"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><form class="search-box" role="search"><input type="search" placeholder="搜索" autocomplete="off" spellcheck="false" value><!----></form></div></header><!--]--><div class="vp-sidebar-mask"></div><!--[--><aside class="vp-sidebar" vp-sidebar><nav class="vp-navbar-items" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/vuepress_blog/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/vuepress_blog/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><!----><!--[--><!--]--></aside><!--]--><!--[--><main class="page"><div class="category-wrapper"><!--[--><a class="route-link route-link-active category" href="/vuepress_blog/category/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/">经验总结 <span class="category-num">8</span></a><a class="route-link category" href="/vuepress_blog/category/%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/">代码解读 <span class="category-num">3</span></a><a class="route-link category" href="/vuepress_blog/category/%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3/">说明文档 <span class="category-num">7</span></a><a class="route-link category" href="/vuepress_blog/category/%E6%9D%82%E9%A1%B9/">杂项 <span class="category-num">4</span></a><a class="route-link category" href="/vuepress_blog/category/%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/">项目笔记 <span class="category-num">4</span></a><a class="route-link category" href="/vuepress_blog/category/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习 <span class="category-num">1</span></a><!--]--></div><div class="article-wrapper"><!----><!--[--><article class="article"><header class="title">组件传值与代码规范</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/24</span><span class="category">Category: 经验总结</span><span class="tag">Tag: TypeScript, Vue3</span></div><div class="excerpt">
+<h2>组件传值</h2>
+<p>我上次所撰写的页面属于一个分步骤走的流程页面，因此每个步骤页面都有共同的父组件index.vue，因此各个步骤页面的 数据都是统一通过父组件进行请求和分发的，因此只有父子组件之间的数据流动。这里我是使用的 <code>defineProps</code>和 <code>defineEmits</code>来实现组件双向绑定（v-model）的标准且兼容性广泛的方法。其核心在于理解 <strong>v-model 本质上是语法糖</strong>，它自动处理了一个名为 <code>modelValue</code>的 prop 和一个名为 <code>update:modelValue</code>的自定义事件 。</p></div></article><article class="article"><header class="title">实习应该掌握的知识</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/2</span><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vue3</span></div><div class="excerpt"><p>实习产生的经验总结</p></div></article><article class="article"><header class="title">实习周总结4</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/28</span><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, SSE, BroadcastChannel</span></div><div class="excerpt">
+<h2>详细总结</h2>
+<p>此处包含我个人对项目代码的一些详细解读，当然为了撰写效率，其包含了ai的总结部分，但基本思路和知识是对的就行。</p>
+<p>对于SSE的基本知识：<a href="https://ksladnasx.github.io/vuepress_blog/posts/SSE%E7%AE%80%E4%BB%8B.html" target="_blank" rel="noopener noreferrer">SSE简介 | xh's blog</a></p>
+<p>对于源项目代码的解读：<a href="https://ksladnasx.github.io/vuepress_blog/posts/sseService%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90.html" target="_blank" rel="noopener noreferrer">SSE服务代码解读 | xh's blog</a></p></div></article><article class="article"><header class="title">第三周周总结</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/18</span><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vue3</span></div><div class="excerpt">
+<p>本周主要是根据学长的安排进入了流量开发小组，主要是对接天翼云后端api进行监听器部分的功能点开发以及创建后端服务器组的功能点实现。</p>
+<h2>创建监听器</h2>
+<p>首先是创建监听器的页面，它包含五个步骤，每个步骤都分了单独的页面。由此我将文件分为主文件index.vue和五个步骤的页面文件。主文件便负责了各种页面的数据的请求以及最后创建监听器的请求。</p>
+<p>同时此功能点每个步骤间有各类数据的关联，其难点便在于对各组件之间传值的方式的书写。这里我使用的是defineProps结合 <code>defineEmits</code>的方式实现各个组件之间的数据同步的。因为本身Vue 3支持多个v-model绑定，因此可实现更简洁的双向数据流：</p></div></article><article class="article"><header class="title">实习周总结二</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/7</span><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vitest</span></div><div class="excerpt">
+<p>本周并未完全按照计划走，而是加上学长的建议进行了一些动态的调整。本周进行了HTTP底层逻辑的复习，Vitest的学习---也是最主要的，同时将我的个人githubpages站点更换为VuePress框架并进行了自动化的githubpages打包上传部署</p>
+<h2>HTTP</h2>
+<p>HTTP（超文本传输协议）是一种详细规定了浏览器和万维网服务器之间互相通信规则的应用层协议。它基于TCP/IP通信协议来传递数据，如HTML文件、图片文件、查询结果等。同时它是一种无连接，无状态并媒体独立的协议。</p>
+<h3>请求报文格式</h3>
+<div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">请求行（方法、URL、协议版本）</span>
+<span class="line">请求头（多个键值对）</span>
+<span class="line">空行</span>
+<span class="line">请求体（可选，如POST提交的数据）</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div></article><article class="article"><header class="title">实习周总结一</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/3</span><span class="category">Category: 经验总结</span><span class="tag">Tag: 实习, Vue3</span></div><div class="excerpt">
+<p>本周按照计划的那样，进行了基本的git学习以及一些Echart的实操。同时修复了一些项目的代码具体的修复想法都写在了之前的文件里了，这里不再赘述。同时也尝试了熟悉了VueX的代码。</p>
+<h2>项目代码学习</h2>
+<p>对于项目代码的阅览，我主要包括动态路由，VueX中的commit，以及&amp;&amp;运算符的巧用的学习</p>
+<h3>Dynamic Router</h3>
+<p>动态路由是一种根据用户权限动态控制前端页面访问权限的技术方案。其核心原理是将后端返回的用户菜单权限数据与前端预定义的路由配置进行映射和匹配。</p>
+<p>具体的实现流程是：用户登录成功后，前端根据其权限标识（如角色或权限列表）从后端接口获取对应的菜单数据。随后，前端通过一个转换函数（如 <code>filterAsyncRoutes</code>）将这些菜单数据加工成符合 Vue Router 规范的路由配置对象。这个过程通常涉及组件的动态解析（例如使用 <code>() =&gt; import(...)</code>实现懒加载）和路由层级的递归处理。生成的有效路由配置会通过 <code>router.addRoute</code>（Vue Router 4）或 <code>router.addRoutes</code>（Vue Router 3）方法动态注入到路由实例中。同时，侧边栏导航菜单会根据处理后的权限数据，利用递归组件或 <code>v-for</code>指令动态渲染，确保用户界面与其权限实时同步。</p></div></article><article class="article"><header class="title">项目创建</header><hr><div class="article-info"><!----><span class="date">Date: 2025/9/22</span><span class="category">Category: 经验总结</span><span class="tag">Tag: Vue3, ElementPlus, TypeScript</span></div><div class="excerpt"><p><h1>Vue3项目探索</h1>Vue的学习是一个循序渐进的过程，这里我会从最基本的项目创建部分开始进行讲解，慢慢深入，直到掌握基本的Vue3代码书写流程</p></div></article><article class="article"><header class="title">SSE最大连接次数突破</header><hr><div class="article-info"><!----><span class="date">Date: 2025/11/27</span><span class="category">Category: 经验总结</span><span class="tag">Tag: BroadcastChannel, SSE</span></div><div class="excerpt">
+<h2>前言</h2>
+<p>在我们建立sse连接的时候，由于<strong>HTTP/1.1</strong>的限制，在该协议下，大多数现代浏览器（如Chrome、Firefox、Edge）对<strong>同一域名（协议+域名+端口）的并发连接数限制通常为6个</strong>。这意味着，同一个浏览器标签页（或同一浏览器实例）中，对相同域名最多只能同时建立约6个SSE连接，超出此数量的新连接会被浏览器阻塞，直到有连接被关闭。</p>
+<p>若需要突破此限制，可考虑以下方案：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">解决方案</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>升级至HTTP/2</strong></td>
+<td style="text-align:left">HTTP/2支持<strong>多路复用</strong>，可在单个TCP连接上并行处理多个请求和响应，从而从根本上解决连接数限制问题。</td>
+<td style="text-align:left"><strong>长远和推荐方案</strong>，需服务器和浏览器支持，通常要求使用HTTPS。</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>多域名/多端口策略</strong></td>
+<td style="text-align:left">将SSE连接分散到不同的子域（如<code>sse1.example.com</code>, <code>sse2.example.com</code>）或不同端口号。每个子域或端口享有独立的6个连接限额。</td>
+<td style="text-align:left"><strong>过渡方案</strong>，适用于暂无法升级HTTP/2的情况，但配置管理稍复杂。</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>优化连接使用</strong></td>
+<td style="text-align:left">利用标签页切换及时关闭不再需要的SSE连接，或尝试将多个数据流合并到一个SSE连接中传输（通过不同事件类型区分）。</td>
+<td style="text-align:left"><strong>基础优化</strong>，良好的连接管理习惯。</td>
+</tr>
+</tbody>
+</table></div></article><!--]--></div></main><!--]--></div><!--[--><!----><!--]--><!--]--></div>
+    <script type="module" src="/vuepress_blog/assets/app-C8HDIWy3.js" defer></script>
+  </body>
+</html>
