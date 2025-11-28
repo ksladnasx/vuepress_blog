@@ -13,10 +13,10 @@ GithubPages站点地址：[xh's blog](https://ksladnasx.github.io/vuepress_blog/
 
 ## <i class="fas fa-bookmark"></i> 内容索引
 ### 大体分类
-- [全部文章](./article)
-- [按类型分](./category)
-- [按标签分](./tag)
-- [按时间分](./timeline)
+- [全部文章](./article/)
+- [按类型分](./category/)
+- [按标签分](./tag/)
+- [按时间分](./timeline/)
 
 ### <i class="fas fa-list-check"></i> 开发实践
 - [<i class="fas fa-sitemap"></i> 让我们从docsify的创建开始](./posts/todolist建立.md) - docsify项目创建与部署
@@ -30,7 +30,7 @@ GithubPages站点地址：[xh's blog](https://ksladnasx.github.io/vuepress_blog/
 - [<i class="fas fa-square-root-alt"></i> 公式插件测试](./posts/插件公式示例.md) - LaTeX数学公式展示
 
 ### <i class="fas fort-awesome"></i> 实习经验
-- [<i class="fas fa-file-alt"></i> 实习经验总结](./posts/实习经验.md)- 实习整体经验与收获
+- [<i class="fas fa-file-alt"></i> 实习经验总结](./posts/实习经验.md)- 实习所需要有的基本经验与收获
 - [<i class="fas fa-calendar-week"></i> 实习周总结](./posts/实习周总结1.md)- 第一周工作内容与心得
 - [<i class="fas fa-calendar-week"></i> 实习周总结](./posts/实习周总结2.md)- 第二周工作内容与心得
 - [<i class="fas fa-calendar-week"></i> 实习周总结](./posts/实习周总结3.md)- 第三周工作内容与心得

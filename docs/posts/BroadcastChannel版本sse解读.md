@@ -15,7 +15,10 @@ tag:
 
 相关文章：[BroadcastChannel方式解决sse连接数限制](BroadcastChannel方式解决sse连接数限制.md)
 
-为了深入了解这个 SSE 服务类的完整工作原理和代码逻辑。下面我会分模块、按流程进行细致解析。
+代码核心设计解读：[BroadcastChannel核心设计](BroadcastChannel方式解决sse连接数限制.html#核心设计)
+
+当然，为了深入了解这个 SSE 服务类的完整工作原理和代码逻辑。下面我会分模块、按流程进行细致解析。
+
 
 ### 一、整体架构与核心目标
 

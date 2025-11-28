@@ -20,5 +20,5 @@ git remote add origin git@github.com:ksladnasx/vuepress_blog.git || true
 echo "强制推送到gh-pages分支..."
 git push -f origin master:gh-pages
 
-echo "部署成功！"
+echo "部署成功！地址：https://ksladnasx.github.io/vuepress_blog/"
 cd -
