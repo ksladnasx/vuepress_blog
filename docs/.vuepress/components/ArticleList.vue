@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
   /** Article items */
   items: {
     type: Array,
@@ -8,18 +10,19 @@ defineProps({
   /** Whether is timeline or not */
   isTimeline: Boolean,
 })
+
+// 定义一个计算属性，返回过滤后的列表
+const filteredItems = computed(() => {
+  // 在 <script setup> 中直接使用 props.items，不需要 this
+  return props.items.filter(item => item.info && item.info.title);
+});
 </script>
 
 <template>
   <div class="article-wrapper">
     <div v-if="!items.length">Nothing in here.</div>
 
-    <article
-      v-for="{ info, path } in items"
-      :key="path"
-      class="article"
-      @click="$router.push(path)"
-    >
+    <article v-for="{ info, path } in filteredItems" :key="path" class="article" @click="$router.push(path)">
       <header class="title">
         {{
           (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : '') +
@@ -32,13 +35,9 @@ defineProps({
       <div class="article-info">
         <span v-if="info.author" class="author">Author: {{ info.author }}</span>
 
-        <span v-if="info.date && !isTimeline" class="date"
-          >Date: {{ new Date(info.date).toLocaleDateString() }}</span
-        >
+        <span v-if="info.date && !isTimeline" class="date">Date: {{ new Date(info.date).toLocaleDateString() }}</span>
 
-        <span v-if="info.category" class="category"
-          >Category: {{ info.category.join(', ') }}</span
-        >
+        <span v-if="info.category" class="category">Category: {{ info.category.join(', ') }}</span>
 
         <span v-if="info.tag" class="tag">Tag: {{ info.tag.join(', ') }}</span>
       </div>
@@ -113,7 +112,7 @@ defineProps({
     display: flex;
     flex-shrink: 0;
 
-    > span {
+    >span {
       margin-inline-end: 0.5em;
       line-height: 1.8;
     }
