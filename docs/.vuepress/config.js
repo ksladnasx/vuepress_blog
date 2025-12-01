@@ -2,10 +2,11 @@ import { blogPlugin } from '@vuepress/plugin-blog'
 import { defaultTheme } from '@vuepress/theme-default'
 import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
-import { searchPlugin } from '@vuepress/plugin-search'
+import { slimsearchPlugin } from '@vuepress/plugin-slimsearch'
+// import { searchPlugin } from '@vuepress/plugin-search'
 
 export default defineUserConfig({
-  lang: 'en-US',
+  lang: 'zh-CN',
   title: "xh's blog ",
   base: '/vuepress_blog/',
   description: 'A VuePress bolg Site for personal useage',
@@ -142,29 +143,32 @@ export default defineUserConfig({
      
       hotReload: true,
     }),
-    searchPlugin({
-      searchMaxSuggestions: 10, // 最多显示10条建议
-      searchHotkeys: ['s', '/'], // 按 's' 或 '/' 键即可搜索
-      isSearchable: (page) => page.path !== '/', // 排除首页
+    // 官方全文搜索插件（替代search-pro）
+    slimsearchPlugin({
+      indexContent: true, // 关键：开启正文内容索引（支持搜索全文）
+      maxSuggestions: 10, // 最多显示10条搜索结果
       locales: {
         '/': {
-          placeholder: '搜索', // 中文站点的占位符
-        },
-        '/en/': {
-          placeholder: 'Search', // 英文站点的占位符
+          placeholder: '搜索文档', // 搜索框占位符
         },
       },
-      // 你还可以自定义匹配和排序逻辑
-      // getSearchIndex: async (app) => { ... }
     }),
-    // mdEnhancePlugin({
-    //   // 明确启用Mermaid功能
-    //   mermaid: true,
-    //   // 可选：自定义Mermaid配置
-    //   mermaidOptions: {
-    //     theme: 'default',
+    // searchPlugin({
+    //   searchMaxSuggestions: 10, // 最多显示10条建议
+    //   searchHotkeys: ['s', '/'], // 按 's' 或 '/' 键即可搜索
+    //   isSearchable: (page) => page.path !== '/', // 排除首页
+    //   locales: {
+    //     '/': {
+    //       placeholder: '搜索', // 中文站点的占位符
+    //     },
+    //     '/en/': {
+    //       placeholder: 'Search', // 英文站点的占位符
+    //     },
     //   },
+    //   // 你还可以自定义匹配和排序逻辑
+    //   // getSearchIndex: async (app) => { ... }
     // }),
+
    
   ],
 

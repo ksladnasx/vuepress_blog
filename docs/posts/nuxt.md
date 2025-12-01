@@ -987,7 +987,7 @@ export default defineNuxtConfig({
 ```
 
 最后打开 http://localhost:3000/sitemap.xml 就可以看到sitemap了</br></br>
-🗺️[sitemap官方文档](https://nuxtseo.com/docs/sitemap/guides/dynamic-urls)<hr/>
+🗺️[sitemap官方文档](https://nuxtseo.com/docs/sitemap/guides/dynamic-urls)
 
 
 # 项目问题
