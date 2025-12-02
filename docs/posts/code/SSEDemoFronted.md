@@ -1,5 +1,13 @@
-代码：
+---
+date: 2025-12-01
+category:
+  - code
+tag:
+  - SSE
+excerpt: <p><h2>介绍</h2>这里是SSE实践练习的前端组件部分页面</p>
+---
 
+# SSEDemoFronted.vue
 ```vue
 <template>
   <div class="sse-demo">

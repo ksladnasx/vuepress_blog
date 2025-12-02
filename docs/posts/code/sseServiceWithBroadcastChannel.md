@@ -1,7 +1,7 @@
 ---
 date: 2025-11-27
 category:
-  - 杂项
+  - code
 tag:
   - BroadcastChannel
   - SSE

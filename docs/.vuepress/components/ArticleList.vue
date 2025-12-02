@@ -1,6 +1,5 @@
 <script setup>
-import { computed } from 'vue';
-
+// 这个是一个被复用的组件
 const props = defineProps({
   /** Article items */
   items: {
@@ -9,20 +8,18 @@ const props = defineProps({
   },
   /** Whether is timeline or not */
   isTimeline: Boolean,
+  kind:String
 })
 
-// 定义一个计算属性，返回过滤后的列表
-const filteredItems = computed(() => {
-  // 在 <script setup> 中直接使用 props.items，不需要 this
-  return props.items.filter(item => item.info && item.info.title);
-});
+
 </script>
 
 <template>
   <div class="article-wrapper">
+    <!-- 是文章列表页或时间线页就显示标题 -->
+    <h1 v-if="kind == 'Article'|| isTimeline">{{ isTimeline ? "时间线": "文章列表" }}</h1>
     <div v-if="!items.length">Nothing in here.</div>
-
-    <article v-for="{ info, path } in filteredItems" :key="path" class="article" @click="$router.push(path)">
+    <article v-for="{ info, path } in items" :key="path" class="article" @click="$router.push(path)">
       <header class="title">
         {{
           (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : '') +

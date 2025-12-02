@@ -2,25 +2,28 @@
 import { useBlogType } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import ArticleList from '../components/ArticleList.vue'
-
+import { computed } from 'vue';
 const timelines = useBlogType('timeline')
+
+// 过滤时间线页面
+// 定义一个计算属性，返回过滤后的列表，过滤条件是路径不在posts/code/目录下
+const filteredItems = computed(() => {
+  // 在 <script setup> 中直接使用 props.items，不需要 this
+  return timelines.value.items.filter(item => !item.path.includes('/posts/code/'));
+});
+
 </script>
 
 <template>
   <ParentLayout>
     <template #page>
       <main class="page">
-        <h1 class="timeline-title">Timeline</h1>
-
-        <ArticleList :items="timelines.items" is-timeline />
+        <ArticleList :items="filteredItems" is-timeline />
       </main>
     </template>
   </ParentLayout>
 </template>
 
 <style lang="scss">
-.timeline-title {
-  padding-top: calc(var(--navbar-height) + 1rem) !important;
-  text-align: center;
-}
+
 </style>
