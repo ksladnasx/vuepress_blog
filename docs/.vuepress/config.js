@@ -4,6 +4,7 @@ import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { slimsearchPlugin } from "@vuepress/plugin-slimsearch";
 import { socialSharePlugin } from 'vuepress-plugin-social-share'
+import { commentPlugin } from '@vuepress/plugin-comment'
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -178,6 +179,24 @@ export default defineUserConfig({
       title: '我发现一篇好文章，分享给你！',
       // 6. 可选配置：分享时的默认描述（优先级：页面 frontmatter.description > 插件配置 description）
       description: '来自 Vuepress 站点的优质内容',
+    }),
+
+    //评论插件
+     commentPlugin({
+      provider: 'Giscus',
+      options: {
+        repo: "ksladnasx/vuepress_blog",
+        repoId: "R_kgDOQQMX1A",
+        category: "Announcements",
+        categoryId: "DIC_kwDOQQMX1M4CzSLA",
+        mapping: "pathname",
+        reactionsEnabled: "1",
+        emitMetadata: "0",
+        inputPosition: "top",
+        theme: "preferred_color_scheme",
+        lang: "zh-CN",
+        crossorigin: "anonymous",
+      },
     }),
   ],
 
