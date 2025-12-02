@@ -8,6 +8,11 @@ excerpt: <p><h2>介绍</h2>这里是SSE实践练习的前端组件部分页面</
 ---
 
 # SSEDemoFronted.vue
+
+返回： [SSE实践测试](../SSE实践测试.md)
+
+sse实践部分的前端代码（其中的主要组件）：
+
 ```vue
 <template>
   <div class="sse-demo">

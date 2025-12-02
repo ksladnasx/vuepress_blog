@@ -7,7 +7,7 @@ tag:
 excerpt: <p><h2>介绍</h2>显然这里是封装了一个类来实现SSE，其中开头的disabled是应用于全局禁用的，这个由实际环境进行配置。然后后续对类创建了全局的实例实现并进行了导出。</p>
 ---
 
-返回文件解析页面：[sseService文件解析.js](./sseService文件解析.md)
+返回文件解析页面：[sseService文件解析.js](../sseService文件解析.md)
 
 # sseService.js
 
