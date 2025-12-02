@@ -1,41 +1,47 @@
-import { blogPlugin } from '@vuepress/plugin-blog'
-import { defaultTheme } from '@vuepress/theme-default'
-import { defineUserConfig } from 'vuepress'
-import { viteBundler } from '@vuepress/bundler-vite'
-import { slimsearchPlugin } from '@vuepress/plugin-slimsearch'
+import { blogPlugin } from "@vuepress/plugin-blog";
+import { defaultTheme } from "@vuepress/theme-default";
+import { defineUserConfig } from "vuepress";
+import { viteBundler } from "@vuepress/bundler-vite";
+import { slimsearchPlugin } from "@vuepress/plugin-slimsearch";
 // import { searchPlugin } from '@vuepress/plugin-search'
 
 export default defineUserConfig({
-  lang: 'zh-CN',
+  lang: "zh-CN",
   title: "xh's blog ",
-  base: '/vuepress_blog/',
-  description: 'A VuePress bolg Site for personal useage',
-
+  base: "/vuepress_blog/",
+  description: "A VuePress bolg Site for personal useage",
+  sidebar: {
+    auto: {
+      collapsible: true, // 所有层级默认可折叠（默认就是true）
+      maxDepth: 3, // 自动生成到 h3（三级标题），左侧侧边栏显示 h1/h2，h3 不显示在左侧（留给右侧）
+      minDepth: 2, // 左侧侧边栏仅显示 h1/h2（避免左侧太拥挤）
+    },
+  },
   theme: defaultTheme({
-    logo: 'https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png',
+    logo: "https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png",
     // +++ 新增搜索配置 +++
     // search: true, // 启用内置搜索
     // searchMaxSuggestions: 10, // 将最大搜索结果数量调整为10个[1,5](@ref)
     // +++ 新增搜索配置结束 +++
     navbar: [
       {
-        text: '文章',
-        link: '/article/',
+        text: "文章",
+        link: "/article/",
       },
       {
-        text: '分类',
-        link: '/category/',
+        text: "分类",
+        link: "/category/",
       },
       {
-        text: '标签',
-        link: '/tag/',
+        text: "标签",
+        link: "/tag/",
       },
       {
-        text: '时间线',
-        link: '/timeline/',
-      }
+        text: "时间线",
+        link: "/timeline/",
+      },
     ],
-    sidebarDepth: 2,
+
     displayAllHeaders: false,
   }),
 
@@ -43,36 +49,36 @@ export default defineUserConfig({
     blogPlugin({
       // Only files under posts are articles
       filter: ({ filePathRelative }) =>
-        filePathRelative ? filePathRelative.startsWith('posts/') : false,
+        filePathRelative ? filePathRelative.startsWith("posts/") : false,
 
       // Getting article info
       getInfo: ({ frontmatter, title, data }) => ({
         title,
-        author: frontmatter.author || '',
+        author: frontmatter.author || "",
         date: frontmatter.date || null,
         category: frontmatter.category || [],
         tag: frontmatter.tag || [],
         excerpt:
           // Support manually set excerpt through frontmatter
-          typeof frontmatter.excerpt === 'string'
+          typeof frontmatter.excerpt === "string"
             ? frontmatter.excerpt
-            : data?.excerpt || '',
+            : data?.excerpt || "",
       }),
 
       // Generate excerpt for all pages excerpt those users choose to disable
       excerptFilter: ({ frontmatter }) =>
         !frontmatter.home &&
         frontmatter.excerpt !== false &&
-        typeof frontmatter.excerpt !== 'string',
+        typeof frontmatter.excerpt !== "string",
 
       category: [
         {
-          key: 'category',
+          key: "category",
           getter: (page) => page.frontmatter.category || [],
-          layout: 'Category',
-          itemLayout: 'Category',
+          layout: "Category",
+          itemLayout: "Category",
           frontmatter: () => ({
-            title: 'Categories',
+            title: "Categories",
             sidebar: false,
           }),
           itemFrontmatter: (name) => ({
@@ -81,12 +87,12 @@ export default defineUserConfig({
           }),
         },
         {
-          key: 'tag',
+          key: "tag",
           getter: (page) => page.frontmatter.tag || [],
-          layout: 'Tag',
-          itemLayout: 'Tag',
+          layout: "Tag",
+          itemLayout: "Tag",
           frontmatter: () => ({
-            title: 'Tags',
+            title: "Tags",
             sidebar: false,
           }),
           itemFrontmatter: (name) => ({
@@ -98,49 +104,49 @@ export default defineUserConfig({
 
       type: [
         {
-          key: 'article',
+          key: "article",
           // Remove archive articles
           filter: (page) => !page.frontmatter.archive,
-          layout: 'Article',
+          layout: "Article",
           frontmatter: () => ({
-            title: 'Articles',
+            title: "Articles",
             sidebar: false,
           }),
           // Sort pages with time and sticky
           sorter: (pageA, pageB) => {
             if (pageA.frontmatter.sticky && pageB.frontmatter.sticky)
-              return pageB.frontmatter.sticky - pageA.frontmatter.sticky
+              return pageB.frontmatter.sticky - pageA.frontmatter.sticky;
 
-            if (pageA.frontmatter.sticky && !pageB.frontmatter.sticky) return -1
+            if (pageA.frontmatter.sticky && !pageB.frontmatter.sticky)
+              return -1;
 
-            if (!pageA.frontmatter.sticky && pageB.frontmatter.sticky) return 1
+            if (!pageA.frontmatter.sticky && pageB.frontmatter.sticky) return 1;
 
-            if (!pageB.frontmatter.date) return 1
-            if (!pageA.frontmatter.date) return -1
+            if (!pageB.frontmatter.date) return 1;
+            if (!pageA.frontmatter.date) return -1;
 
             return (
               new Date(pageB.frontmatter.date).getTime() -
               new Date(pageA.frontmatter.date).getTime()
-            )
+            );
           },
         },
         {
-          key: 'timeline',
+          key: "timeline",
           // Only article with date should be added to timeline
           filter: (page) => page.frontmatter.date instanceof Date,
           // Sort pages with time
           sorter: (pageA, pageB) =>
             new Date(pageB.frontmatter.date).getTime() -
             new Date(pageA.frontmatter.date).getTime(),
-          layout: 'Timeline',
+          layout: "Timeline",
           frontmatter: () => ({
-            title: 'Timeline',
+            title: "Timeline",
             sidebar: false,
           }),
         },
       ],
-      
-     
+
       hotReload: true,
     }),
     // 官方全文搜索插件（替代search-pro）
@@ -148,29 +154,12 @@ export default defineUserConfig({
       indexContent: true, // 关键：开启正文内容索引（支持搜索全文）
       maxSuggestions: 10, // 最多显示10条搜索结果
       locales: {
-        '/': {
-          placeholder: '搜索文档', // 搜索框占位符
+        "/": {
+          placeholder: "搜索文档", // 搜索框占位符
         },
       },
     }),
-    // searchPlugin({
-    //   searchMaxSuggestions: 10, // 最多显示10条建议
-    //   searchHotkeys: ['s', '/'], // 按 's' 或 '/' 键即可搜索
-    //   isSearchable: (page) => page.path !== '/', // 排除首页
-    //   locales: {
-    //     '/': {
-    //       placeholder: '搜索', // 中文站点的占位符
-    //     },
-    //     '/en/': {
-    //       placeholder: 'Search', // 英文站点的占位符
-    //     },
-    //   },
-    //   // 你还可以自定义匹配和排序逻辑
-    //   // getSearchIndex: async (app) => { ... }
-    // }),
-
-   
   ],
 
   bundler: viteBundler(),
-})
+});
