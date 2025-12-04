@@ -19,7 +19,7 @@ export default defineUserConfig({
     },
   },
   theme: defaultTheme({
-    logo: "https://images.icon-icons.com/1113/PNG/512/1486071332-wordpress-blog-multimedia-media-internet-chating-message_79296.png",
+    logo: "https://ksladnasx.github.io/vuepress_blog/assets/blog.svg",
     navbar: [
       {
         text: "文章",
