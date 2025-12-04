@@ -1,4 +1,6 @@
 # <i class="fas fa-laptop-code"></i> 个人技术知识库
+![image-2025](.\posts\img\blog.svg)
+
 GithubPages站点地址：[xh's blog](https://ksladnasx.github.io/vuepress_blog/)
 > **简洁高效 | 实时更新 | 全栈技术 | 开发笔记**  
 > 本个人博客知识库使用Vuepress构建，托管于GitHub Pages，专注于前端开发和全栈技术实践。
@@ -48,12 +50,17 @@ GithubPages站点地址：[xh's blog](https://ksladnasx.github.io/vuepress_blog/
 - [<img src="https://www.typescriptlang.org/favicon-32x32.png?v=8944a05a8b601855de116c8a56d3b3ae" style="height:15px;padding-right:10px"/>TypeScript](https://www.typescriptlang.org/)
 - [<img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.bfNVfuKq5NOy_tB-ZD3RMQAAAA?w=140&h=158&c=7&r=0&o=5&dpr=1.5&pid=1.7" style="height:15px;padding-right:10px;"/>Docker](https://www.docker.com/)
 - [<img src="https://nginx.org/favicon.ico" style="height:15px;padding-right:10px"/>Nignx](https://nginx.org/)
+
+
 <style> 
 /* 用于Vue链接的小图标居中 */
  a{
     display:flex;
     align-items:center
  }
-
+.icon{
+   width: 16px;
+  height: 16px;
+}
 </style>
 
