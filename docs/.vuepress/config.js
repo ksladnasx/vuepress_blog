@@ -19,7 +19,7 @@ export default defineUserConfig({
     },
   },
   theme: defaultTheme({
-    logo: "https://ksladnasx.github.io/vuepress_blog/assets/blog.svg",
+    logo: "posts/img/blog.svg",
     navbar: [
       {
         text: "文章",

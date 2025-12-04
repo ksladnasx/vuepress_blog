@@ -1,5 +1,4 @@
 # <i class="fas fa-laptop-code"></i> 个人技术知识库
-![image-2025](.\posts\img\blog.svg)
 
 GithubPages站点地址：[xh's blog](https://ksladnasx.github.io/vuepress_blog/)
 > **简洁高效 | 实时更新 | 全栈技术 | 开发笔记**  
