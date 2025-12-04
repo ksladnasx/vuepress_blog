@@ -19,7 +19,7 @@ export default defineUserConfig({
     },
   },
   theme: defaultTheme({
-    logo: "posts/img/blog.svg",
+    logo: "posts/img/blog.png",
     navbar: [
       {
         text: "文章",
