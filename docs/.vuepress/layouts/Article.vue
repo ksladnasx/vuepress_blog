@@ -6,10 +6,10 @@ import { computed } from 'vue';
 const articles = useBlogType('article')
 
 // 过滤文章列表页面
-// 定义一个计算属性，返回过滤后的列表，过滤条件是路径不在posts/code/目录下
+// 定义一个计算属性，返回过滤后的列表，过滤条件是路径不在posts/code/目录下或者posts/other/目录下
 const filteredItems = computed(() => {
   // 在 <script setup> 中直接使用 props.items，不需要 this
-  return articles.value.items.filter(item => !item.path.includes('/posts/code/'));
+  return articles.value.items.filter(item => !(item.path.includes('/posts/code/') || item.path.includes('/posts/other/')));
 });
 const kind = 'Article'
 </script>

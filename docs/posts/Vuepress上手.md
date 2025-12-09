@@ -13,13 +13,14 @@ tag:
 
 ### 依赖环境
 
+注意node版本要对，不对用nvm换
 - [Node.js v20.9.0+](https://nodejs.org/)
 - 包管理器，如:[pnpm](https://pnpm.io/zh/)[yarn](https://classic.yarnpkg.com/en/)[npm](https://www.npmjs.com/) 等。
 
 提示
 
-- 使用 [pnpm](https://pnpm.io/zh/) 时，你需要安装 `vue` 作为 peer-dependencies 。
-- 使用 [yarn 2+](https://yarnpkg.com/) 时，你需要在 [`.yarnrc.yml`](https://yarnpkg.com/configuration/yarnrc#nodeLinker) 文件中设置 `nodeLinker: 'node-modules'` 。
+- 使用 [pnpm](https://pnpm.io/zh/)时，你需要安装 `vue` 作为 peer-dependencies 。
+- 使用 [yarn 2+](https://yarnpkg.com/)时，你需要在 [`.yarnrc.yml`](https://yarnpkg.com/configuration/yarnrc#nodeLinker) 文件中设置 `nodeLinker: 'node-modules'` 。
 
 ### 创建项目
 
