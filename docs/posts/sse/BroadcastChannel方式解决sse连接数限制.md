@@ -35,7 +35,7 @@ tag:
 2. **其他"从"标签页**通过消息通道接收事件
 3. **自动选举和故障转移**确保高可用性
 
-![BroadcastChannel主从模式消息传递演示](.\img\BroadcastChannel.png)
+![BroadcastChannel主从模式消息传递演示](..\img\BroadcastChannel.png)
 
 
 
@@ -82,7 +82,7 @@ channel.onmessage = (event) => {
 - 监听主标签页的广播消息
 - 触发本地的事件处理器
 
-![BroadcastChannel主从模式消息传递演示](.\img\BroadcastChannel.png)
+![BroadcastChannel主从模式消息传递演示](..\img\BroadcastChannel.png)
 
 ### 4. 故障转移机制
 

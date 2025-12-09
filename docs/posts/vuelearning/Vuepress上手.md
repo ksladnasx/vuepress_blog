@@ -162,4 +162,4 @@ export default defineUserConfig({
   ],
 })
 ```
-![image-20251124111838525](.\img\blog.png)
+![image-20251124111838525](..\img\blog.png)
