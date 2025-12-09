@@ -11,7 +11,7 @@ tag:
 
 # sseService文件解读(BroadcastChannel版)
 
-源文件地址：[sseServiceWithBroadcastChannel.js](./code/sseServiceWithBroadcastChannel.md)
+源文件地址：[sseServiceWithBroadcastChannel.js](../code/sseServiceWithBroadcastChannel.md)
 
 相关文章：[BroadcastChannel方式解决sse连接数限制](BroadcastChannel方式解决sse连接数限制.md)
 

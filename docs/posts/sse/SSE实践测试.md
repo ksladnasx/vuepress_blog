@@ -19,9 +19,9 @@ tag:
 
 ## 代码
 
-前端主要组件代码：[SSEDemoFronted](./code/SSEDemoFronted.md)
+前端主要组件代码：[SSEDemoFronted](../code/SSEDemoFronted.md)
 
-后端nodejs代码：[sseDomeServer](./code/sseDomeServer.md)
+后端nodejs代码：[sseDomeServer](../code/sseDomeServer.md)
 
 当服务器发送
 

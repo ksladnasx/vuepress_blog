@@ -15,7 +15,7 @@ tag:
 
 注意node版本要对，不对用nvm换
 - [Node.js v20.9.0+](https://nodejs.org/)
-- 包管理器，如:[pnpm](https://pnpm.io/zh/)[yarn](https://classic.yarnpkg.com/en/)[npm](https://www.npmjs.com/) 等。
+- 包管理器，如: [pnpm](https://pnpm.io/zh/)[yarn](https://classic.yarnpkg.com/en/)[npm](https://www.npmjs.com/)
 
 提示
 
