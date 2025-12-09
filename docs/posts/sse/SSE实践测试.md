@@ -15,13 +15,13 @@ tag:
 
 后端部分通过设置SSE必需的响应头以及相应的定时器发送数据来建立sse接口，前端部分则通过`eventSource.value = new EventSource(sse数据接口地址)`来进行连接，利用`eventSource.value.onopen`,`eventSource.value.onmessage` 以及 `eventSource.value.addEventListener('自定义事件名'，函数)`来实现对后端数据的接收。
 
-当然有更方便不涉及业务逻辑的方式，就是封装一个类，具体见：[sseService文件解析.js](./sseService文件解析.md)
+当然有更方便不涉及业务逻辑的方式，就是封装一个类，具体见：[sseService文件解析.js](../sse/sseService文件解析.md)
 
 ## 代码
 
-前端主要组件代码：[SSEDemoFronted](../code/SSEDemoFronted.md)
+前端主要组件代码：[SSEDemoFronted](../codes/SSEDemoFronted.md)
 
-后端nodejs代码：[sseDomeServer](../code/sseDomeServer.md)
+后端nodejs代码：[sseDomeServer](../codes/sseDomeServer.md)
 
 当服务器发送
 

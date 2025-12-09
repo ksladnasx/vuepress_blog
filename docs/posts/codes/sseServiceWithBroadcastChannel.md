@@ -12,9 +12,9 @@ excerpt: <p><h2>介绍</h2>这里是最后突破了sse连接数限制的源代�
 
 相关文章：
 
-[BroadcastChannel方式解决sse连接数限制](../BroadcastChannel方式解决sse连接数限制.md)
+[BroadcastChannel方式解决sse连接数限制](../sse/BroadcastChannel方式解决sse连接数限制.md)
 
-[BroadcastChannel版本sse文件解读.md](../BroadcastChannel版本sse解读.md)
+[BroadcastChannel版本sse文件解读.md](../sse/BroadcastChannel版本sse解读.md)
 
 ## 代码
 

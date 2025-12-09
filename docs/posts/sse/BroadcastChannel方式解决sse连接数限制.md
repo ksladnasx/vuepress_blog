@@ -295,6 +295,6 @@ this.broadcastChannel.onmessage = (event) => {
 
 此处我为原有的SSE连接文件（`sseService.js`）添加BroadcastChannel 的主从模式逻辑以突破SSE的连接限制，选择主标签页的规则是先到先得，所有标签页都关闭的时候清除选举的标签页标志，也就是 **Localstorage** 里的标志。当然在撰写代码的同时也要注意主标签页如果被用户叉掉或者刷新，被刷新的标签页的id会进行重置，则要进行重新选举。
 
-源代码：[sseServiceWithBroadcastChannel.js](../code/sseServiceWithBroadcastChannel.md)
+源代码：[sseServiceWithBroadcastChannel.js](../codes/sseServiceWithBroadcastChannel.md)
 
-相关文章：[BroadcastChannel版本sse文件解读.md](./BroadcastChannel版本sse解读.md)
+相关文章：[BroadcastChannel版本sse文件解读.md](../sse/BroadcastChannel版本sse解读.md)

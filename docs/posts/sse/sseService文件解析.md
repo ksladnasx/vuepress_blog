@@ -5,10 +5,10 @@ category:
 tag:
   - SSE
 ---
-
+ 
 # SSE服务代码解读
 
-完整代码地址：[sseService.js](../code/sseService.md)
+完整代码地址：[sseService.js](../codes/sseService.md)
 
 这是一个功能完整的SSE（Server-Sent Events）客户端服务类，用于接收后端实时推送的设备状态变化通知。以下是对代码的详细解读：
 
