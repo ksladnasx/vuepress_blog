@@ -34,7 +34,7 @@ const props = defineProps({
 
         <span v-if="info.date && !isTimeline" class="date">Date: {{ new Date(info.date).toLocaleDateString() }}</span>
 
-        <span v-if="info.category" class="category">Category: {{ info.category.join(', ') }}</span>
+        <span v-if="info.category" class="category">Category: {{ info.category==''?'暂无':info.category +","}}</span>
 
         <span v-if="info.tag" class="tag">Tag: {{ info.tag.join(', ') }}</span>
       </div>

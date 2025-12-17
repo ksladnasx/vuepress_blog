@@ -1,7 +1,7 @@
 ---
 date: 2025-12-11
 category:
-  -项目实践
+  - 项目笔记
 tag:
   - React
   - TypeScript
