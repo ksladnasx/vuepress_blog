@@ -3,16 +3,42 @@ import { defaultTheme } from "@vuepress/theme-default";
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { slimsearchPlugin } from "@vuepress/plugin-slimsearch";
-import { socialSharePlugin } from 'vuepress-plugin-social-share'
-import { commentPlugin } from '@vuepress/plugin-comment'
+import { socialSharePlugin } from "vuepress-plugin-social-share";
+import { commentPlugin } from "@vuepress/plugin-comment";
+import markdownItKatex from "markdown-it-katex";
 
 export default defineUserConfig({
   lang: "zh-CN",
   title: "xh's blog ",
   base: "/vuepress_blog/",
   description: "A VuePress bolg Site for personal useage",
+  head: [
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css",
+      },
+    ],
+    [
+      "script",
+      {
+        src: "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js",
+        defer: true,
+      },
+    ],
+  ],
+  markdown: {
+    extendMarkdown: (md) => {
+      // 注册插件
+      md.use(markdownItKatex, {
+        throwOnError: false,
+        strict: 'ignore'
+      });
+    }
+  },
   sidebar: {
-    auto: { 
+    auto: {
       collapsible: true, // 所有层级默认可折叠（默认就是true）
       maxDepth: 3, // 自动生成到 h3（三级标题），左侧侧边栏显示 h1/h2，h3 不显示在左侧（留给右侧）
       minDepth: 2, // 左侧侧边栏仅显示 h1/h2（避免左侧太拥挤）
@@ -145,7 +171,7 @@ export default defineUserConfig({
 
       hotReload: true,
     }),
-    
+
     // 官方全文搜索插件（替代search-pro）
     slimsearchPlugin({
       indexContent: true, // 关键：开启正文内容索引（支持搜索全文）
@@ -161,29 +187,29 @@ export default defineUserConfig({
     socialSharePlugin({
       // 1. 配置支持的分享平台（必选，按需选择）
       networks: [
-        'weibo',    // 微博
-        'wechat',   // 微信
-        'qq',       // QQ
-        'twitter',  // Twitter
-        'facebook', // Facebook
-        'linkedin', // LinkedIn
-        'copy',     // 复制链接（实用功能）
+        "weibo", // 微博
+        "wechat", // 微信
+        "qq", // QQ
+        "twitter", // Twitter
+        "facebook", // Facebook
+        "linkedin", // LinkedIn
+        "copy", // 复制链接（实用功能）
       ],
       // 2. 可选配置：分享按钮位置（默认 bottom-right，底部右侧）
-      position: 'top-left', // 可选值：top-left/top-right/bottom-left/bottom-right
+      position: "top-left", // 可选值：top-left/top-right/bottom-left/bottom-right
       // 3. 可选配置：图标样式（默认 circle，圆形）
-      iconStyle: 'circle', // 可选值：circle/square/rounded-square
+      iconStyle: "circle", // 可选值：circle/square/rounded-square
       // 4. 可选配置：触发方式（默认 hover，鼠标悬浮显示）
-      trigger: 'hover', // 可选值：hover/click（点击显示分享面板）
+      trigger: "hover", // 可选值：hover/click（点击显示分享面板）
       // 5. 可选配置：分享时的默认标题（优先级：页面 frontmatter.title > 插件配置 title > 站点 title）
-      title: '我发现一篇好文章，分享给你！',
+      title: "我发现一篇好文章，分享给你！",
       // 6. 可选配置：分享时的默认描述（优先级：页面 frontmatter.description > 插件配置 description）
-      description: '来自 Vuepress 站点的优质内容',
+      description: "来自 Vuepress 站点的优质内容",
     }),
 
     //评论插件
-     commentPlugin({
-      provider: 'Giscus',
+    commentPlugin({
+      provider: "Giscus",
       options: {
         repo: "ksladnasx/vuepress_blog",
         repoId: "R_kgDOQQMX1A",
