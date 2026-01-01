@@ -117,6 +117,7 @@
 
 
   ## 🔧 技术栈与工具
+  查询docker镜像网站：https://docker.aityp.com/
 
   <div class="tech-stack">
     <div class="tech-item">
