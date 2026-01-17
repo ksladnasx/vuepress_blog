@@ -176,6 +176,71 @@ declare module '*.vue' {
 }
 ```
 
+## 添加@符号文件路径指向
+
+项目**已经是标准 Vite + Vue 3 + TS 模板**，你已经有：
+
+1. `tsconfig.node.json` - 针对 Node 环境的 TS 配置 ✓
+2. 应该还有 `tsconfig.app.json` - 针对浏览器环境的 TS 配置
+3. `vite.config.ts` - Vite 配置
+
+### **最简配置只需要 2 步：**
+
+## **第1步：配置 `vite.config.ts`**
+
+```typescript
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// 不再需要 path 模块，使用 Node.js 原生方式
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': new URL('./src', import.meta.url).pathname
+    }
+  }
+})
+```
+
+或者利用path模块的写法：
+
+```typescript
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src') // 配置 @ 指向 src 目录
+    }
+  },
+})
+```
+
+
+
+## **第2步：配置 `tsconfig.app.json`**
+
+（你的项目应该已经有这个文件，只需添加 `paths` 配置）
+
+```json
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    // 只需要添加这两行，其他保持原样
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*", "src/**/*.vue"]
+}
+```
+
 ## 添加路由和状态管理(可选)
 
 1. **安装Vue Router**
