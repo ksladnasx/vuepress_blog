@@ -133,10 +133,12 @@ build
 
 #### 1. 构建 Docker 镜像
 
-在本地能成功docker build后，将代码推到git云端，然后远程连接服务器，git pull拉取最新代码然后再进行部署，注意此处部署要指明dockerfile中声明的全局变量（这本来是在.env文件的，但是dockerignore掉了），用于前端后续的请求使用。注意此处镜像的命名要带上版本号，用于后期管理：
+在本地能成功docker build后，将**全部代码**推到git云端，然后远程连接服务器，`git pull`拉取最新代码然后再进行部署，注意此处部署要指明dockerfile中声明的全局变量（这本来是在.env文件的，但是`dockerignore`掉了），用于前端后续的请求使用。注意此处镜像的命名要带上版本号，用于后期管理：
+
+注意你是在你拉取到的代码的文件夹内运行的，因此结尾是一个点，否则会出现Dockerfile not found 的情况。
 
 ```bash
-docker build -t slow-sql-web:1.0.1 --build-arg VITE_API_BASE_URL=http://172.20.20.128:10800 ..
+docker build -t slow-sql-web:1.0.1 --build-arg VITE_API_BASE_URL=http://172.20.20.128:10800 .
 ```
 
 #### 2. 运行 Docker 容器
@@ -167,7 +169,7 @@ CMD ["npm", "start"]
 
 运行命令（注意开发环境需要挂载本地目录实现热更新）：
 
-```bash
+```shell
 docker build -t my-react-app:dev -f Dockerfile.dev .
 docker run -d -p 3000:3000 -v $(pwd):/app -v /app/node_modules --name react-dev-container my-react-app:dev
 ```
@@ -177,7 +179,31 @@ docker run -d -p 3000:3000 -v $(pwd):/app -v /app/node_modules --name react-dev-
 
 ### 五、常见问题解决
 
-1. 偶尔会出现端口被占用的情况，一般是之前的容器没停，需要先查看什么容器占用了这个端口：
+1. 出现容器运行成功，且有容器id产生的情况，但是还是没法访问，那查看容器日志：
+
+   ```shell
+   docker log <容器id或者容器名称>
+   ```
+
+   然后复制log问ai什么情况，具体情况具体解决。
+
+   但是一般都要删除错误的镜像和容器：
+
+   ```shell
+   # 先获取镜像ID
+   docker images
+   # 查找使用该镜像的容器
+   docker ps -a --filter "ancestor=<镜像ID或名称>"
+   # 停用并镜像下容器
+   docker stop <容器id或者容器名称>
+   docker rm <容器id或者容器名称>
+   # 镜像下容器都被删除后可进行镜像删除
+   docker rmi <镜像id或者镜像名称>
+   ```
+
+   
+
+2. 偶尔会出现端口被占用的情况，一般是之前的容器没停，需要先查看什么容器占用了这个端口：
 
    ```cmd
    docker ps -a | grep 10801
@@ -185,25 +211,29 @@ docker run -d -p 3000:3000 -v $(pwd):/app -v /app/node_modules --name react-dev-
 
    然后复制显示的容器的id，对容器进行一个停止，停止后也可以通过rm将没用的容器删除：
 
-   ```cmd
+   ```shell
    docker stop <容器id>
    ```
 
-2. 有时候在远程的连接的服务器上不小心修改了某些文件的源码，合并的时候会出现冲突，要合并冲突很麻烦，因此要一个个先放弃你刚刚不小心修改的文件回到原始状态，然后再git pull 拉取最新代码。：
+3. 对于Vue的项目，有时候需要灵活进行配置
 
-   ```cmd
+4. 有时候在远程的连接的服务器上不小心修改了某些文件的源码，合并的时候会出现冲突，要合并冲突很麻烦，因此要一个个先放弃你刚刚不小心修改的文件回到原始状态，然后再git pull 拉取最新代码。：
+
+   ```shell
    git checkout -- <文件名>
    git pull
    ```
 
-3. **React 路由刷新 404**：确保 Nginx 配置中添加了`try_files $uri $uri/ /index.html;`。
+5. **React 路由刷新 404**：确保 Nginx 配置中添加了`try_files $uri $uri/ /index.html;`。
 
-4. 构建镜像时依赖安装缓慢：可在Dockerfile中添加 npm 镜像源或者修改为内网的仓库地址：
+6. 构建镜像时依赖安装缓慢：可在Dockerfile中添加 npm 镜像源或者修改为内网的仓库地址：
 
    ```dockerfile
    RUN npm config set registry https://registry.npmmirror.com
    ```
 
-5. **开发环境热更新不生效**：检查容器挂载目录是否正确，确保本地代码修改后同步到容器。
+   国内访问很麻烦，有一些国内直达的地址（可以直接pull），收录在：[docker镜像站](https://docker.aityp.com/)
 
-6. **镜像体积过大**：生产环境务必使用**多阶段构建**，仅保留 Nginx 和静态文件，避免携带 Node 依赖。
+7. **开发环境热更新不生效**：检查容器挂载目录是否正确，确保本地代码修改后同步到容器。
+
+8. **镜像体积过大**：生产环境务必使用**多阶段构建**，仅保留 Nginx 和静态文件，避免携带 Node 依赖。
