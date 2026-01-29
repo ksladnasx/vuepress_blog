@@ -171,36 +171,36 @@ const props = defineProps({
 }
 }
 @keyframes elasticRun {
-  /* 去程：从-50px到700px，面朝右 */
+  /* 去程：从左侧边缘外到右侧边缘外 */
   0% {
-    transform: translateX(-10px) rotateY(0deg);
+    transform: translateX(0vw) rotateY(0deg);
   }
   49.9% {
-    transform: translateX(700px) rotateY(0deg);
-    animation-timing-function: ease-in; /* 快到终点时稍微减速 */
+    transform: translateX(40vw) rotateY(0deg);
+    animation-timing-function: ease-in;
   }
   
-  /* 在700px处停留并转身 */
+  /* 在右边界转身 */
   50% {
-    transform: translateX(700px) rotateY(0deg);
+    transform: translateX(40vw) rotateY(0deg);
   }
   50.1% {
-    transform: translateX(700px) rotateY(180deg);
-    animation-timing-function: ease-out; /* 转身后开始加速 */
+    transform: translateX(40vw) rotateY(180deg);
+    animation-timing-function: ease-out;
   }
   
-  /* 回程：从700px回到-50px，面朝左 */
+  /* 回程：从右侧边缘外回到左侧边缘外 */
   99.9% {
-    transform: translateX(-10px) rotateY(180deg);
-    animation-timing-function: ease-in; /* 快到起点时稍微减速 */
+    transform: translateX(0vw) rotateY(180deg);
+    animation-timing-function: ease-in;
   }
   
-  /* 在-50px处停留并转身 */
+  /* 在左边界转身 */
   100% {
-    transform: translateX(-10px) rotateY(180deg);
+    transform: translateX(0vw) rotateY(180deg);
   }
   0.1% {
-    transform: translateX(-10px) rotateY(0deg);
+    transform: translateX(0vw) rotateY(0deg);
   }
 }
 /* 空状态样式 */
@@ -389,6 +389,7 @@ const props = defineProps({
   margin: 1.5rem 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp:2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 
