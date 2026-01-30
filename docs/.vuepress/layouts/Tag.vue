@@ -69,6 +69,7 @@ const routePath = useRoutePath()
     .tag-count {
       font-size: 1.1rem;
       color: var(--vp-c-text-2);
+      
     }
   }
 }
@@ -80,6 +81,7 @@ const routePath = useRoutePath()
   justify-content: center;
   max-width: 800px;
   margin: 0 auto;
+  
   
   .tag {
     display: inline-flex;
@@ -136,6 +138,7 @@ const routePath = useRoutePath()
       .tag-num {
         background:var(--vp-c-border);
         color: rgb(255, 255, 255);
+      
       }
       
       &::after {

@@ -18,7 +18,7 @@ const kind = 'Article'
   <ParentLayout>
     <template #page>
       <main class="page">
-        <ArticleList :items="filteredItems" :kind="kind"/>
+        <ArticleList :items="filteredItems" :kind="kind" />
       </main>
     </template>
   </ParentLayout>

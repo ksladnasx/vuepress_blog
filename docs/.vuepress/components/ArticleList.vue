@@ -10,6 +10,12 @@ const props = defineProps({
   isTimeline: Boolean,
   kind: String
 })
+
+const handleTagClick = (event, tags) => {
+      event.stopPropagation();  // 明确阻止冒泡
+      event.preventDefault();   // 阻止默认行为
+      console.log('Tags clicked:', tags);
+}
 </script>
 
 <template>
@@ -62,7 +68,7 @@ const props = defineProps({
               </h2>
               <div class="title-underline"></div>
             </div>
-            
+            ·
             <!-- 元信息标签 -->
             <div class="meta-tags">
               <span v-if="info.author" class="meta-tag author">
@@ -86,7 +92,7 @@ const props = defineProps({
                 {{ info.category[0] || '暂无分类' }}
               </span>
               
-              <span v-if="info.tag && info.tag.length" class="meta-tag tag-list">
+              <span v-if="info.tag && info.tag.length" class="meta-tag tag-list" >
                 <svg class="tag-icon" viewBox="0 0 24 24" width="16" height="16">
                   <path fill="currentColor" d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/>
                 </svg>
