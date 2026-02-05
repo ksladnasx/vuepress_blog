@@ -51,11 +51,11 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
       <div class="stat-label">标签分类</div>
     </div>
     <div class="stat">
-      <div class="stat-number" data-target="12">9</div>
+      <div class="stat-number" data-target="12">10</div>
       <div class="stat-label">专题系列</div>
     </div>
     <div class="stat">
-      <div class="stat-number" data-target="256000" data-unit="万">52.16k</div>
+      <div class="stat-number" data-target="256000" data-unit="万">58.16k</div>
       <div class="stat-label">累计字数</div>
     </div>
   </div>
@@ -290,6 +290,11 @@ body.dark {
   transform: translateY(-6px);
   border-color: var(--c-brand) !important;
   box-shadow: var(--card-shadow-hover) !important;
+  background: linear-gradient(135deg, 
+    rgba(130, 230, 160, 0.9) 0%,     /* 中等亮度的绿色 */
+    rgba(139, 194, 229, 0.9) 70%,    /* 中间灰色调 */
+    rgba(136, 171, 186, 0.9) 100%       /* 较深的灰色 */
+) !important;
 }
 
 .feature-card:hover::before {
@@ -390,7 +395,11 @@ body.dark {
   box-shadow: 
     0 12px 40px rgba(0, 0, 0, 0.15),
     0 4px 12px rgba(var(--c-primary-rgb), 0.1);
- 
+  background: linear-gradient(135deg, 
+    rgba(104, 168, 195, 0.9)  0%,     /* 中等亮度的绿色 */
+    rgba(139, 194, 229, 0.9) 30%,    /* 中间灰色调 */
+    rgba(130, 230, 160, 0.9)100%       /* 较深的灰色 */
+) !important;
 }
 
 .update-item:hover::before {
@@ -425,7 +434,7 @@ body.dark {
 }
 
 .update-title:hover {
-  color: green;
+  color: rgba(246, 196, 44, 0.9)
 }
 
 .update-tag {
@@ -473,8 +482,10 @@ body.dark {
   border-color: var(--c-brand) !important;
   box-shadow: var(--card-shadow-hover) !important;
   background: linear-gradient(135deg, 
-    rgb(123, 218, 149) 0%, 
-    rgba(250, 250, 255, 0.9) 100%) !important;
+    rgba(130, 230, 160, 0.9) 0%,     /* 中等亮度的绿色 */
+    rgba(139, 194, 229, 0.9) 70%,    /* 中间灰色调 */
+    rgba(136, 171, 186, 0.9) 100%       /* 较深的灰色 */
+) !important;
 }
 
 

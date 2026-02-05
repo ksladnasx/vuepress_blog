@@ -46,6 +46,7 @@ export default defineUserConfig({
   },
   theme: defaultTheme({
     logo: "https://i.ibb.co/J0sk1b5/f89933c9d92ac0b5a82b3729a4af8b49.gif",
+    logoDark: "https://i.ibb.co/hJTDWKm7/5755f5a31ed6b10208144c9a41166629.gif",
     navbar: [
       {
         text: "文章",
