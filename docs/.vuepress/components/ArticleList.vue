@@ -68,7 +68,6 @@ const handleTagClick = (event, tags) => {
               </h2>
               <div class="title-underline"></div>
             </div>
-            ·
             <!-- 元信息标签 -->
             <div class="meta-tags">
               <span v-if="info.author" class="meta-tag author">
