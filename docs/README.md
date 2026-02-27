@@ -3,6 +3,7 @@ home: true
 heroImage: https://i.ibb.co/vCgfCfND/02d25d0526a02a24d22cc51be3d07b50.gif
 heroText: xh's blog
 tagline: 捕捉思想星火，留存实践足迹，探寻技术本质。
+background: https://i.ibb.co/vCgfCfND/02d25d0526a02a24d22cc51be3d07b50.gif
 actions:
   - text: 开始
     link: get-started.md
@@ -28,13 +29,14 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
     <span class="update-date">
      ⏱   {{ item.info.date ? new Date(item.info.date).toLocaleDateString() : '暂无' }}
     </span>
-    <span class="update-title">
+    <span class="update-title">🔥
       {{ item.info.title || '暂无' }}
     </span>
     <span class="update-tag"> <svg class="tag-icon" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
       {{ item.info.category && item.info.category[0] ? item.info.category[0] : '暂无分类' }}
+      <span class="update-title" style="padding-left:8px"> ➡️ </span>
     </span>
-    -->
+    
   </div>
 </div>
 </div>
@@ -329,8 +331,7 @@ body.dark {
 /* 最近更新 */
 .recent-updates {
   border-radius: 20px;
-  padding: 40px;
-  margin: 20px 0;
+  padding: 20px;
    
 }
 
@@ -457,7 +458,7 @@ body.dark {
 
 /* 统计数据 - 修复数字颜色问题 */
 .stats-section {
-  margin: 60px 0;
+  margin:30px 0;
 }
 
 .stats-container {
@@ -509,8 +510,8 @@ body.dark {
 
 /* 技术栈 */
 .tech-stack {
-  margin: 60px 0;
-  padding: 40px;
+  margin: 20px 0;
+  padding: 20px;
   border-radius: 20px;
 }
 
