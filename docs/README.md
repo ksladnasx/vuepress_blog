@@ -145,7 +145,7 @@ onMounted(() => {
     currentDomain.value = fullUrl;
     
     // 只在 GitHub Pages 老域名下显示弹窗
-    if (hostname === "localhost"||'ksladnasx.github.io' || 
+    if (hostname === "localhost"|| hostname === 'ksladnasx.github.io' || 
         fullUrl.startsWith('https://ksladnasx.github.io/vuepress_blog/')) {
       // 延迟一点显示，避免影响页面渲染
       setTimeout(() => {
