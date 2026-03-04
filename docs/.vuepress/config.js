@@ -10,7 +10,7 @@ import markdownItKatex from "markdown-it-katex";
 export default defineUserConfig({
   lang: "zh-CN",
   title: "xh's blog ",
-  base: "/vuepress_blog/",
+  base: "/",
   description: "A VuePress bolg Site for personal useage",
   head: [
     [
@@ -33,9 +33,9 @@ export default defineUserConfig({
       // 注册插件
       md.use(markdownItKatex, {
         throwOnError: false,
-        strict: 'ignore'
+        strict: "ignore",
       });
-    }
+    },
   },
   sidebar: {
     auto: {
