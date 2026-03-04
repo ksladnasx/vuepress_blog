@@ -121,7 +121,7 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
           前往新域名
         </button>
         <button class="btn btn-secondary" @click="closeDomainAlert">
-          24小时内不再提示
+          关闭
         </button>
       </div>
     </div>
@@ -144,45 +144,32 @@ onMounted(() => {
     const hostname = window.location.hostname;
     currentDomain.value = fullUrl;
     
-    // 检查是否是 GitHub Pages 原始域名
-    if (hostname === 'localhost' ||'ksladnasx.github.io' || 
+    // 只在 GitHub Pages 老域名下显示弹窗
+    if (hostname === "localhost"||'ksladnasx.github.io' || 
         fullUrl.startsWith('https://ksladnasx.github.io/vuepress_blog/')) {
       // 延迟一点显示，避免影响页面渲染
       setTimeout(() => {
         showDomainAlert.value = true;
       }, 500);
+      console.log('检测到原始域名，显示提示弹窗');
     }
-    
-    console.log('Current domain:', fullUrl);
+    // 新域名 https://www.xiaohanblog.us.ci/ 下什么都不做，不弹窗
   }
 });
 
 // 关闭弹窗
 const closeDomainAlert = () => {
   showDomainAlert.value = false;
-  // 可以存入 localStorage，24小时内不再提示
-  localStorage.setItem('domainAlertDismissed', Date.now().toString());
 };
 
-// 跳转到自定义域名
+// 跳转到新域名
 const goToCustomDomain = () => {
   window.location.href = 'https://www.xiaohanblog.us.ci/';
 };
 
-// 检查是否应该显示弹窗（考虑本地存储）
+// 计算是否显示弹窗
 const shouldShowAlert = computed(() => {
-  if (!showDomainAlert.value) return false;
-  
-  const dismissed = localStorage.getItem('domainAlertDismissed');
-  if (dismissed) {
-    // 如果24小时内关闭过，不再显示
-    const dismissedTime = parseInt(dismissed);
-    const now = Date.now();
-    if (now - dismissedTime < 24 * 60 * 60 * 1000) {
-      return false;
-    }
-  }
-  return true;
+  return showDomainAlert.value;
 });
 
 const techStack = ref([
