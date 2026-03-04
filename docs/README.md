@@ -151,8 +151,9 @@ onMounted(() => {
       setTimeout(() => {
         showDomainAlert.value = true;
       }, 500);
-      console.log('检测到原始域名，显示提示弹窗');
+      console.log(`检测到原始域名${hostname}，显示提示弹窗`);
     }
+    console.log(`当前访问网站的域名为：${hostname}`);
     // 新域名 https://www.xiaohanblog.us.ci/ 下什么都不做，不弹窗
   }
 });
