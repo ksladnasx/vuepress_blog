@@ -99,13 +99,91 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
   </div>
   </div>
 
-
-
+<!-- 弹窗 -->
+<template v-if="shouldShowAlert">
+   <div class="domain-alert-overlay">
+    <div class="domain-alert-modal">
+      <div class="domain-alert-header">
+        <div class="header-left">
+          <span class="header-icon">🌐</span>
+          <span class="header-title">域名提示</span>
+        </div>
+        <button class="close-btn" @click="closeDomainAlert">✕</button>
+      </div>
+      <div class="domain-alert-body">
+        <p>您正在通过其他原始域名访问本站：</p>
+        <p class="current-domain">{{ currentDomain }}</p>
+        <p>✨ 使用新域名获得更好的体验（请勿用QQ或者微信的浏览器访问喵）：</p>
+        <p class="suggested-domain">https://www.xiaohanblog.us.ci/</p>
+      </div>
+      <div class="domain-alert-footer">
+        <button class="btn btn-primary" @click="goToCustomDomain">
+          前往新域名
+        </button>
+        <button class="btn btn-secondary" @click="closeDomainAlert">
+          24小时内不再提示
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script setup>
 import { useBlogType } from '@vuepress/plugin-blog/client'
 import { useBlogCategory } from '@vuepress/plugin-blog/client'
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+
+// 弹窗相关的响应式变量
+const showDomainAlert = ref(false);
+const currentDomain = ref('');
+
+// 在组件挂载后检查域名
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    const fullUrl = window.location.href;
+    const hostname = window.location.hostname;
+    currentDomain.value = fullUrl;
+    
+    // 检查是否是 GitHub Pages 原始域名
+    if (hostname === 'localhost' ||'ksladnasx.github.io' || 
+        fullUrl.startsWith('https://ksladnasx.github.io/vuepress_blog/')) {
+      // 延迟一点显示，避免影响页面渲染
+      setTimeout(() => {
+        showDomainAlert.value = true;
+      }, 500);
+    }
+    
+    console.log('Current domain:', fullUrl);
+  }
+});
+
+// 关闭弹窗
+const closeDomainAlert = () => {
+  showDomainAlert.value = false;
+  // 可以存入 localStorage，24小时内不再提示
+  localStorage.setItem('domainAlertDismissed', Date.now().toString());
+};
+
+// 跳转到自定义域名
+const goToCustomDomain = () => {
+  window.location.href = 'https://www.xiaohanblog.us.ci/';
+};
+
+// 检查是否应该显示弹窗（考虑本地存储）
+const shouldShowAlert = computed(() => {
+  if (!showDomainAlert.value) return false;
+  
+  const dismissed = localStorage.getItem('domainAlertDismissed');
+  if (dismissed) {
+    // 如果24小时内关闭过，不再显示
+    const dismissedTime = parseInt(dismissed);
+    const now = Date.now();
+    if (now - dismissedTime < 24 * 60 * 60 * 1000) {
+      return false;
+    }
+  }
+  return true;
+});
 
 const techStack = ref([
   {
@@ -187,7 +265,6 @@ const features = ref([
 
 const timelines = useBlogType('timeline')
 const filteredItems = computed(() => {
-  // 在 <script setup> 中直接使用 props.items，不需要 this
   return timelines.value.items.filter(item => !(item.path.includes('/posts/codes/') || item.path.includes('/posts/meaningless/')));
 });
 const tagMap = useBlogCategory('tag')
@@ -655,5 +732,227 @@ body.dark {
 .recent-updates { animation-delay: 0.7s; }
 .stats-section { animation-delay: 0.8s; }
 .tech-stack { animation-delay: 0.9s; }
+
+/* 弹窗样式 */
+.domain-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.domain-alert-modal {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+.domain-alert-header {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.header-title {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.domain-alert-body {
+  padding: 20px 20px 16px;
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.domain-alert-body p {
+  margin: 8px 0;
+}
+
+.domain-alert-body p:first-child {
+  margin-top: 0;
+}
+
+.domain-alert-body p:last-child {
+  margin-bottom: 0;
+}
+
+.current-domain {
+  background-color: #f8f9fa;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  word-break: break-all;
+  margin: 12px 0;
+  border-left: 4px solid #ff6b6b;
+  color: #495057;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.suggested-domain {
+  background-color: #f0f9ff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+  margin: 12px 0 0;
+  border-left: 4px solid #4caf50;
+  color: #2c3e50;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.domain-alert-footer {
+  padding: 16px 20px 20px;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.btn-secondary:hover {
+  background-color: #f1f3f5;
+  border-color: #ced4da;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .domain-alert-modal {
+    background-color: #1e2a3a;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+  
+  .domain-alert-header {
+    background: linear-gradient(135deg, #4a5a9e 0%, #5a3a7a 100%);
+  }
+  
+  .domain-alert-body {
+    color: #e9ecef;
+  }
+  
+  .current-domain {
+    background-color: #2a3a4a;
+    color: #e9ecef;
+    border-left-color: #ff8787;
+  }
+  
+  .suggested-domain {
+    background-color: #1a3340;
+    color: #e9ecef;
+    border-left-color: #69db7e;
+  }
+  
+  .domain-alert-footer {
+    background-color: #1a2735;
+    border-top-color: #2a3a4a;
+  }
+  
+  .btn-secondary {
+    background-color: #2a3a4a;
+    color: #e9ecef;
+    border-color: #3a4a5a;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #3a4a5a;
+    border-color: #4a5a6a;
+  }
+}
 </style>
 

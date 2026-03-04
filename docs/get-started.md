@@ -2,10 +2,10 @@
 
 <div class="get-started-page">
   <div class="site-badge">
-    <span><a href="https://ksladnasx.github.io/vuepress_blog/" target="_blank" class="site-link">
+    <span><a href="https://www.xiaohanblog.us.ci/" target="_blank" class="site-link">
       🚀 访问站点
     </a></span>
-    <span class="site-meta">持续更新 · 全栈技术 · 实践导向</span>
+    <span class="site-meta">注：原github地址已不可用，请点击访问站点访问新域名</span>
   </div>
 
   本知识库基于 Vuepress 构建并托管于 GitHub Pages，专注记录前端开发与全栈技术实践经验，致力于打造简洁高效的个人学习与分享平台。

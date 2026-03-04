@@ -16,6 +16,8 @@ const handleTagClick = (event, tags) => {
       event.preventDefault();   // 阻止默认行为
       console.log('Tags clicked:', tags);
 }
+
+
 </script>
 
 <template>
