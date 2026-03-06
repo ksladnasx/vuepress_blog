@@ -2,6 +2,7 @@ import { blogPlugin } from "@vuepress/plugin-blog";
 import { defaultTheme } from "@vuepress/theme-default";
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
+import { sitemapPlugin } from "@vuepress/plugin-sitemap";
 import { slimsearchPlugin } from "@vuepress/plugin-slimsearch";
 import { socialSharePlugin } from "vuepress-plugin-social-share";
 import { commentPlugin } from "@vuepress/plugin-comment";
@@ -32,7 +33,7 @@ export default defineUserConfig({
     extendMarkdown: (md) => {
       // 注册插件
       md.use(markdownItKatex, {
-        throwOnError: false,
+        throwOnError: false,  
         strict: "ignore",
       });
     },
@@ -171,6 +172,13 @@ export default defineUserConfig({
       ],
 
       hotReload: true,
+    }),
+
+    // 站点地图（SEO）
+    sitemapPlugin({
+      hostname: "https://www.xiaohanblog.us.ci/", // 生产环境：改为你实际部署的域名
+      devServer: true, // 开发环境下也生成 sitemap，可通过 http://localhost:8080/sitemap.xml 查看
+      devHostname: "http://localhost:8080",
     }),
 
     // 官方全文搜索插件（替代search-pro）
