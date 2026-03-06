@@ -216,24 +216,41 @@ export default defineUserConfig({
       description: "来自 Vuepress 站点的优质内容",
     }),
 
-    //评论插件
+    //评论插件（Giscus 配置需与 https://giscus.app/zh-CN 一致，且字段放在顶层）
     commentPlugin({
       provider: "Giscus",
-      options: {
-        repo: "ksladnasx/vuepress_blog",
-        repoId: "R_kgDOQQMX1A",
-        category: "Announcements",
-        categoryId: "DIC_kwDOQQMX1M4CzSLA",
-        mapping: "pathname",
-        reactionsEnabled: "1",
-        emitMetadata: "0",
-        inputPosition: "top",
-        theme: "preferred_color_scheme",
-        lang: "zh-CN",
-        crossorigin: "anonymous",
-      },
+      comment: true,
+      repo: "ksladnasx/vuepress_blog",
+      repoId: "R_kgDOQQMX1A",
+      category: "Announcements",
+      categoryId: "DIC_kwDOQQMX1M4CzSLA",
+      mapping: "pathname",
+      reactionsEnabled: "1",
+      emitMetadata: "0",
+      inputPosition: "top",
+      lightTheme: "light",
+      darkTheme: "dark",
+      lang: "zh-CN",
     }),
   ],
 
-  bundler: viteBundler(),
+  bundler: viteBundler({
+    viteOptions: {
+      server: {
+        proxy: {
+          // 本地开发时代理 GitHub API / 资源，减轻 CORS（Giscus iframe 内请求仍由 giscus.app 发出，部署后无此问题）
+          "/github-api": {
+            target: "https://api.github.com",
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/github-api/, ""),
+          },
+          "/github-assets": {
+            target: "https://github.githubassets.com",
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/github-assets/, ""),
+          },
+        },
+      },
+    },
+  }),
 });
