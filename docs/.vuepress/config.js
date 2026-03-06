@@ -28,10 +28,17 @@ export default defineUserConfig({
         defer: true,
       },
     ],
+    [
+      "script",
+      {
+        src: "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js",
+        defer: true,
+      },
+    ],
   ],
   markdown: {
     extendMarkdown: (md) => {
-      // 注册插件
+      // KaTeX 公式
       md.use(markdownItKatex, {
         throwOnError: false,  
         strict: "ignore",
