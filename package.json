@@ -13,6 +13,7 @@
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.20",
     "@vuepress/plugin-blog": "2.0.0-rc.86",
+    "@vuepress/plugin-markdown-chart": "^2.0.0-rc.109",
     "@vuepress/plugin-sitemap": "2.0.0-rc.19",
     "@vuepress/theme-default": "2.0.0-rc.88",
     "markdown-it-katex": "^2.0.3",

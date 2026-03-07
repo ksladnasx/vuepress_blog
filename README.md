@@ -1,4 +1,4 @@
-# 我的 VuePress 博客
+# xiaohan 博客说明文档
 
 这是一个基于 VuePress 构建的个人博客项目。本文档将指导你如何拉取项目、在本地启动开发环境，以及如何部署到服务器。
 
@@ -76,7 +76,7 @@ npm run docs:build
 
 ### 使用部署脚本
 
-1. **确保脚本有执行权限**（Linux/macOS）：
+1. **确保脚本有执行权限**（Linux/macOS/gitbash）：
 
    ```bash
    chmod +x deploy.sh
@@ -85,7 +85,7 @@ npm run docs:build
 2. **运行部署脚本**：
 
    ```bash
-   ./deploy.sh
+   sh ./deploy.sh
    ```
 
 脚本内容示例（假设部署到 GitHub Pages）：

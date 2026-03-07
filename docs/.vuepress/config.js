@@ -6,6 +6,7 @@ import { sitemapPlugin } from "@vuepress/plugin-sitemap";
 import { slimsearchPlugin } from "@vuepress/plugin-slimsearch";
 import { socialSharePlugin } from "vuepress-plugin-social-share";
 import { commentPlugin } from "@vuepress/plugin-comment";
+import { markdownChartPlugin } from "@vuepress/plugin-markdown-chart";
 import markdownItKatex from "markdown-it-katex";
 
 export default defineUserConfig({
@@ -77,6 +78,11 @@ export default defineUserConfig({
   }),
 
   plugins: [
+    // Mermaid 图表：识别并渲染 ```mermaid 代码块
+    markdownChartPlugin({
+      mermaid: true,
+    }),
+
     blogPlugin({
       // Only files under posts are articles
       filter: ({ filePathRelative }) =>
