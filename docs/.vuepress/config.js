@@ -19,7 +19,7 @@ export default defineUserConfig({
       "link",
       {
         rel: "icon",
-        href: "/posts/img/myblog.png",
+        href: "https://i.ibb.co/Df8Pv3Jf/myblog.png",
       },
     ],
     [
