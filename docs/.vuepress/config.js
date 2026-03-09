@@ -18,6 +18,13 @@ export default defineUserConfig({
     [
       "link",
       {
+        rel: "icon",
+        href: "/posts/img/myblog.png",
+      },
+    ],
+    [
+      "link",
+      {
         rel: "stylesheet",
         href: "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css",
       },
