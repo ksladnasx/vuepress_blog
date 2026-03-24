@@ -790,7 +790,7 @@ JS的代码块在执行期间，会创建一个相应的作用域链，这个作
 
 **（1）受控组件**
 
-在使用表单来收集用户输入时，例如<input><select><textearea>等元素都要绑定一个change事件，当表单的状态发生变化，就会触发onChange事件，更新组件的state。这种组件在React中被称为**受控组件**，在受控组件中，组件渲染出的状态与它的value或checked属性相对应，react通过这种方式消除了组件的局部状态，使整个状态可控。react官方推荐使用受控表单组件。
+在使用表单来收集用户输入时，例如 `<input><select><textearea>`等元素都要绑定一个change事件，当表单的状态发生变化，就会触发onChange事件，更新组件的state。这种组件在React中被称为**受控组件**，在受控组件中，组件渲染出的状态与它的value或checked属性相对应，react通过这种方式消除了组件的局部状态，使整个状态可控。react官方推荐使用受控表单组件。
 
 
 
@@ -2051,9 +2051,9 @@ class Parent extends Component {
 
 ### 2. 如何配置 React-Router 实现路由切换
 
-**（1）使用 <Route> 组件**
+**（1）使用 `<Route> `组件**
 
-路由匹配是通过比较 <Route> 的 path 属性和当前地址的 pathname 来实现的。当一个 <Route> 匹配成功时，它将渲染其内容，当它不匹配时就会渲染 null。没有路径的 <Route> 将始终被匹配。
+路由匹配是通过比较` <Route> `的 path 属性和当前地址的 pathname 来实现的。当一个` <Route>` 匹配成功时，它将渲染其内容，当它不匹配时就会渲染 null。没有路径的` <Route>` 将始终被匹配。
 
 ```javascript
 // when location = { pathname: '/about' }
@@ -2062,9 +2062,9 @@ class Parent extends Component {
 <Route component={Always}/> // renders <Always/>
 ```
 
-**（2）结合使用 <Switch> 组件和 <Route> 组件**
+**（2）结合使用 `<Switch> `组件和 `<Route>` 组件**
 
-<Switch> 用于将 <Route> 分组。
+`<Switch>` 用于将 `<Route>` 分组。
 
 ```javascript
 <Switch>
@@ -2073,19 +2073,18 @@ class Parent extends Component {
     <Route path="/contact" component={Contact} />
 </Switch>
 ```
+Switch 不是分组Route所必须的，但他通常很有用。 一个 Switch 会遍历其所有的子 Route元素，并仅渲染与当前地址匹配的第一个元素。
 
-<Switch> 不是分组 <Route> 所必须的，但他通常很有用。 一个 <Switch> 会遍历其所有的子 <Route>元素，并仅渲染与当前地址匹配的第一个元素。
+**（3）使用 `<Link>、 <NavLink>、<Redirect>` 组件**
 
-**（3）使用 <Link>、 <NavLink>、<Redirect> 组件**
-
-<Link> 组件来在你的应用程序中创建链接。无论你在何处渲染一个 <Link> ，都会在应用程序的 HTML 中渲染锚（<a>）。
+`<Link>` 组件来在你的应用程序中创建链接。无论你在何处渲染一个 `<Link>` ，都会在应用程序的 HTML 中渲染锚（`<a>`）。
 
 ```javascript
 <Link to="/">Home</Link>   
 // <a href='/'>Home</a>
 ```
 
-<NavLink> 是一种特殊类型的 <Link> 当它的 to属性与当前地址匹配时，可以将其定义为"活跃的"。
+`<NavLink>` 是一种特殊类型的 `<Link>` 当它的 to属性与当前地址匹配时，可以将其定义为"活跃的"。
 
 ```javascript
 // location = { pathname: '/react' }
@@ -2095,11 +2094,11 @@ class Parent extends Component {
 // <a href='/react' className='hurray'>React</a>
 ```
 
-当我们想强制导航时，可以渲染一个<Redirect>，当一个<Redirect>渲染时，它将使用它的to属性进行定向。
+当我们想强制导航时，可以渲染一个`<Redirect>`，当一个`<Redirect>`渲染时，它将使用它的to属性进行定向。
 
 ### 3. React-Router怎么设置重定向？
 
-使用<Redirect>组件实现路由的重定向：
+使用`<Redirect>`组件实现路由的重定向：
 
 ```javascript
 <Switch>
@@ -2119,15 +2118,15 @@ class Parent extends Component {
 
 从最终渲染的 DOM 来看，这两者都是链接，都是 标签，区别是∶ 
 
-<Link>是react-router 里实现路由跳转的链接，一般配合<Route> 使用，react-router接管了其默认的链接跳转行为，区别于传统的页面跳转，<Link> 的“跳转”行为只会触发相匹配的<Route>对应的页面内容更新，而不会刷新整个页面。
+Link是react-router 里实现路由跳转的链接，一般配合Route 使用，react-router接管了其默认的链接跳转行为，区别于传统的页面跳转，Link 的“跳转”行为只会触发相匹配的Route对应的页面内容更新，而不会刷新整个页面。
 
 
 
-<Link>做了3件事情:
+`<Link>`做了3件事情:
 
 - 有onclick那就执行onclick
 - click的时候阻止a标签默认事件
-- 根据跳转href(即是to)，用history (web前端路由两种方式之一，history & hash)跳转，此时只是链接变了，并没有刷新页面而<a>标签就是普通的超链接了，用于从当前页面跳转到href指向的另一 个页面(非锚点情况)。
+- 根据跳转href(即是to)，用history (web前端路由两种方式之一，history & hash)跳转，此时只是链接变了，并没有刷新页面而`<a>`标签就是普通的超链接了，用于从当前页面跳转到href指向的另一 个页面(非锚点情况)。
 
 
 
