@@ -22,4 +22,4 @@ git push -f origin master:gh-pages
 
 
 cd -
-echo "部署成功！地址：https://www.xhblog.cc.cd/"
+echo "部署成功！地址：https://www.xhblog.cc.cd"

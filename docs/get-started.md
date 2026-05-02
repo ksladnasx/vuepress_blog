@@ -2,7 +2,7 @@
 
 <div class="get-started-page">
   <div class="site-badge">
-    <span><a href="https://https://www.xhblog.cc.cd//" target="_blank" class="site-link">
+    <span><a href="https://www.xhblog.cc.cd/" target="_blank" class="site-link">
       🚀 访问站点
     </a></span>
     <span class="site-meta">注：原github地址已不可用，请点击访问站点访问新域名</span>
