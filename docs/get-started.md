@@ -2,17 +2,16 @@
 
 <div class="get-started-page">
   <div class="site-badge">
-    <span><a href="https://www.xiaohanblog.us.ci/" target="_blank" class="site-link">
+    <span><a href="https://https://www.xhblog.cc.cd//" target="_blank" class="site-link">
       🚀 访问站点
     </a></span>
     <span class="site-meta">注：原github地址已不可用，请点击访问站点访问新域名</span>
   </div>
 
-  本知识库基于 Vuepress 构建并托管于 GitHub Pages，专注记录前端开发与全栈技术实践经验，致力于打造简洁高效的个人学习与分享平台。
-  请勿使用vpn或者加速器访问网站，否则可能出现无法评论的状况
+本知识库基于 Vuepress 构建并托管于 GitHub Pages，专注记录前端开发与全栈技术实践经验，致力于打造简洁高效的个人学习与分享平台。
+请勿使用vpn或者加速器访问网站，否则可能出现无法评论的状况
 
-
-  ## 🚀 特点优势
+## 🚀 特点优势
 
   <div class="features-grid">
     <div class="feature-card">
@@ -37,10 +36,10 @@
     </div>
   </div>
 
+## 📚 内容索引
 
-  ## 📚 内容索引
+### 分类导航
 
-  ### 分类导航
   <div class="nav-links">
     <a href="./article/" class="nav-item">📖 全部文章</a>
     <a href="./category/" class="nav-item">🏷️ 按类型分</a>
@@ -48,7 +47,8 @@
     <a href="./timeline/" class="nav-item">🕒 按时间分</a>
   </div>
 
-  ### 内容概要
+### 内容概要
+
   <!-- 优化内容索引排版：统一容器/间距/对齐 -->
   <div class="content-index-wrapper">
     <div class="content-section">
@@ -116,9 +116,9 @@
     </div>
   </div>
 
+## 🔧 技术栈与工具
 
-  ## 🔧 技术栈与工具
-  查询docker镜像网站：[docker镜像站](https://docker.aityp.com/)
+查询docker镜像网站：[docker镜像站](https://docker.aityp.com/)
 
   <div class="tech-stack">
     <div class="tech-item">
@@ -151,7 +151,7 @@
     </div>
   </div>
 
-  ## 🔗 站点信息
+## 🔗 站点信息
 
   <div class="site-info">
     <a href="https://github.com/ksladnasx" target="_blank" class="info-link">🐙 GitHub个人主页</a>
@@ -159,7 +159,6 @@
     <a href="#" class="info-link">⚙️ 站点构建说明</a>
   </div>
 </div>
-
 
 <style>
 /* 基础变量：仅作用于当前页面 */

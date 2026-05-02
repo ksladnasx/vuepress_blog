@@ -48,7 +48,7 @@ export default defineUserConfig({
     extendMarkdown: (md) => {
       // KaTeX 公式
       md.use(markdownItKatex, {
-        throwOnError: false,  
+        throwOnError: false,
         strict: "ignore",
       });
     },
@@ -196,7 +196,7 @@ export default defineUserConfig({
 
     // 站点地图（SEO）
     sitemapPlugin({
-      hostname: "https://www.xiaohanblog.us.ci/", // 生产环境：改为你实际部署的域名
+      hostname: "https://https://www.xhblog.cc.cd//", // 生产环境：改为你实际部署的域名
       devServer: true, // 开发环境下也生成 sitemap，可通过 http://localhost:8080/sitemap.xml 查看
       devHostname: "http://localhost:8080",
     }),

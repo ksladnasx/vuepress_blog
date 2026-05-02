@@ -14,8 +14,6 @@ actions:
 footer: MIT Licensed | Copyright © 2025-present VuePress Community
 ---
 
-
-
 <!-- 最近更新 -->
 <div class="recent-updates">
   <h2>最近更新</h2>
@@ -62,8 +60,6 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
     </div>
   </div>
 </div>
-
-
 
 <!-- 主要特性展示 -->
 <div class="features-grid">
@@ -114,7 +110,7 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
         <p>您正在通过其他原始域名访问本站：</p>
         <p class="current-domain">{{ currentDomain }}</p>
         <p>✨ 使用新域名获得更好的体验（请勿用QQ或者微信的浏览器访问喵）：</p>
-        <p class="suggested-domain">https://www.xiaohanblog.us.ci/</p>
+        <p class="suggested-domain">https://https://www.xhblog.cc.cd//</p>
       </div>
       <div class="domain-alert-footer">
         <button class="btn btn-primary" @click="goToCustomDomain">
@@ -154,7 +150,7 @@ onMounted(() => {
       console.log(`检测到原始域名${hostname}，显示提示弹窗`);
     }
     console.log(`当前访问网站的域名为：${hostname}`);
-    // 新域名 https://www.xiaohanblog.us.ci/ 下什么都不做，不弹窗
+    // 新域名 https://https://www.xhblog.cc.cd// 下什么都不做，不弹窗
   }
 });
 
@@ -165,7 +161,7 @@ const closeDomainAlert = () => {
 
 // 跳转到新域名
 const goToCustomDomain = () => {
-  window.location.href = 'https://www.xiaohanblog.us.ci/';
+  window.location.href = 'https://https://www.xhblog.cc.cd//';
 };
 
 // 计算是否显示弹窗
