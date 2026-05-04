@@ -5,7 +5,7 @@ heroText: xh's blog
 tagline: 捕捉思想星火，留存实践足迹，探寻技术本质。
 background: https://i.ibb.co/vCgfCfND/02d25d0526a02a24d22cc51be3d07b50.gif
 actions:
-  - text: 开始
+  - text: 文章
     link: /article/
     type: primary
   - text: 介绍
@@ -55,7 +55,7 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
       <div class="stat-label">专题系列</div>
     </div>
     <div class="stat">
-      <div class="stat-number" data-target="256000" data-unit="万">58.16k</div>
+      <div class="stat-number" data-target="256000" data-unit="万">79.35k</div>
       <div class="stat-label">累计字数</div>
     </div>
   </div>
