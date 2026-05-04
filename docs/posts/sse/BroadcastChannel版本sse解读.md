@@ -7,8 +7,6 @@ tag:
   - BroadcastChannel
 ---
 
-
-
 # sseService文件解读(BroadcastChannel版)
 
 源文件地址：[sseServiceWithBroadcastChannel.js](../codes/sseServiceWithBroadcastChannel.md)
@@ -18,7 +16,6 @@ tag:
 代码核心设计解读：[BroadcastChannel核心设计](../sse/BroadcastChannel方式解决sse连接数限制.html#核心设计)
 
 当然，为了深入了解这个 SSE 服务类的完整工作原理和代码逻辑。下面我会分模块、按流程进行细致解析。
-
 
 ### 一、整体架构与核心目标
 
@@ -197,7 +194,7 @@ connect() {
   if (!this.isMaster) return Promise.resolve() // 从标签页不建立实际连接
 
   this.referenceCount++ // 引用计数+1（防止重复连接）
-  
+
   if (this.isConnected || this.isConnecting) return Promise.resolve() // 已有连接则返回
 
   return new Promise((resolve, reject) => {
@@ -372,11 +369,8 @@ startConnectionMonitor() {
 2. 初始化`BroadcastChannel`并监听消息
 
 3. 检查
-   `
-   localStorage
-   `
+   `localStorage`
    中是否有主标签页
-
    - 无主：参与选举并当选，建立 SSE 连接
    - 有主：成为从标签页，通过广播接收数据
 
@@ -460,26 +454,27 @@ getConnectionStatus() { // 获取当前连接状态
 ```javascript
 // 每30秒检查一次主标签页状态（仅从标签页执行）
 setInterval(() => {
-  if (!this.isMaster) { // 当前是从标签页
+  if (!this.isMaster) {
+    // 当前是从标签页
     const currentMasterInstanceId = localStorage.getItem(this.masterKey);
-    
+
     if (!currentMasterInstanceId) {
       // 主标签页标识不存在，直接触发重新选举
-      console.log('检测到主标签页不存在，触发重新选举')
-      this.electionMaster()
+      console.log("检测到主标签页不存在，触发重新选举");
+      this.electionMaster();
     } else {
       // 主标签页标识存在，发送ping消息检查其是否存活
       this.broadcastChannel.postMessage({
-        type: 'ping',
+        type: "ping",
         tabId: this.tabId,
-        instanceId: this.tabInstanceId
-      })
-      
+        instanceId: this.tabInstanceId,
+      });
+
       // 关键逻辑：设置超时定时器refreshTimeout
       if (this.refreshTimeout) clearTimeout(this.refreshTimeout); // 清除旧定时器（避免重复）
       this.refreshTimeout = setTimeout(() => {
         // 5秒内未收到pong响应，判定主标签页失效
-        console.log('主标签页心跳超时，触发重新选举')
+        console.log("主标签页心跳超时，触发重新选举");
         this.electionMaster(); // 重新选举主标签页
       }, 5000);
     }
@@ -540,7 +535,7 @@ startActiveTabsMonitor() {
       } catch (error) {
         console.error("更新活跃标签页时间戳失败:", error);
       }
-    }, 60000); 
+    }, 60000);
 ```
 
 这段代码中 “定期更新当前标签页时间戳并标记为活跃” 的逻辑，是为了**维持标签页的 “活跃状态”，确保主标签页选举机制能基于真实有效的标签页列表进行，避免因标签页 “假死” 或 “失效” 导致的选举异常**。
@@ -551,7 +546,7 @@ startActiveTabsMonitor() {
 
 在多标签页场景中，浏览器无法直接感知其他标签页是否仍在正常运行（可能被用户关闭、崩溃，或长时间未操作）。因此，代码通过`localStorage`维护了一个 “活跃标签页列表”（`activeTabsKey`对应的存储），每个标签页需要主动证明自己 “还活着”。
 
-时间戳（`timestamp`）是标签页 “活跃度” 的凭证：**时间戳越新，说明标签页越可能处于正常运行状态**。
+时间戳（`timestamp`）是标签页 “活跃度” 的凭证**：时间戳越新，说明标签页越可能处于正常运行状态**。
 
 ##### 2. 定时更新的具体作用
 
@@ -569,10 +564,7 @@ startActiveTabsMonitor() {
   }
   ```
 
-  
-
 - **确保主标签页选举的准确性**：主标签页选举（`electionMaster`）的前提是 “基于活跃标签页列表”。如果当前标签页不更新时间戳，会被`cleanExpiredTabs`移除，导致：
-
   - 若当前标签页是主标签页：会被判定为失效，触发重新选举（错误地失去主标签页身份）；
   - 若当前标签页是从标签页：会被排除在选举候选人之外，无法在主标签页失效时参与补选。
 
