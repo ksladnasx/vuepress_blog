@@ -43,6 +43,14 @@ export default defineUserConfig({
         defer: true,
       },
     ],
+    // ========== 新增 Google 验证 meta 标签 ==========
+    [
+      "meta",
+      {
+        name: "google-site-verification",
+        content: "C4ZL9Ex1hjRQWnZoAkq9jJBLBmvtRbEjWveqGwgGWsc",
+      },
+    ],
   ],
   markdown: {
     extendMarkdown: (md) => {
