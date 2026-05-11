@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <img src="loading.png" alt="" data-src="img1.png">
+        <img src="loading.png" alt="" data-src="img1.png">
+        <img src="loading.png" alt="" data-src="img1.png">
+        <img src="loading.png" alt="" data-src="img1.png">
+        <img src="loading.png" alt="" data-src="img1.png">
+        <img src="loading.png" alt="" data-src="img1.png">
+    </div>
+</body>
+<script>
+    let imgs = document.querySelectorAll('img');
+
+    function lozyLoad() {
+        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+        let winHeight = window.innerHeight;
+        for (let i = 0; i < imgs.length; i++) {
+            let img = imgs[i];
+            // 关键修正：只处理还没有真实 src 的图片（即仍然有 data-src 属性）
+            if (img.getAttribute('data-src') && img.offsetTop < scrollTop + winHeight) {
+                img.src = img.getAttribute('data-src');
+                img.removeAttribute('data-src');  // 加载后移除 data-src属性，避免重复加载
+                console.log('加载图片', i);
+            }
+        }
+    }
+
+    // 关键修正：赋值函数本身，而不是执行结果
+    window.onscroll = lozyLoad;
+    // 页面加载时先执行一次，加载首屏图片
+    lozyLoad();
+</script>
+<style>
+    .container {
+        height: 2000px;
+    }
+
+    img {
+        display: block;
+        width: 100px;
+        height: 100px;
+        margin: 20px auto;
+        padding-bottom: 300px;
+    }
+</style>
+
+</html>

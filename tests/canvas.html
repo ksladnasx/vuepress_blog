@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>电影票选座系统 | Canvas影院座位图</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            /* 避免拖动/选中文本干扰 */
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* 主卡片 */
+        .cinema-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(2px);
+            border-radius: 48px;
+            padding: 24px 30px 30px 30px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* 画布区 + 荧幕示意 */
+        .screen-wrapper {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .screen-mock {
+            background: linear-gradient(90deg, #f0f0f0, #fff9e0, #f0f0f0);
+            width: 70%;
+            margin: 0 auto 12px auto;
+            border-radius: 30px 30px 12px 12px;
+            padding: 8px 0;
+            font-weight: bold;
+            color: #2c3e2f;
+            letter-spacing: 6px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+            backdrop-filter: blur(6px);
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+            background-color: #eef2f5;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            width: 100%;
+            height: auto;
+            border: 2px solid rgba(255, 215, 150, 0.6);
+        }
+
+        canvas:active {
+            transform: scale(0.99);
+        }
+
+        /* 图例面板 */
+        .legend-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin: 20px 0 20px 0;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 12px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(8px);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #f0f3f5;
+            text-shadow: 0 1px 1px black;
+        }
+
+        .legend-color {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 控制栏 */
+        .action-bar {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin: 18px 0 18px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #2c3e2f;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 10px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 0 #141f17;
+            font-family: inherit;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+        }
+
+        button:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #141f17;
+        }
+
+        .btn-confirm {
+            background: #e67e22;
+            box-shadow: 0 6px 0 #b45f1b;
+        }
+
+        .btn-clear {
+            background: #3a6b4b;
+            box-shadow: 0 6px 0 #1d3a2a;
+        }
+
+        .info-area {
+            background: #0b1a1fe0;
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 16px 20px;
+            margin-top: 15px;
+            text-align: center;
+            color: #fffaec;
+            border: 1px solid #ffd98c60;
+        }
+
+        .selected-seats {
+            font-weight: bold;
+            font-size: 1rem;
+            word-break: break-word;
+            background: #00000055;
+            padding: 8px 14px;
+            border-radius: 28px;
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 1.05rem;
+        }
+
+        .badge {
+            background: #ffb347;
+            color: #1f2a1b;
+            padding: 4px 12px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0 0 8px 0;
+            color: #ffdd99;
+            font-weight: 600;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+        }
+
+        footer {
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.7;
+            margin-top: 14px;
+            color: #ccc;
+        }
+
+        @media (max-width: 800px) {
+            .cinema-container {
+                padding: 16px;
+            }
+
+            .legend-item {
+                font-size: 11px;
+            }
+
+            button {
+                padding: 6px 18px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="cinema-container">
+            <h2>🎬 CINEMA 选座舱 🎟️</h2>
+            <div class="screen-wrapper">
+                <div class="screen-mock">✨ 巨幕荧幕 ✨</div>
+                <canvas id="seatCanvas" width="1100" height="620"
+                    style="width:100%; height:auto; max-width:1100px; aspect-ratio:1100/620"></canvas>
+            </div>
+
+            <!--  图例说明  -->
+            <div class="legend-panel">
+                <div class="legend-item">
+                    <div class="legend-color" style="background:#88c9a6;"></div><span>可选座位</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:#ffa559;"></div><span>已选座位</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:#7f8c8d;"></div><span>已售/不可选</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color"
+                        style="background:transparent; border:2px solid #c0392b; width:26px; height:26px;"></div>
+                    <span>已售(叉号示意)</span>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-clear" id="clearBtn">🗑️ 清空我的选座</button>
+                <button class="btn-confirm" id="confirmBtn">✅ 确认选座 & 输出座位</button>
+            </div>
+
+            <div class="info-area" id="infoArea">
+                <span class="badge">📌 当前选座</span>
+                <div class="selected-seats" id="selectedDisplay">暂无选座，点击座位图选座~</div>
+                <div style="font-size: 13px; margin-top: 8px;">💡 点击「可选座位」选中/取消，确认后输出具体座位号</div>
+            </div>
+            <footer>单击可选座位切换状态 | 已售座位不可选</footer>
+        </div>
+    </div>
+
+    <script>
+        (
+            function () {
+                // ------------------- 影院配置 -------------------
+                const ROWS = 8;          // 8 行 (A~H)
+                const COLS = 12;         // 12 列 (1~12)
+                const SEAT_W = 40;       // 座位宽 (px)
+                const SEAT_H = 40;       // 座位高 (px)
+                const GAP = 6;           // 座位间距 px
+                // 偏移量 (左侧用于行标签，顶部用于列标签)
+                let OFFSET_X = 78;      // 左边距，用于绘制行标签 "A/B/C..."
+                let OFFSET_Y = 56;      // 上边距，用于绘制列数字 1~12
+
+                // 全局数据
+                let seats = [];           // 三维? 二维数组: seats[row][col] = { status: 'available' | 'sold' | 'selected' }
+                let canvas = document.getElementById('seatCanvas');
+                let ctx = canvas.getContext('2d');
+
+                // 辅助: 座位实际占位宽高 (包括间距)
+                const stepX = SEAT_W + GAP;
+                const stepY = SEAT_H + GAP;
+
+                // 初始化座位状态
+                function initSeats() {
+                    // 1. 新建所有座位，默认可选 available
+                    seats = Array(ROWS).fill().map(() => Array(COLS).fill().map(() => ({ status: 'available' })));
+
+                    // 2. 随机生成一些已售座位 (约占总数 12% ~ 18%，让界面真实)
+                    const totalSeats = ROWS * COLS;
+                    const soldCount = Math.floor(totalSeats * 0.13) + Math.floor(Math.random() * 5); // 大约13~18%
+                    let addedSold = 0;
+                    while (addedSold < soldCount) {
+                        const randRow = Math.floor(Math.random() * ROWS);
+                        const randCol = Math.floor(Math.random() * COLS);
+                        if (seats[randRow][randCol].status === 'available') {
+                            seats[randRow][randCol].status = 'sold';
+                            addedSold++;
+                        }
+                    }
+                    // 额外手动设置几个特定位置已售，增加真实感 (但不影响核心)
+                    // (可选) 确保角落有已售不影响体验
+                    if (seats[0][0]?.status === 'available') seats[0][0].status = 'sold';
+                    if (seats[ROWS - 1][COLS - 1]?.status === 'available') seats[ROWS - 1][COLS - 1].status = 'sold';
+                    if (ROWS > 3 && COLS > 4 && seats[2][5]?.status === 'available') seats[2][5].status = 'sold';
+                    if (ROWS > 4 && seats[4][3]?.status === 'available') seats[4][3].status = 'sold';
+                }
+                // ---------- 动态计算画布主体内容在画布中的上下偏移，使其居中 ----------
+                function calcCenterOffset() {
+                    // 座位网格的实际总宽度 = 列数 * (座位宽+间距) - 间距（最后一项右边不留间距）
+                    const gridWidth = COLS * (SEAT_W + GAP) - GAP;
+                    const gridHeight = ROWS * (SEAT_H + GAP) - GAP;
+                    // 水平居中：画布宽 - 网格宽，再除以2
+                    OFFSET_X = (canvas.width - gridWidth) / 2;
+                    // 垂直居中：画布高 - 网格高，再除以2；如果想给顶部列标签留空间，可以再减去一点（比如20px）
+                    OFFSET_Y = (canvas.height - gridHeight) / 2 - 10;  // -10 让标签不贴顶，可按需调整
+                    // 确保最小偏移不为负数
+                    OFFSET_X = Math.max(OFFSET_X, 20);
+                    OFFSET_Y = Math.max(OFFSET_Y, 20);
+                }
+                // ---------- 绘制完整界面(行列标签 + 座位) ----------
+                function drawTheater() {
+                    if (!ctx) return;
+                    calcCenterOffset();     // 动态计算居中偏移
+                    // 清空画布 (绘制影院背景)
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // 1. 绘制底色网格背景 (细腻质感)
+                    ctx.fillStyle = '#eef2f5';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // 2. 绘制装饰走道阴影 (微效果)
+                    ctx.save(); // 保存状态以便后续恢复
+
+                    // ---------- 绘制行标签 (A ~ H) ----------
+                    ctx.font = 'bold 18px "Segoe UI", system-ui';
+                    ctx.fillStyle = '#2c3e2f';
+                    ctx.shadowBlur = 0;
+                    for (let i = 0; i < ROWS; i++) {
+                        const rowLetter = String.fromCharCode(65 + i); // A, B, C...
+                        const seatCenterY = OFFSET_Y + i * stepY + SEAT_H / 2;
+                        // 绘制行文本在左侧
+                        ctx.fillStyle = '#1e2f2c';
+                        ctx.font = 'bold 19px "Inter", "Segoe UI"';
+                        ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                        ctx.fillText(rowLetter, OFFSET_X - 30, seatCenterY + 7);
+                        // 右侧辅助标签(可选, 不加多余)
+                    }
+
+                    // ---------- 绘制列标签 (1 ~ 12) ----------
+                    ctx.font = 'bold 16px monospace';
+                    ctx.fillStyle = '#2c3e2f';
+                    ctx.textAlign = 'center';
+                    for (let j = 0; j < COLS; j++) {
+                        const colNum = j + 1;
+                        const seatCenterX = OFFSET_X + j * stepX + SEAT_W / 2;
+                        ctx.fillStyle = '#1a3a2e';
+                        ctx.font = 'bold 16px "Segoe UI"';
+                        ctx.fillText(colNum, seatCenterX, OFFSET_Y - 12);
+                    }
+                    ctx.textAlign = 'left';
+
+                    // ---------- 绘制所有座位 (核心) ----------
+                    for (let row = 0; row < ROWS; row++) {
+                        for (let col = 0; col < COLS; col++) {
+                            const seat = seats[row][col];
+                            const x = OFFSET_X + col * stepX;
+                            const y = OFFSET_Y + row * stepY;
+                            const status = seat.status;
+
+                            // 圆角矩形路径 (美观)
+                            ctx.beginPath();
+                            const radius = 8;
+                            ctx.moveTo(x + radius, y);
+                            ctx.lineTo(x + SEAT_W - radius, y);
+                            ctx.quadraticCurveTo(x + SEAT_W, y, x + SEAT_W, y + radius);
+                            ctx.lineTo(x + SEAT_W, y + SEAT_H - radius);
+                            ctx.quadraticCurveTo(x + SEAT_W, y + SEAT_H, x + SEAT_W - radius, y + SEAT_H);
+                            ctx.lineTo(x + radius, y + SEAT_H);
+                            ctx.quadraticCurveTo(x, y + SEAT_H, x, y + SEAT_H - radius);
+                            ctx.lineTo(x, y + radius);
+                            ctx.quadraticCurveTo(x, y, x + radius, y);
+                            ctx.closePath();
+
+                            // 填充背景色根据状态
+                            if (status === 'available') {
+                                ctx.fillStyle = '#88c9a6';   // 清新绿色
+                                ctx.fill();
+                                ctx.strokeStyle = '#487a44';
+                                ctx.lineWidth = 1.2;
+                                ctx.stroke();
+                            } else if (status === 'selected') {
+                                ctx.fillStyle = '#ffa559';   // 橙金色选中
+                                ctx.fill();
+                                ctx.strokeStyle = '#c95a0f';
+                                ctx.lineWidth = 1.8;
+                                ctx.stroke();
+                                // 加个内发光小点缀
+                                ctx.save();
+                                ctx.shadowBlur = 0;
+                                ctx.beginPath();
+                                ctx.rect(x + 4, y + 4, SEAT_W - 8, SEAT_H - 8);
+                                ctx.fillStyle = '#ffd966aa';
+                                ctx.fill();
+                                ctx.restore();
+                            } else { // sold
+                                ctx.fillStyle = '#7f8c8d';   // 灰岩色
+                                ctx.fill();
+                                ctx.strokeStyle = '#4a5b5f';
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                                // 绘制 X 叉 (已售标识)
+                                ctx.beginPath();
+                                ctx.moveTo(x + 8, y + 8);
+                                ctx.lineTo(x + SEAT_W - 8, y + SEAT_H - 8);
+                                ctx.moveTo(x + SEAT_W - 8, y + 8);
+                                ctx.lineTo(x + 8, y + SEAT_H - 8);
+                                ctx.strokeStyle = '#c0392b';
+                                ctx.lineWidth = 2.5;
+                                ctx.stroke();
+                                // 附加短斜线增强视觉效果
+                                ctx.beginPath();
+                                ctx.moveTo(x + 12, y + 12);
+                                ctx.lineTo(x + SEAT_W - 12, y + SEAT_H - 12);
+                                ctx.strokeStyle = '#e67e22';
+                                ctx.lineWidth = 1.2;
+                                ctx.stroke();
+                            }
+
+                            // 可选：在座位中央显示小点 (提升科技感, 可选)
+                            if (status === 'selected') {
+                                ctx.beginPath();
+                                ctx.arc(x + SEAT_W / 2, y + SEAT_H / 2, 6, 0, 2 * Math.PI);
+                                ctx.fillStyle = '#fff1b5';
+                                ctx.shadowBlur = 3;
+                                ctx.fill();
+                                ctx.shadowBlur = 0;
+                            } else if (status === 'available') {
+                                ctx.beginPath();
+                                ctx.arc(x + SEAT_W / 2, y + SEAT_H / 2, 3, 0, 2 * Math.PI);
+                                ctx.fillStyle = '#ebf5e8';
+                                ctx.fill();
+                            }
+                        }
+                    }
+
+                    // 补充走道虚线装饰(可选美化)
+                    ctx.beginPath();
+                    ctx.setLineDash([8, 10]);
+                    ctx.strokeStyle = '#cbad7a';
+                    ctx.lineWidth = 1.5;
+                    for (let i = 0; i <= ROWS; i++) {
+                        const yLine = OFFSET_Y + i * stepY - 3;
+                        ctx.beginPath();
+                        ctx.moveTo(OFFSET_X - 15, yLine);
+                        ctx.lineTo(OFFSET_X + COLS * stepX + 10, yLine);
+                        ctx.stroke();
+                    }
+                    ctx.setLineDash([]); // 恢复实线
+                    ctx.restore();
+
+                    // 额外标注提醒: 已售区域不可点小提示（角落）
+                    ctx.font = "italic 11px monospace";
+                    ctx.fillStyle = "#3f4e3c";
+                    ctx.fillText("❌ 灰色叉座位已售", canvas.width - 120, canvas.height - 12);
+                }
+
+                // 鼠标坐标 → 行列索引 (如果点在座位矩形内返回 {row, col} 否则 null)
+                function getSeatIndexFromClick(clientX, clientY) {
+                    const rect = canvas.getBoundingClientRect();
+                    const scaleX = canvas.width / rect.width;    // canvas物理像素比 (避免CSS缩放影响)
+                    const scaleY = canvas.height / rect.height;
+
+                    const canvasX = (clientX - rect.left) * scaleX;
+                    const canvasY = (clientY - rect.top) * scaleY;
+
+                    // 遍历所有座位判断命中区域
+                    for (let row = 0; row < ROWS; row++) {
+                        for (let col = 0; col < COLS; col++) {
+                            const seatLeft = OFFSET_X + col * stepX;
+                            const seatTop = OFFSET_Y + row * stepY;
+                            const seatRight = seatLeft + SEAT_W;
+                            const seatBottom = seatTop + SEAT_H;
+                            if (canvasX >= seatLeft && canvasX <= seatRight && canvasY >= seatTop && canvasY <= seatBottom) {
+                                return { row, col };
+                            }
+                        }
+                    }
+                    return null;
+                }
+
+                // 更新右侧信息栏 (显示当前选中座位及总价/数量)
+                function updateSelectionInfo() {
+                    const selectedList = [];
+                    for (let i = 0; i < ROWS; i++) {
+                        for (let j = 0; j < COLS; j++) {
+                            if (seats[i][j].status === 'selected') {
+                                const rowLetter = String.fromCharCode(65 + i);
+                                const colNum = j + 1;
+                                selectedList.push(`${rowLetter}${colNum}`);
+                            }
+                        }
+                    }
+                    const displayDiv = document.getElementById('selectedDisplay');
+                    if (selectedList.length === 0) {
+                        displayDiv.innerHTML = '✨ 暂无选座，点击座位图选座 ✨';
+                    } else {
+                        displayDiv.innerHTML = `🎫 已选座位：${selectedList.join('、')}  (共${selectedList.length}座)`;
+                    }
+                    // 附加总价信息 (可选，票价假设45元)
+                    const totalPrice = selectedList.length * 45;
+                    const priceSpan = document.getElementById('priceHint');
+                    if (!priceSpan) {
+                        // 动态增加显示总价
+                        const infoArea = document.getElementById('infoArea');
+                        let oldHint = document.getElementById('priceHint');
+                        if (!oldHint) {
+                            const newDiv = document.createElement('div');
+                            newDiv.id = 'priceHint';
+                            newDiv.style.marginTop = '10px';
+                            newDiv.style.fontSize = '14px';
+                            newDiv.style.fontWeight = 'bold';
+                            newDiv.style.backgroundColor = '#00000044';
+                            newDiv.style.borderRadius = '40px';
+                            newDiv.style.padding = '5px 12px';
+                            newDiv.style.display = 'inline-block';
+                            newDiv.style.width = 'auto';
+                            infoArea.appendChild(newDiv);
+                        }
+                        const hint = document.getElementById('priceHint');
+                        if (selectedList.length) {
+                            hint.innerHTML = `💰 预估总价: ¥${totalPrice}  (¥45/座)`;
+                        } else {
+                            hint.innerHTML = `🎬 点击座位开始选座吧`;
+                        }
+                    } else {
+                        if (selectedList.length) {
+                            priceSpan.innerHTML = `💰 预估总价: ¥${totalPrice}  (¥45/座)`;
+                        } else {
+                            priceSpan.innerHTML = `🎬 点击座位开始选座`;
+                        }
+                    }
+                }
+
+                // 处理点击canvas的逻辑
+                function handleCanvasClick(e) {
+                    const idx = getSeatIndexFromClick(e.clientX, e.clientY);
+                    if (!idx) return;
+
+                    const { row, col } = idx;
+                    const seat = seats[row][col];
+                    // 已售座位不能操作
+                    if (seat.status === 'sold') {
+                        // 轻提示 (无侵入)
+                        showTempMessage("⚠️ 该座位已售出，不可选", "#c0392b");
+                        return;
+                    }
+
+                    // 切换 available <-> selected
+                    if (seat.status === 'available') {
+                        seat.status = 'selected';
+                        showTempMessage(`✔️ 已选座位 ${String.fromCharCode(65 + row)}${col + 1}`, "#2e7d32");
+                    } else if (seat.status === 'selected') {
+                        seat.status = 'available';
+                        showTempMessage(`🗑️ 取消座位 ${String.fromCharCode(65 + row)}${col + 1}`, "#f39c12");
+                    }
+
+                    // 重绘界面
+                    drawTheater();
+                    // 刷新右侧展示区
+                    updateSelectionInfo();
+                }
+
+                // 临时浮动消息 (简单模拟toast)
+                let toastTimeout = null;
+                function showTempMessage(msg, bgColor) {
+                    let toast = document.getElementById('dynamicToast');
+                    if (!toast) {
+                        const div = document.createElement('div');
+                        div.id = 'dynamicToast';
+                        div.style.position = 'fixed';
+                        div.style.bottom = '30px';
+                        div.style.left = '50%';
+                        div.style.transform = 'translateX(-50%)';
+                        div.style.backgroundColor = bgColor || '#333';
+                        div.style.color = 'white';
+                        div.style.padding = '8px 20px';
+                        div.style.borderRadius = '40px';
+                        div.style.fontWeight = 'bold';
+                        div.style.zIndex = '9999';
+                        div.style.fontSize = '0.9rem';
+                        div.style.boxShadow = '0 4px 12px black';
+                        div.style.backdropFilter = 'blur(8px)';
+                        div.style.whiteSpace = 'nowrap';
+                        document.body.appendChild(div);
+                        toast = div;
+                    }
+                    toast.style.backgroundColor = bgColor || '#2c3e2f';
+                    toast.innerText = msg;
+                    toast.style.opacity = '1';
+                    clearTimeout(toastTimeout);
+                    toastTimeout = setTimeout(() => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => {
+                            if (toast && toast.parentNode) toast.remove();
+                        }, 300);
+                    }, 1300);
+                }
+
+                // 清空所有选中 (保留已售与可选)
+                function clearAllSelections() {
+                    let changed = false;
+                    for (let i = 0; i < ROWS; i++) {
+                        for (let j = 0; j < COLS; j++) {
+                            if (seats[i][j].status === 'selected') {
+                                seats[i][j].status = 'available';
+                                changed = true;
+                            }
+                        }
+                    }
+                    if (changed) {
+                        drawTheater();
+                        updateSelectionInfo();
+                        showTempMessage("🧹 已清空所有选中的座位", "#3a6b4b");
+                    } else {
+                        showTempMessage("ℹ️ 当前没有选中的座位", "#7f8c8d");
+                    }
+                }
+
+                // 确认选座 & 输出座位位置 (满足题目核心要求)
+                function confirmSeatsAndOutput() {
+                    const selectedSeats = [];
+                    for (let i = 0; i < ROWS; i++) {
+                        for (let j = 0; j < COLS; j++) {
+                            if (seats[i][j].status === 'selected') {
+                                const rowLetter = String.fromCharCode(65 + i);
+                                const colNum = j + 1;
+                                selectedSeats.push(`${rowLetter}${colNum}`);
+                            }
+                        }
+                    }
+
+                    if (selectedSeats.length === 0) {
+                        alert("⚠️ 您还没有选择任何座位！请先点击座位图选座～");
+                        showTempMessage("请先选座再确认", "#c0392b");
+                        return;
+                    }
+
+                    // 输出用户选的座位的位置 (控制台 + 弹窗 + 界面强调)
+                    const outputStr = selectedSeats.join('、');
+                    console.log(`[选座确认] 用户选择的座位: ${outputStr} (共${selectedSeats.length}个座位)`);
+                    // 按要求输出 (alert 并且同时展示在界面高亮)
+                    alert(`🎉 选座成功！\n您已选座位: ${outputStr}\n共计 ${selectedSeats.length} 座，祝您观影愉快！`);
+                    // 同时在信息区显著展示一次最终结果并闪烁
+                    const displayDiv = document.getElementById('selectedDisplay');
+                    const originalHtml = displayDiv.innerHTML;
+                    displayDiv.innerHTML = `✅ 最终确认座位：${outputStr} ✅`;
+                    displayDiv.style.transition = '0.2s';
+                    displayDiv.style.backgroundColor = '#ffb34733';
+                    setTimeout(() => {
+                        if (displayDiv.innerHTML !== originalHtml) {
+                            // 保留结果但不覆盖普通模式，改成维持2秒再恢复? 为了避免覆盖选座显示，改为保留一会再变回原来
+                            setTimeout(() => {
+                                updateSelectionInfo();  // 还原真实选中列表显示
+                                displayDiv.style.backgroundColor = '';
+                            }, 3000);
+                        } else {
+                            displayDiv.style.backgroundColor = '';
+                        }
+                    }, 2800);
+
+                    // 额外也能在toast显示
+                    showTempMessage(`✨ 已确认座位 ${outputStr} ✨`, "#e67e22");
+                }
+
+                // 事件绑定 + 窗口自适应重新绘制(但绘制函数尺寸固定, 无需额外重设，但可能遇到模糊)
+                function bindEvents() {
+                    canvas.addEventListener('click', handleCanvasClick);
+                    const clearBtn = document.getElementById('clearBtn');
+                    const confirmBtn = document.getElementById('confirmBtn');
+                    if (clearBtn) clearBtn.addEventListener('click', clearAllSelections);
+                    if (confirmBtn) confirmBtn.addEventListener('click', confirmSeatsAndOutput);
+                    // 可选: 窗口resize无需重绘因为canvas像素不变，但文字适应没影响。保证绘制再调用一次无妨
+                    window.addEventListener('resize', () => {
+                        drawTheater(); // 保持比例重绘(主要是坐标不变)
+                    });
+                }
+
+                // 主入口初始化
+                function init() {
+                    initSeats();            // 生成座位数据(包含随机已售)
+                    bindEvents();
+                    drawTheater();         // 绘制界面
+                    updateSelectionInfo(); // 显示初始信息
+                }
+
+                init();
+            })();
+    </script>
+</body>
+
+</html>
