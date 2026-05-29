@@ -733,77 +733,191 @@ var countSubstrings = function (s) {
 
 //动态规划
 function coinChange(coins, amount) {
-    // 创建 dp 数组
-    const dp = new Array(amount + 1).fill(Infinity);
+  // 创建 dp 数组
+  const dp = new Array(amount + 1).fill(Infinity);
 
-    // 金额为 0 时不需要硬币
-    dp[0] = 0;
+  // 金额为 0 时不需要硬币
+  dp[0] = 0;
 
-    // 遍历每个金额
-    for (let i = 1; i <= amount; i++) {
-
-        // 尝试每一种硬币
-        for (const coin of coins) {
-
-            // 当前硬币可以使用
-            if (i - coin >= 0) {
-
-                // 状态转移
-                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
-            }
-        }
-    }
-
-    // 无法组成
-    return dp[amount] === Infinity ? -1 : dp[amount];
-}
-
-
-var findTargetSumWays = function(nums, target) {
-
-    let sum = 0;
-
-    for (let num of nums) {
-        sum += num;
-    }
-
-    // 不可能组成
-    if ((target + sum) % 2 !== 0) return 0;
-
-    let bagSize = (target + sum) / 2;
-
-    // target 过大
-    if (bagSize < 0) return 0;
-
-    // dp[j] 表示组成 j 的方案数
-    let dp = new Array(bagSize + 1).fill(0);
-
-    // 初始化
-    dp[0] = 1;
-
-    // 遍历物品
-    for (let num of nums) {
-
-        // 0/1 背包倒序
-        for (let j = bagSize; j >= num; j--) {
-
-            dp[j] += dp[j - num];
-        }
-    }
-
-    return dp[bagSize];
-};
-
-
-//set
-var findDisappearedNumbers = function(nums) {
-    let n= nums.length
-    let nums_new = new Set(nums)
-    let res = []
-    for (let i = 1 ;i <= n;i ++ ){
-      if(!nums_new.has(i)){
-        res.push(i)
+  // 遍历每个金额
+  for (let i = 1; i <= amount; i++) {
+    // 尝试每一种硬币
+    for (const coin of coins) {
+      // 当前硬币可以使用
+      if (i - coin >= 0) {
+        // 状态转移
+        dp[i] = Math.min(dp[i], dp[i - coin] + 1);
       }
     }
-    return res
+  }
+
+  // 无法组成
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+
+var findTargetSumWays = function (nums, target) {
+  let sum = 0;
+
+  for (let num of nums) {
+    sum += num;
+  }
+
+  // 不可能组成
+  if ((target + sum) % 2 !== 0) return 0;
+
+  let bagSize = (target + sum) / 2;
+
+  // target 过大
+  if (bagSize < 0) return 0;
+
+  // dp[j] 表示组成 j 的方案数
+  let dp = new Array(bagSize + 1).fill(0);
+
+  // 初始化
+  dp[0] = 1;
+
+  // 遍历物品
+  for (let num of nums) {
+    // 0/1 背包倒序
+    for (let j = bagSize; j >= num; j--) {
+      dp[j] += dp[j - num];
+    }
+  }
+
+  return dp[bagSize];
+};
+
+//set
+var findDisappearedNumbers = function (nums) {
+  let n = nums.length;
+  let nums_new = new Set(nums);
+  let res = [];
+  for (let i = 1; i <= n; i++) {
+    if (!nums_new.has(i)) {
+      res.push(i);
+    }
+  }
+  return res;
+};
+
+//回溯
+var permute = function (nums) {
+  let res = [];
+  //定义dfs函数
+  function dfs(current) {
+    if (current.length == nums.length) {
+      res.push([...current]); //不能直接放current数组否则是空
+      return;
+    }
+
+    for (let i of nums) {
+      if (current.includes(i)) {
+        continue;
+      }
+      current.push(i); //选择加入i
+      dfs(current); //继续向下递归
+      current.pop(); //剔除选择的i方便下一次循环
+    }
+  }
+
+  //初始化调用dfs函数
+  dfs([]);
+  return res;
+};
+
+//
+var findAnagrams = function (s, p) {
+  let need = new Array(26).fill(0);
+  let window = new Array(26).fill(0);
+
+  // 统计 p
+  for (let c of p) {
+    need[c.charCodeAt() - 97]++;
+  }
+
+  let left = 0;
+  let right = 0;
+
+  let res = [];
+
+  while (right < s.length) {
+    // 加入右字符
+    let r = s[right].charCodeAt() - 97;
+    window[r]++;
+
+    right++;
+
+    // 窗口长度达到 p.length
+    if (right - left === p.length) {
+      // 判断是否相同
+      if (isSame(need, window)) {
+        res.push(left);
+      }
+
+      // 移除左字符
+      let l = s[left].charCodeAt() - 97;
+      window[l]--;
+
+      left++;
+    }
+  }
+
+  return res;
+};
+
+// 判断两个数组是否一致
+function isSame(a, b) {
+  for (let i = 0; i < 26; i++) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+//二叉树的dfs
+var pathSum = function (root, targetSum) {
+  let count = 0;
+
+  // 从当前节点开始统计
+  function dfs(node, sum) {
+    if (!node) return;
+    sum += node.val;
+    if (sum === targetSum) {
+      count++; //后续可能会有一正一负的节点也能再次到达目标值，所以说这里不急着return
+    }
+    dfs(node.left, sum);
+    dfs(node.right, sum);
+  }
+
+  // 枚举所有起点，因为路径不需要从根节点开始
+  function traverse(node) {
+    if (!node) return;
+    dfs(node, 0);
+    traverse(node.left);
+    traverse(node.right);
+  }
+
+  traverse(root);
+
+  return count;
+};
+
+// dp，0/1背包
+var canPartition = function (nums) {
+  //转化问题为是否能选择数组中的元素组合为值volume
+  let sum = nums.reduce((a, b) => a + b, 0);
+  if (sum % 2 != 0) {
+    return false; //无法整除2，无法均分
+  }
+  let target = sum / 2;
+  let dp = new Array(target + 1).fill(0); //从0到volume
+  for (let i = 0; i < nums.length; i++) {
+    // 倒序！
+    for (let j = target; j >= nums[i]; j--) {
+      dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i]);
+    }
+  }
+  return dp[target] == target;
 };
