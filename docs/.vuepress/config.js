@@ -65,7 +65,7 @@ export default defineUserConfig({
         #dify-chatbot-bubble-button {
           position: fixed !important;
           right: 1.5rem !important;
-          bottom: 1.5rem !important;
+          bottom: 1rem !important;
           background-color: #1C64F2 !important;
           z-index: 10001 !important;
         }
@@ -73,7 +73,7 @@ export default defineUserConfig({
         #dify-chatbot-bubble-window {
           position: fixed !important;
           right: 1.5rem !important;
-          bottom: 5.5rem !important;
+          bottom: 5rem !important;
           width: 24rem !important;
           height: 40rem !important;
           max-width: calc(100vw - 2rem) !important;
