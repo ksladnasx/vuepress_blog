@@ -48,7 +48,7 @@ export default defineUserConfig({
       {},
       `
         window.difyChatbotConfig = {
-          token: 'rElu3Qj5FNP1t7eD',
+          token: 'PRFQL6hdwlirsgQK',
           inputs: {},
           systemVariables: {},
           userVariables: {
