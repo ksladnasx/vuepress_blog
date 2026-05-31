@@ -43,6 +43,59 @@ export default defineUserConfig({
         defer: true,
       },
     ],
+    [
+      "script",
+      {},
+      `
+        window.difyChatbotConfig = {
+          token: 'rElu3Qj5FNP1t7eD',
+          inputs: {},
+          systemVariables: {},
+          userVariables: {
+            avatar_url: 'https://i.ibb.co/d4F1NSMr/b-815a814aec2ee024eb3211e41f487e05.jpg',
+            name: '曉&凾',
+          },
+        }
+      `,
+    ],
+    [
+      "style",
+      {},
+      `
+        #dify-chatbot-bubble-button {
+          position: fixed !important;
+          right: 1.5rem !important;
+          bottom: 1.5rem !important;
+          background-color: #1C64F2 !important;
+          z-index: 10001 !important;
+        }
+
+        #dify-chatbot-bubble-window {
+          position: fixed !important;
+          right: 1.5rem !important;
+          bottom: 5.5rem !important;
+          width: 24rem !important;
+          height: 40rem !important;
+          max-width: calc(100vw - 2rem) !important;
+          max-height: calc(100vh - 6rem) !important;
+          z-index: 10000 !important;
+        }
+
+        @media (max-width: 480px) {
+          #dify-chatbot-bubble-button {
+            right: 1rem !important;
+            bottom: 1rem !important;
+          }
+
+          #dify-chatbot-bubble-window {
+            right: 1rem !important;
+            bottom: 5rem !important;
+            width: calc(100vw - 2rem) !important;
+            height: min(40rem, calc(100vh - 6rem)) !important;
+          }
+        }
+      `,
+    ],
     // ========== 新增 Google 验证 meta 标签 ==========
     [
       "meta",

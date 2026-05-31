@@ -7,6 +7,19 @@ import Timeline from "./layouts/Timeline.vue";
 import HomePage from "./components/HomePage.vue";
 import { nextTick, onMounted } from "vue";
 
+const DIFY_CHATBOT_TOKEN = "rElu3Qj5FNP1t7eD";
+
+const loadDifyChatbot = () => {
+  if (typeof window === "undefined") return;
+  if (document.getElementById(DIFY_CHATBOT_TOKEN)) return;
+
+  const script = document.createElement("script");
+  script.src = "https://udify.app/embed.min.js";
+  script.id = DIFY_CHATBOT_TOKEN;
+  script.defer = true;
+  document.body.appendChild(script);
+};
+
 const renderMath = () => {
   if (typeof window === "undefined") return;
   const renderMathInElement = window.renderMathInElement;
@@ -40,6 +53,7 @@ export default defineClientConfig({
 
     onMounted(() => {
       nextTick(renderMath);
+      nextTick(loadDifyChatbot);
     });
 
     router.afterEach(() => {
@@ -47,4 +61,3 @@ export default defineClientConfig({
     });
   },
 });
-
