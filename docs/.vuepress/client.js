@@ -7,7 +7,7 @@ import Timeline from "./layouts/Timeline.vue";
 import HomePage from "./components/HomePage.vue";
 import { nextTick, onMounted } from "vue";
 
-const DIFY_CHATBOT_TOKEN = "rElu3Qj5FNP1t7eD";
+const DIFY_CHATBOT_TOKEN = "PRFQL6hdwlirsgQK";
 
 const loadDifyChatbot = () => {
   if (typeof window === "undefined") return;

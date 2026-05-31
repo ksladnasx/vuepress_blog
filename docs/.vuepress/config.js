@@ -53,7 +53,7 @@ export default defineUserConfig({
           systemVariables: {},
           userVariables: {
             avatar_url: 'https://i.ibb.co/d4F1NSMr/b-815a814aec2ee024eb3211e41f487e05.jpg',
-            name: '曉&凾',
+            name: '我',
           },
         }
       `,

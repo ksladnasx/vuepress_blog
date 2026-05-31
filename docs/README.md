@@ -73,7 +73,6 @@ footer: MIT Licensed | Copyright © 2025-present VuePress Community
       <p>{{ feature.description }}</p>
     </div>
   </div>
-
 <!-- 技术栈 -->
 <div class="tech-stack">
     <h2>技术栈</h2>
