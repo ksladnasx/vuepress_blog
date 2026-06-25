@@ -179,7 +179,7 @@ const features = ref([
 
 const timelines = useBlogType('timeline')
 const filteredItems = computed(() => {
-  return timelines.value.items.filter(item => !(item.path.includes('/posts/codes/') || item.path.includes('/posts/meaningless/')));
+  return timelines.value.items.filter(item => !(item.path.includes('/posts/codes/') || item.path.includes('/posts/meaningless/')|| item.path.includes('/posts/interview/')|| item.path.includes('/posts/classlearning/')));
 });
 const tagMap = useBlogCategory('tag')
 const articlenum = filteredItems.value.length

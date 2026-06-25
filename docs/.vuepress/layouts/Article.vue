@@ -9,7 +9,7 @@ const articles = useBlogType('article')
 // 定义一个计算属性，返回过滤后的列表，过滤条件是路径不在posts/codes/目录下或者posts/meaningless/目录下
 const filteredItems = computed(() => {
   // 在 <script setup> 中直接使用 props.items，不需要 this
-  return articles.value.items.filter(item => !(item.path.includes('/posts/codes/') || item.path.includes('/posts/meaningless/')));
+  return articles.value.items.filter(item => !(item.path.includes('/posts/codes/') || item.path.includes('/posts/meaningless/')|| item.path.includes('/posts/interview/')));
 });
 const kind = 'Article'
 </script>
