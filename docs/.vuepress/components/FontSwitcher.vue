@@ -2,11 +2,12 @@
 import { computed, onMounted, ref } from "vue";
 
 const STORAGE_KEY = "xh-font";
-
+//然后在这个数组中添加字体选项就行
 const fonts = [
-  { key: "simkai", label: "楷体" },
-  { key: "lxgw", label: "霞鹜" },
-  { key: "fangsong", label: "仿宋" },
+  { key: "simkai", label: "楷体",describe:"华文楷体" },
+  { key: "lxgw", label: "霞鹜",describe:"霞鹜文楷"  },
+  { key: "fangsong", label: "仿宋" ,describe:"华文方宋" },
+  { key: "fzstk", label: "方舒" ,describe:"方正舒体" },
 ];
 
 const currentKey = ref(fonts[0].key);
@@ -55,8 +56,8 @@ onMounted(() => {
   <button
     class="font-switcher"
     type="button"
-    :aria-label="`切换字体，当前：${currentFont.label}`"
-    :title="`切换字体，当前：${currentFont.label}`"
+    :aria-label="`切换字体，当前：${currentFont.describe}`"
+    :title="`切换字体，当前：${currentFont.describe}`"
     @click="switchFont"
   >
     <span class="font-icon" aria-hidden="true">字</span>

@@ -22,8 +22,9 @@
   font-weight: 400;
 }
 
+
 :root {
-  --xh-font-family: "XH SimKai", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --xh-font-family: "XH SimKai", "KaiTi",'MSYH', "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-family: var(--xh-font-family);
   --code-font-family: var(--xh-font-family);
   --vp-font-family-base: var(--xh-font-family);
@@ -40,6 +41,20 @@ html[data-font="fangsong"] {
 
 html[data-font="simkai"] {
   --xh-font-family: "XH SimKai", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+// 想新增字体加在这里添加 @font-face 和 html[data-font="xxx"] 的配置即可，
+// 然后在FontSwitcher文件的fonts数组中添加字体选项就行 
+@font-face {
+  font-family: "XH FZSTK";
+  src: url("/FZSTK.TTF") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+html[data-font="fzstk"] {
+  --xh-font-family: "XH FZSTK", "Microsoft YaHei", "PingFang SC", sans-serif;
 }
 
 html,

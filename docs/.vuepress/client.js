@@ -6,6 +6,7 @@ import Tag from "./layouts/Tag.vue";
 import Timeline from "./layouts/Timeline.vue";
 import HomePage from "./components/HomePage.vue";
 import { nextTick, onMounted } from "vue";
+import "./styles/index.scss";
 
 const DIFY_CHATBOT_TOKEN = "PRFQL6hdwlirsgQK";
 
