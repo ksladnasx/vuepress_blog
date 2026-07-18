@@ -32,7 +32,7 @@ const routePath = useRoutePath()
               class="tag"
             >
               <span class="tag-name">{{ name }}</span>
-              <span class="tag-num">
+              <span class="tag-num" >
                 {{ items.length }}
               </span>
             </RouteLink>
@@ -55,7 +55,13 @@ const routePath = useRoutePath()
 
 .tag-wrapper {
   @include mixins.content-wrapper;
+  box-sizing: border-box;
+  width: min(1180px, calc(100vw - 2rem));
+  max-width: none;
   padding-top: calc(var(--navbar-height) + 0rem) !important;
+  padding-right: clamp(1rem, 3vw, 2.5rem);
+  padding-left: clamp(1rem, 3vw, 2.5rem);
+
   .tag-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -82,68 +88,99 @@ const routePath = useRoutePath()
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 0.55rem;
   justify-content: center;
-  max-width: 800px;
+  max-width: none;
+  width: 100%;
   margin: 0 auto;
   
   
   .tag {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.28rem;
     margin: 0;
-    padding: 0.6rem 1rem;
-    border-radius: 1rem;
-    font-weight: 500;
+    padding: 0.36rem 0.58rem;
+    border-radius: 999px;
+    font-size: calc(var(--xh-font-size) * 0.76);
+    font-weight: 650;
+    line-height: 1.35;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
     // animation: fadeInUp 0.5s ease-out;
-    background: var(--vp-c-bg-soft);
-    border: 1px solid var(--vp-c-border);
-    color: var(--vp-c-text-1);
-    font-size: 0.95rem;
+    background: var(--vp-c-bg-elv);
+    border: 1px solid rgba(var(--vp-c-gray-soft-rgb), 0.4);
+    color: var(--vp-c-text-mute);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
     
     &:hover {
-      // transform: translateY(-3px) scale(1.05);
       border-color: var(--vp-c-brand);
-      box-shadow: 0 6px 16px rgba(var(--vp-c-brand-rgb), 0.15);
-      background: rgba(var(--vp-c-brand-rgb), 0.05);
+      box-shadow: 0 6px 16px rgba(var(--vp-c-brand-rgb), 0.12);
+      background: var(--vp-c-accent-soft);
+      color: var(--vp-c-accent);
+      transform: translateY(-1px);
+
+      .tag-num {
+        border-color: rgba(var(--vp-c-brand-rgb), 0.24);
+        background: rgba(var(--vp-c-brand-rgb), 0.1);
+        color: var(--vp-c-accent);
+        
+      }
     }
     
     .tag-name {
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
     }
     
     .tag-num {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 0.6rem;
-      height: 1.1rem;
-      padding: 0 0.3rem;
-      border-radius: 0.7rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: rgba(var(--vp-c-gray-soft-rgb), 0.5);
-      transition: all 0.3s ease;
+      min-width: 0.82rem;
+      height: 0.82rem;
+      padding: 0 0.22rem;
+      border: 1px solid rgba(var(--vp-c-gray-soft-rgb), 0.32);
+      border-radius: 0.9rem;
+      background: transparent;
+      color: var(--vp-c-text-subtle);
+      font-family: var(--xh-system-code-font-family, Consolas, monospace);
+      font-size: calc(var(--xh-font-size) * 0.54);
+      font-weight: 700;
+      line-height: 1;
+      font-size: calc(var(--xh-font-size) * 0.6) !important;
+      transform: translateY(-0.04rem);
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
     }
     
     &.route-link-active {
-      background: rgba(var(--vp-c-brand-rgb), 0.15);
+      background: var(--vp-c-accent-soft);
       border-color: var(--vp-c-brand);
-      border-width: 1.3px;
       color: var(--vp-c-brand);
-      font-weight: 600;
+      font-weight: 750;
       box-shadow: 
-        0 6px 20px rgba(var(--vp-c-brand-rgb), 0.2),
-        0 0 0 1px rgba(var(--vp-c-brand-rgb), 0.1) inset;
+        0 6px 18px rgba(var(--vp-c-brand-rgb), 0.14),
+        0 0 0 1px rgba(var(--vp-c-brand-rgb), 0.08) inset;
       
       .tag-num {
-        background:var(--vp-c-border);
-        color: rgb(255, 255, 255);
-      
+        border-color: transparent;
+        background: var(--vp-c-brand);
+        color: var(--vp-c-accent-text);
       }
       
       &::after {
@@ -151,9 +188,9 @@ const routePath = useRoutePath()
         position: absolute;
         inset: -2px;
         border-radius: inherit;
-        background: linear-gradient(45deg, var(--vp-c-brand), var(--vp-c-brand-light));
+        background: var(--vp-c-brand);
         z-index: -1;
-        opacity: 0.3;
+        opacity: 0.12;
         // animation: rotate 3s linear infinite;
       }
     }
@@ -195,13 +232,17 @@ const routePath = useRoutePath()
   .tag-header .tag-title {
     font-size: 2rem;
   }
+
+  .tag-wrapper {
+    width: 100%;
+  }
   
   .tag-cloud {
-    gap: 0.6rem;
+    gap: 0.5rem;
     
     .tag {
-      padding: 0.5rem 0.8rem;
-      font-size: 0.9rem;
+      padding: 0.32rem 0.52rem;
+      font-size: calc(var(--xh-font-size) * 0.72);
     }
   }
 }
@@ -212,11 +253,11 @@ const routePath = useRoutePath()
   }
   
   .tag-cloud {
-    gap: 0.5rem;
+    gap: 0.42rem;
     
     .tag {
-      padding: 0.4rem 0.7rem;
-      font-size: 0.85rem;
+      padding: 0.28rem 0.46rem;
+      font-size: calc(var(--xh-font-size) * 0.68);
     }
   }
 }

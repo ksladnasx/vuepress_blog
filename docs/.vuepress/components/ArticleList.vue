@@ -99,7 +99,7 @@ const handleTagClick = (event, tags) => {
                 </svg>
                 <span class="tags">
                   <span v-for="(tag, index) in info.tag.slice(0, 3)" :key="index" class="tag-item">
-                    {{ tag }}
+                    <span class="tag-text">{{ tag }}</span>
                   </span>
                   <span v-if="info.tag.length > 3" class="tag-more">+{{ info.tag.length - 3 }}</span>
                 </span>
@@ -337,26 +337,35 @@ const handleTagClick = (event, tags) => {
 
 /* 元信息标签样式 */
 .meta-tags {
+  --article-meta-size: calc(var(--xh-font-size) * 0.72);
+
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
   margin-top: 1rem;
+  min-width: 0;
 }
 
 .meta-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  background: rgba(var(--vp-c-gray-soft-rgb), 0.5);
-  border: 1px solid var(--vp-c-border);
-  border-radius: 20px;
-  font-size: 0.875rem;
+  gap: 0.32rem;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.28rem 0.56rem;
+  border: 1px solid rgba(var(--vp-c-gray-soft-rgb), 0.35);
+  border-radius: 999px;
+  background: var(--vp-c-control);
   color: var(--vp-c-text-2);
-  transition: all 0.2s ease;
-
+  font-size: var(--article-meta-size) !important;
+  line-height: 1.35;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+ 
   &:hover {
-    background: rgba(var(--vp-c-brand-rgb), 0.1);
+    background: var(--vp-c-accent-soft);
     border-color: var(--vp-c-brand);
     color: var(--vp-c-brand);
   }
@@ -368,24 +377,75 @@ const handleTagClick = (event, tags) => {
 }
 
 .tag-list {
+  flex: 1 1 14rem;
+  gap: 0.35rem;
+  padding: 0.22rem 0.4rem;
+  border-color: transparent;
+  background: transparent;
+  overflow: hidden;
+
   .tags {
-    display: flex;
-    gap: 0.25rem;
+    display: inline-flex;
+    gap: 0.3rem;
     align-items: center;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .tag-item {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: min(7rem, 30vw);
+    padding: 0.14rem 0.42rem;
+    border: 1px solid rgba(var(--vp-c-brand-rgb), 0.16);
+    border-radius: 999px;
+    background: rgb(var(--vp-c-brand-rgb), 0.08);
+    color: var(--vp-c-accent);
+    font-size: var(--article-meta-size) !important;
+    line-height: 1.35;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+
     &:not(:last-child)::after {
-      content: '•';
-      margin-left: 0.25rem;
-      opacity: 0.5;
+      content: none;
+    }
+
+    &:hover {
+      border-color: rgba(var(--vp-c-brand-rgb), 0.34);
+      background: var(--vp-c-accent-soft);
+      color: var(--vp-c-accent-hover);
     }
   }
 
+  .tag-text {
+    overflow: hidden;
+    min-width: 0;
+    font-size: var(--article-meta-size) !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .tag-more {
-    margin-left: 0.25rem;
-    font-size: 0.75rem;
-    opacity: 0.7;
+    flex: 0 0 auto;
+    padding: 0.14rem 0.38rem;
+    border: 1px solid var(--vp-c-border);
+    border-radius: 999px;
+    background: var(--vp-c-bg);
+    color: var(--vp-c-text-subtle);
+    font-size: var(--article-meta-size) !important;
+    line-height: 1.35;
+  }
+
+  .tag-icon {
+    flex: 0 0 auto;
   }
 }
 
@@ -449,7 +509,7 @@ const handleTagClick = (event, tags) => {
   }
 
   .meta-tag {
-    font-size: 0.8125rem;
+    font-size: var(--article-meta-size) !important;
     padding: 0.25rem 0.5rem;
   }
 }

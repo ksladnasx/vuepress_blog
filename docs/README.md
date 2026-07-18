@@ -2,7 +2,7 @@
 home: true
 heroImage: https://i.ibb.co/vCgfCfND/02d25d0526a02a24d22cc51be3d07b50.gif
 heroText: xh's blog
-tagline: 把学习、项目和思考整理成可回头查阅的笔记。
+tagline: 捕捉思想星火，留存实践足迹，探寻技术本质。
 actions:
   - text: 文章
     link: /article/

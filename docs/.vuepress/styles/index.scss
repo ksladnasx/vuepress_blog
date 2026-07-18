@@ -164,6 +164,10 @@ body,
   font-family: var(--xh-font-family);
   font-synthesis: weight;
 }
+.vp-navbar-item,
+.font-settings{
+  font-size: calc(var(--xh-font-size) * 0.9) !important;
+}
 
 [vp-content],
 .theme-default-content,
@@ -226,19 +230,17 @@ body,
   ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *)),
 .article-wrapper
   :where(
-    .page-title,
     .empty-text,
-    .article-title,
+    
     .meta-tag,
     .meta-tag *,
-    .tag-item,
     .tag-more,
     .article-excerpt,
     .article-excerpt *,
     .read-more-text
   ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *)),
-.category-wrapper :where(.category-title, .category-count, .category, .category *):not(:where(svg, svg *)),
-.tag-wrapper :where(.tag-title, .tag-count, .tag, .tag *):not(:where(svg, svg *)) {
+.category-wrapper :where(.category-count, .category, .category *):not(:where(svg, svg *)),
+.tag-wrapper :where( .tag-count, .tag, .tag *):not(:where(svg, svg *)) {
   font-size: var(--xh-font-size) !important;
   font-weight: var(--xh-font-weight) !important;
   font-variation-settings: "wght" var(--xh-font-weight);

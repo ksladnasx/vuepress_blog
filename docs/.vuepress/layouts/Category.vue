@@ -93,9 +93,10 @@ const routePath = useRoutePath()
   .category {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 0.55rem;
     margin: 0;
-    padding: 1rem 1.25rem;
+    padding: 0.9rem 2.2rem 0.9rem 1rem;
     border-radius: 1rem;
     font-weight: 500;
     cursor: pointer;
@@ -138,21 +139,33 @@ const routePath = useRoutePath()
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 70%;
+      min-width: 0;
+      max-width: 100%;
     }
     
     .category-num {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.55rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 1rem;
-      height: 2rem;
-      padding: 0 0.5rem;
-      border-radius: 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      background: rgba(var(--vp-c-gray-soft-rgb), 0.5);
-      transition: all 0.3s ease;
+      min-width: 0.9rem;
+      height: 0.9rem;
+      padding: 0 0.24rem;
+      border: 1px solid rgba(var(--vp-c-gray-soft-rgb), 0.32);
+      border-radius: 999px;
+      background: var(--vp-c-bg);
+      color: var(--vp-c-text-subtle);
+      font-family: var(--xh-system-code-font-family, Consolas, monospace);
+      font-size: calc(var(--xh-font-size) * 0.56);
+      font-weight: 750;
+      line-height: 1; 
+      font-size: calc(var(--xh-font-size) * 0.8) !important;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
     }
     
     &.route-link-active {
@@ -165,8 +178,9 @@ const routePath = useRoutePath()
         0 0 0 1px rgba(var(--vp-c-brand-rgb), 0.1) inset;
       
       .category-num {
-        background: rgba(255, 255, 255, 0.9);;
-        color: black;
+        border-color: transparent;
+        background: var(--vp-c-brand);
+        color: var(--vp-c-accent-text);
       }
       
       &::after {
@@ -234,7 +248,7 @@ const routePath = useRoutePath()
     gap: 1rem;
     
     .category {
-      padding: 0.8rem 1rem;
+      padding: 0.8rem 2rem 0.8rem 0.95rem;
       font-size: 1rem;
     }
   }
@@ -250,7 +264,7 @@ const routePath = useRoutePath()
     gap: 0.8rem;
     
     .category {
-      padding: 0.7rem 0.9rem;
+      padding: 0.7rem 1.9rem 0.7rem 0.85rem;
       font-size: 0.95rem;
     }
   }
