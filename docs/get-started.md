@@ -1,431 +1,438 @@
-# 🖥️ 个人技术知识库
+---
+title: 介绍
+description: 王涵的个人介绍、技术方向与博客入口
+sidebar: false
+---
+
+<script setup>
+const experiences = [
+  {
+    time: "2025.12 - 2026.05",
+    title: "农担智能体开发平台",
+    description:
+      "参与工作流、知识库、Agent 对话、模型配置、审计日志等模块建设；用配置驱动思路重构工作流节点渲染，优化权限查询链路、文件上传校验和运行时异常兜底。",
+  },
+  {
+    time: "2025.10 - 2025.12",
+    title: "流量调度平台",
+    description:
+      "基于 Vue 3、Pinia 和 Element Plus 参与 RBAC 权限、动态路由和 ELB 监听器创建流程开发，完成多步表单、数据转换和接口串联。",
+  },
+  {
+    time: "2025.10 - 2025.11",
+    title: "电信 IT 慢 SQL 分析系统",
+    description:
+      "基于 React、Redux 和 Ant Design 做接口适配、慢 SQL 多条件筛选、结果弹窗展示及 PDF 导出样式处理。",
+  },
+];
+</script>
+
+# 介绍
 
 <div class="get-started-page">
-  <div class="site-badge">
-    <span><a href="https://www.xhblog.cc.cd/" target="_blank" class="site-link">
-      🚀 访问站点
-    </a></span>
-    <span class="site-meta">注：原github地址已不可用，请点击访问站点访问新域名</span>
-  </div>
+  <section class="about-hero">
+    <p class="eyebrow">About xh's blog</p>
+    <h2>把学习、项目和排查记录整理成以后还能翻回来的笔记。</h2>
+    <p class="lead">
+      我目前就读于重庆邮电大学网络工程专业，方向是前端开发，也在实习中接触并参与了 AI Agent 平台和 Python 后端业务开发。这个站点主要用来记录我在前端工程、全栈协作、AI 应用和课程学习中的实践经验。
+    </p>
+    <div class="hero-actions">
+      <a class="action primary" href="/article/">阅读文章</a>
+      <a class="action secondary" href="https://www.xhblog.cc.cd/" target="_blank" rel="noopener noreferrer">访问站点</a>
+    </div>
+  </section>
 
-本知识库基于 Vuepress 构建并托管于 GitHub Pages，专注记录前端开发与全栈技术实践经验，致力于打造简洁高效的个人学习与分享平台。
-请勿使用vpn或者加速器访问网站，否则可能出现无法评论的状况
+  <section class="profile-strip" aria-label="个人概览">
+    <div>
+      <span>方向</span>
+      <strong>前端开发工程师</strong>
+    </div>
+    <div>
+      <span>城市</span>
+      <strong>成都 / 重庆</strong>
+    </div>
+    <div>
+      <span>学校</span>
+      <strong>重庆邮电大学</strong>
+    </div>
+    <div>
+      <span>毕业</span>
+      <strong>2027 年</strong>
+    </div>
+  </section>
 
-## 🚀 特点优势
+  <section class="about-section">
+    <div class="section-head">
+      <p>Profile</p>
+      <h2>我在做什么</h2>
+    </div>
+    <div class="two-column">
+      <article class="text-panel">
+        <h3>技术方向</h3>
+        <p>
+          我主要关注 Vue 3、React、TypeScript 和现代前端工程实践，喜欢把复杂业务拆成清晰的页面状态、组件边界和接口约定。实习期间参与过通信运营商数字化平台、流量调度平台、慢 SQL 分析系统，以及企业级 AI Agent 开发平台。
+        </p>
+        <p>
+          除了前端，我也会参与 FastAPI、SQLModel、MySQL 相关的后端接口调整、业务逻辑修复和前后端联调。对我来说，全栈经验的价值不是“什么都写一点”，而是能更快理解数据从数据库到页面的完整链路。
+        </p>
+      </article>
+      <article class="text-panel">
+        <h3>这个博客</h3>
+        <p>
+          这里不是作品集模板，也不是堆关键词的地方。我会把平时踩过的坑、复盘过的项目、课程里的重点和一些 AI Coding 实践写下来，尽量保留问题出现时的上下文、排查路径和最后的取舍。
+        </p>
+        <p>
+          如果你也是前端、全栈或 AI 应用方向的学习者，希望这些笔记能提供一点参考；如果过了一段时间我自己忘了，也能在这里重新把思路捡起来。
+        </p>
+      </article>
+    </div>
+  </section>
 
-  <div class="features-grid">
-    <div class="feature-card">
-     <span style="font-size:3rem"> ⚡</span>
-      <h3>极简内容</h3>
-      <p>去除冗余信息，核心知识点一步到位</p>
+  <section class="about-section">
+    <div class="section-head">
+      <p>Skills</p>
+      <h2>常用技术栈</h2>
     </div>
-    <div class="feature-card">
-     <span style="font-size:3rem"> 📄</span>
-      <h3>Markdown 原生</h3>
-      <p>直接渲染 Markdown，专注内容创作</p>
+    <div class="skill-cloud">
+      <span>HTML / CSS</span>
+      <span>JavaScript / TypeScript</span>
+      <span>Vue 3</span>
+      <span>React</span>
+      <span>Pinia / Redux</span>
+      <span>Element Plus</span>
+      <span>Ant Design</span>
+      <span>Tailwind CSS</span>
+      <span>FastAPI</span>
+      <span>SQLModel</span>
+      <span>MySQL</span>
+      <span>Docker / Nginx</span>
+      <span>Git Flow</span>
+      <span>Dify / AI Agent</span>
+      <span>Cursor / AI Coding</span>
     </div>
-    <div class="feature-card">
-      <span style="font-size:3rem">🧮</span>
-      <h3>扩展支持</h3>
-      <p>支持数学公式、图表等专业内容展示</p>
-    </div>
-    <div class="feature-card">
-     <span style="font-size:3rem"> 📱</span>
-      <h3>跨端访问</h3>
-      <p>响应式设计，适配各种设备无缝学习</p>
-    </div>
-  </div>
+  </section>
 
-## 📚 内容索引
+  <section class="about-section">
+    <div class="section-head">
+      <p>Experience</p>
+      <h2>最近的项目经历</h2>
+    </div>
+    <ResumeExperienceList :items="experiences" />
+  </section>
 
-### 分类导航
+  <section class="about-section">
+    <div class="section-head">
+      <p>Notes</p>
+      <h2>从哪里开始看</h2>
+    </div>
+    <div class="entry-grid">
+      <a class="entry-card" href="/article/">
+        <span>全部文章</span>
+        <strong>按更新时间浏览所有笔记</strong>
+      </a>
+      <a class="entry-card" href="/category/">
+        <span>分类</span>
+        <strong>按前端、后端、课程等主题查找</strong>
+      </a>
+      <a class="entry-card" href="/tag/">
+        <span>标签</span>
+        <strong>用关键词快速定位相关内容</strong>
+      </a>
+      <a class="entry-card" href="/timeline/">
+        <span>时间线</span>
+        <strong>按写作顺序回看学习轨迹</strong>
+      </a>
+    </div>
+  </section>
 
-  <div class="nav-links">
-    <a href="./article/" class="nav-item">📖 全部文章</a>
-    <a href="./category/" class="nav-item">🏷️ 按类型分</a>
-    <a href="./tag/" class="nav-item"># 按标签分</a>
-    <a href="./timeline/" class="nav-item">🕒 按时间分</a>
-  </div>
-
-### 内容概要
-
-  <!-- 优化内容索引排版：统一容器/间距/对齐 -->
-  <div class="content-index-wrapper">
-    <div class="content-section">
-      <h3>💻 实战项目与框架应用</h3>
-      <div class="content-grid">
-        <div class="content-card">
-          <a href="./posts/vuelearning/Vuepress上手.html" >▶ 让我们从Vuepress上手开始</a>
-          <span class="content-desc">docsify项目创建与部署</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/modelcode/todolist建立.html">▶ 最基本的todolist实现</a>
-          <span class="content-desc">Vue3 + Composition API实现</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/vuelearning/element-plus.html">▶ ElementPlus组件库指南</a>
-          <span class="content-desc">最佳实践与问题排查</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/experiences/项目经验.html">▶ 项目经验总结</a>
-          <span class="content-desc">架构设计 & 性能优化方案</span>
-        </div>
-      </div>
+  <section class="about-section contact-section">
+    <div class="section-head">
+      <p>Contact</p>
+      <h2>保持联系</h2>
     </div>
-    <div class="content-section">
-      <h3>📕 知识积累与总结</h3>
-      <div class="content-grid">
-        <div class="content-card">
-          <a href="./posts/classlearning/网络协议分析.html">▶ 网络协议分析复习</a>
-          <span class="content-desc">梳理各类网络协议核心原理及学习技巧</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/experiences/全栈开发.html">▶ 全栈开发学习路径</a>
-          <span class="content-desc">从前端基础到后端部署的学习规划</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/otherlearning/算法刷题.html">▶ 算法刷题笔记</a>
-           <span class="content-desc">蓝桥杯刷题总结+经典题解</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/otherlearning/插件公式示例.html">▶ 公式插件测试</a>
-          <span class="content-desc">各类公式书写方法，附常用公式示例</span>
-        </div>
-      </div>
+    <div class="contact-links">
+      <a href="mailto:wh82614088@126.com">wh82614088@126.com</a>
+      <a href="https://github.com/ksladnasx" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://github.com/ksladnasx/vuepress_blog" target="_blank" rel="noopener noreferrer">本站仓库</a>
     </div>
-    <div class="content-section">
-      <h3>💼 职场成长记录</h3>
-      <div class="content-grid">
-        <div class="content-card">
-          <a href="./posts/internship/实习经验.html">▶ 实习经验总结</a>
-          <span class="content-desc">实习所需要有的基本经验与收获</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/internship/实习周总结1.html">▶ 实习周总结1</a>
-          <span class="content-desc">第一周工作内容与心得</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/internship/实习周总结2.html">▶ 实习周总结2</a>
-          <span class="content-desc">第二周工作内容与心得</span>
-        </div>
-        <div class="content-card">
-          <a href="./posts/internship/实习周总结3.html">▶ 实习周总结3</a>
-          <span class="content-desc">第三周工作内容与心得</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-## 🔧 技术栈与工具
-
-查询docker镜像网站：[docker镜像站](https://docker.aityp.com/)
-
-  <div class="tech-stack">
-    <div class="tech-item">
-      <img src="https://tse1-mm.cn.bing.net/th/id/OIP-C.AqyudVa9weRE215AAm8LUgAAAA?w=155&h=158&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" alt="Vue3" class="tech-icon">
-      <a href="https://cn.vuejs.org/">Vue3</a>
-    </div>
-    <div class="tech-item">
-      <img src="https://element-plus.org/images/element-plus-logo-small.svg" alt="ElementPlus" class="tech-icon">
-      <a href="https://element-plus.org/zh-CN/">ElementPlus</a>
-    </div>
-    <div class="tech-item">
-      <img src="https://www.typescriptlang.org/favicon-32x32.png?v=8944a05a8b601855de116c8a56d3b3ae" alt="TypeScript" class="tech-icon">
-      <a href="https://www.typescriptlang.org/">TypeScript</a>
-    </div>
-    <div class="tech-item">
-      <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.bfNVfuKq5NOy_tB-ZD3RMQAAAA?w=140&h=158&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Docker" class="tech-icon">
-      <a href="https://www.docker.com/">Docker</a>
-    </div>
-    <div class="tech-item">
-      <img src="https://nginx.org/favicon.ico" alt="Nginx" class="tech-icon">
-      <a href="https://nginx.org/">Nginx</a>
-    </div>
-    <div class="tech-item">
-      <img src="https://vitest.vite.org.cn/logo.svg" alt="Vitest" class="tech-icon">
-       <a href="https://vitest.vite.org.cn/" target="_blank" rel="noopener noreferrer">Vitest</a>
-    </div>
-    <div class="tech-item">
-      <img src="https://nuxt.uihtm.com/logo.svg" alt="Nuxt" class="tech-icon">
-      <a href="https://nuxt.nodejs.cn/" target="_blank" rel="noopener noreferrer">Nuxt</a>
-    </div>
-  </div>
-
-## 🔗 站点信息
-
-  <div class="site-info">
-    <a href="https://github.com/ksladnasx" target="_blank" class="info-link">🐙 GitHub个人主页</a>
-    <a href="https://github.com/ksladnasx/vuepress_blog" target="_blank" class="info-link">📁 本项目地址</a>
-    <a href="#" class="info-link">⚙️ 站点构建说明</a>
-  </div>
+  </section>
 </div>
 
 <style>
-/* 基础变量：仅作用于当前页面 */
 .get-started-page {
-  --vp-c-brand: #3eaf7c;
-  --vp-c-brand-light: #42b983;
-  --vp-c-brand-lighter: #389d70;
-  --vp-c-bg-alt: #f5f5f5;
-  --vp-c-bg-secondary: #f8f9fa;
-  --vp-c-text-1: #333;
-  --vp-c-text-2: #666;
-  --vp-c-text-3: #888;
-  --vp-c-border: #e9ecef;
-  --vp-c-shadow-1: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-/* dark模式变量覆盖 */
-html[data-theme="dark"] .get-started-page {
-  --vp-c-brand: #42b983;
-  --vp-c-brand-light: #49c48d;
-  --vp-c-brand-lighter: #389d70;
-  --vp-c-bg-alt: #27272a;
-  --vp-c-bg-secondary: #1f2937;
-  --vp-c-text-1: #f9fafb;
-  --vp-c-text-2: #9ca3af;
-  --vp-c-text-3: #6b7280;
-  --vp-c-border: #374151;
-  --vp-c-shadow-1: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-/* 全局重置（仅作用于当前页面） */
-.get-started-page * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-
-/* 基础样式 */
-.get-started-page .site-badge {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: var(--vp-c-bg-alt);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content:space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.get-started-page .site-link {
-  padding: 0.5rem 1rem;
-  background: var(--vp-c-brand);
-  color: white !important;
-  border-radius: 4px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  transition: background 0.3s;
-}
-
-.get-started-page .site-link:hover {
-  background: var(--vp-c-brand-lighter);
-}
-
-.get-started-page .site-meta {
-  color: var(--vp-c-text-2);
-  font-size: 0.9rem;
+  margin-top: 1.5rem;
+  color: var(--vp-c-text);
 }
 
 .get-started-page a {
   text-decoration: none !important;
 }
 
-/* 特点优势网格 */
-.get-started-page .features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.get-started-page .feature-card {
-  background: var(--vp-c-bg-secondary);
-  padding:  1.5rem;
+.get-started-page .about-hero {
+  padding: 2rem;
+  border: 1px solid rgb(var(--xh-accent-rgb) / 16%);
   border-radius: 8px;
-  box-shadow: var(--vp-c-shadow-1);
-  text-align: center;
-  border: 1px solid var(--vp-c-border);
+  background:
+    linear-gradient(135deg, rgb(var(--xh-accent-rgb) / 9%), transparent 42%),
+    var(--vp-c-bg-elv);
+  box-shadow: var(--xh-shadow-soft);
 }
 
-.get-started-page .feature-card > :nth-child(2) {
-  font-size: 2rem;
-  color: var(--vp-c-brand);
-  margin-bottom: 1rem;
-  display: block;
+.get-started-page .eyebrow,
+.get-started-page .section-head p {
+  margin: 0 0 0.45rem;
+  color: var(--vp-c-accent);
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase;
 }
 
-.get-started-page .feature-card h3 {
-  color: var(--vp-c-text-1);
-  padding-top:2.6rem;
-  margin: 0 0 0.5rem 0;
-}
-
-.get-started-page .feature-card p {
-  color: var(--vp-c-text-2);
+.get-started-page .about-hero h2 {
+  max-width: 46rem;
   margin: 0;
+  color: var(--vp-c-text);
+  font-size: 2.35rem !important;
+  font-weight: 850 !important;
+  line-height: 1.22 !important;
 }
 
-/* 分类导航 */
-.get-started-page .nav-links {
+.get-started-page .lead {
+  max-width: 47rem;
+  margin: 1.15rem 0 0;
+  color: var(--vp-c-text-mute);
+  font-size: calc(var(--xh-font-size) * 1.02) !important;
+  line-height: calc(var(--xh-line-height) + 0.02) !important;
+}
+
+.get-started-page .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1rem 0 2rem;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
 }
 
-.get-started-page .nav-item {
-  padding: 0.6rem 1.2rem;
-  background: var(--vp-c-bg-secondary);
-  border: 1px solid var(--vp-c-border);
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--vp-c-text-1) !important;
+.get-started-page .action {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s;
+  justify-content: center;
+  min-height: 2.35rem;
+  padding: 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 800;
+  transition:
+    background-color var(--vp-t-color),
+    border-color var(--vp-t-color),
+    color var(--vp-t-color),
+    transform var(--vp-t-transform);
 }
 
-.get-started-page .nav-item:hover {
-  background: var(--vp-c-bg-alt);
-  transform: translateY(-2px);
-  border-color: var(--vp-c-brand-light);
+.get-started-page .action:hover {
+  transform: translateY(-1px);
 }
 
-/* 内容索引核心优化：统一排版 */
-.get-started-page .content-index-wrapper {
-  margin: 2rem 0;
+.get-started-page .action.primary {
+  background: var(--vp-c-accent-bg);
+  color: var(--vp-c-accent-text, #ffffff) !important;
 }
 
-.get-started-page .content-section {
-  margin: 2rem 0;
-  padding-left: 0.5rem;
+.get-started-page .action.primary:hover {
+  background: var(--vp-c-accent-hover);
 }
 
-.get-started-page .content-section h3 {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  color: var(--vp-c-text-1);
-  font-size: 1.1rem;
+.get-started-page .action.secondary {
+  border-color: rgb(var(--xh-accent-rgb) / 22%);
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent) !important;
 }
 
-/* 网格布局让内容项整齐对齐 */
-.get-started-page .content-grid {
+.get-started-page .profile-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 0.8rem;
-  padding: 0 0.5rem;
-  border-left: 3px solid var(--vp-c-brand);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 2.2rem;
 }
 
-/* 统一卡片样式，让每个条目排版一致 */
-.get-started-page .content-card {
-  display: flex;
-  flex-direction: column;
-  padding: 0.8rem 1rem;
-  background: var(--vp-c-bg-secondary);
-  border-radius: 6px;
-  border: 1px solid var(--vp-c-border);
-  transition: all 0.2s;
-}
-
-.get-started-page .content-card:hover {
-  border-color: var(--vp-c-brand-light);
-  background: var(--vp-c-bg-alt);
-}
-
-.get-started-page .content-card a {
-  color: var(--vp-c-brand-light) !important;
-  text-decoration: none;
-  margin-bottom: 0.3rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.get-started-page .content-card a:hover {
-  text-decoration: underline;
-}
-
-.get-started-page .content-desc {
-  font-size: 0.85rem;
-  color: var(--vp-c-text-3);
-  line-height: 1.4;
-}
-
-/* 技术栈样式 */
-.get-started-page .tech-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin: 2rem 0;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.get-started-page .tech-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.get-started-page .tech-item span {
-  color: var(--vp-c-text-1);
-  font-size: 0.9rem;
-}
-
-.get-started-page .tech-icon {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  filter: var(--vp-c-icon-filter, none);
-}
-
-/* 站点信息样式 */
-.get-started-page .site-info {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--vp-c-bg-secondary);
+.get-started-page .profile-strip div,
+.get-started-page .text-panel,
+.get-started-page .entry-card {
   border: 1px solid var(--vp-c-border);
   border-radius: 8px;
+  background: var(--vp-c-bg-elv);
 }
 
-.get-started-page .info-link {
-  display: flex !important;
+.get-started-page .profile-strip div {
+  padding: 0.85rem 1rem;
+}
+
+.get-started-page .profile-strip span,
+.get-started-page .entry-card span {
+  display: block;
+  color: var(--vp-c-text-subtle);
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+}
+
+.get-started-page .profile-strip strong {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--vp-c-text);
+  font-size: 0.98rem !important;
+  line-height: 1.45 !important;
+}
+
+.get-started-page .about-section {
+  margin-top: 2.4rem;
+}
+
+.get-started-page .section-head {
+  margin-bottom: 0.9rem;
+}
+
+.get-started-page .section-head h2 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  color: var(--vp-c-text);
+  font-size: 1.45rem !important;
+  font-weight: 850 !important;
+  line-height: 1.35 !important;
+}
+
+.get-started-page .two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.get-started-page .text-panel {
+  padding: 1.2rem;
+}
+
+.get-started-page .text-panel h3 {
+  /* margin: 0 0 0.5rem; */
+  color: var(--vp-c-text);
+  /* font-size: 1.05rem !important; */
+  font-weight: 820 !important;
+  line-height: 1.45 !important;
+}
+
+.get-started-page .text-panel p {
+  margin: 0.65rem 0 0;
+  color: var(--vp-c-text-mute);
+  line-height: calc(var(--xh-line-height) + 0.02) !important;
+}
+
+.get-started-page .skill-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.get-started-page .skill-cloud span {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0.8rem 0;
-  color: var(--vp-c-brand-light) !important;
-  text-decoration: none;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px solid rgb(var(--xh-accent-rgb) / 16%);
+  border-radius: 8px;
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+  font-size: calc(var(--xh-font-size) * 0.78) !important;
+  font-weight: 780 !important;
+  line-height: 1.35 !important;
 }
 
-.get-started-page .info-link:hover {
-  color: var(--vp-c-brand) !important;
-  text-decoration: underline;
+.get-started-page .entry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
 }
 
-/* 响应式适配：小屏下内容网格单列显示 */
-@media (max-width: 768px) {
-  .get-started-page .content-grid {
+.get-started-page .entry-card {
+  display: flex;
+  min-height: 4rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  color: var(--vp-c-text) !important;
+  transition:
+    border-color var(--vp-t-color),
+    background-color var(--vp-t-color),
+    transform var(--vp-t-transform),
+    box-shadow var(--vp-t-transform);
+}
+
+.get-started-page .entry-card:hover {
+  border-color: rgb(var(--xh-accent-rgb) / 28%);
+  background: var(--vp-c-accent-soft);
+  box-shadow: var(--xh-shadow-soft);
+  transform: translateY(-2px);
+}
+
+.get-started-page .entry-card strong {
+  margin-top: 1rem;
+  color: var(--vp-c-text);
+  font-size: 0.92rem !important;
+  line-height: 1.55 !important;
+}
+
+.get-started-page .contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.get-started-page .contact-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  background: var(--vp-c-bg-elv);
+  color: var(--vp-c-text) !important;
+  font-weight: 760;
+  overflow-wrap: anywhere;
+}
+
+.get-started-page .contact-links a:hover {
+  border-color: rgb(var(--xh-accent-rgb) / 26%);
+  color: var(--vp-c-accent) !important;
+}
+
+html[data-theme="dark"] .get-started-page .about-hero {
+  background:
+    linear-gradient(135deg, rgb(var(--xh-accent-rgb) / 12%), transparent 46%),
+    var(--vp-c-bg-elv);
+}
+
+@media (max-width: 900px) {
+  .get-started-page .profile-strip,
+  .get-started-page .entry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .get-started-page .two-column {
     grid-template-columns: 1fr;
   }
-  .get-started-page .tech-stack {
-    justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .get-started-page .about-hero {
+    padding: 1.35rem;
   }
-   /* 新增features-grid的移动端适配 */
-   /* 小屏幕下双列显示 */
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr); /* 固定双列 */
-    gap: 1rem; /* 适当减小间距适配小屏 */
+
+  .get-started-page .about-hero h2 {
+    font-size: 1.85rem !important;
+  }
+
+  .get-started-page .profile-strip,
+  .get-started-page .entry-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

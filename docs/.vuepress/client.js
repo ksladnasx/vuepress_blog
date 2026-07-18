@@ -5,6 +5,7 @@ import Category from "./layouts/Category.vue";
 import Tag from "./layouts/Tag.vue";
 import Timeline from "./layouts/Timeline.vue";
 import HomeDashboard from "./components/HomeDashboard.vue";
+import ResumeExperienceList from "./components/ResumeExperienceList.vue";
 import { nextTick, onMounted } from "vue";
 import "./styles/index.scss";
 
@@ -50,6 +51,7 @@ export default defineClientConfig({
   },
   enhance({ app }) {
     app.component("HomeDashboard", HomeDashboard);
+    app.component("ResumeExperienceList", ResumeExperienceList);
   },
   setup() {
     const router = useRouter();
