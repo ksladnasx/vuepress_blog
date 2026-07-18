@@ -9,7 +9,6 @@ tag:
 
 # Nust项目创建
 
-> 官方自带英文文档：[README](/zh-cn/Nuxt4.md)
 
 ```bash
 pnpm create nuxt@latest nuxt4-project
