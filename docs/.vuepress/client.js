@@ -4,7 +4,6 @@ import Article from "./layouts/Article.vue";
 import Category from "./layouts/Category.vue";
 import Tag from "./layouts/Tag.vue";
 import Timeline from "./layouts/Timeline.vue";
-import HomePage from "./components/HomePage.vue";
 import HomeDashboard from "./components/HomeDashboard.vue";
 import { nextTick, onMounted } from "vue";
 import "./styles/index.scss";
@@ -48,7 +47,6 @@ export default defineClientConfig({
     Category,
     Tag,
     Timeline,
-    HomePage,
   },
   enhance({ app }) {
     app.component("HomeDashboard", HomeDashboard);

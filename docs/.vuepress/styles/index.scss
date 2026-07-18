@@ -154,7 +154,10 @@ body,
 .vp-sidebar,
 .vp-page,
 .theme-default-content,
-.home-page,
+.vp-hero,
+.vp-hero-description,
+.vp-hero-actions,
+.vp-hero-action-button,
 .article-wrapper,
 .category-wrapper,
 .tag-wrapper {
@@ -164,7 +167,10 @@ body,
 
 [vp-content],
 .theme-default-content,
-.home-page,
+.vp-hero,
+.vp-hero-description,
+.vp-hero-actions,
+.vp-hero-action-button,
 .article-wrapper,
 .category-wrapper,
 .tag-wrapper {
@@ -218,16 +224,6 @@ body,
     dt *,
     a:not(.header-anchor)
   ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *)),
-.home-page
-  :where(
-    p,
-    p *,
-    li,
-    li *,
-    .tagline,
-    .feature,
-    .feature *
-  ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *)),
 .article-wrapper
   :where(
     .page-title,
@@ -484,4 +480,27 @@ body {
   border-radius: 8px;
   background: var(--vp-c-bg-alt);
   box-shadow: var(--xh-shadow-soft);
+}
+
+.vp-hero-action-button {
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.vp-hero-action-button.secondary {
+  border: 1px solid var(--vp-c-border);
+  background-color: var(--vp-c-bg-elv);
+  color: var(--vp-c-accent);
+}
+
+.vp-hero-action-button.secondary:hover {
+  border-color: var(--vp-c-accent);
+  background-color: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent-hover);
+}
+
+.vp-hero-action-button.primary:hover {
+  border-color: var(--vp-c-accent-hover);
+  background-color: var(--vp-c-accent-hover);
+  color: var(--vp-c-accent-text);
 }

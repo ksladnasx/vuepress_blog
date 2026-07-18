@@ -6,7 +6,7 @@
           <p class="section-kicker">近期</p>
           <h2>最近在写</h2>
         </div>
-        <a class="section-link" href="/article/" style="text-decoration: none;">全部文章</a>
+        <a class="section-link" href="/article/">全部文章</a>
       </div>
 
       <div class="update-list">
@@ -64,7 +64,6 @@
           v-for="tech in techStack"
           :key="tech.name"
           class="tech-tag"
-          style="text-decoration:none;"
           :href="tech.url"
           :target="tech.external ? '_blank' : '_self'"
           :rel="tech.external ? 'noopener noreferrer' : undefined"

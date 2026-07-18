@@ -12,5 +12,4 @@ actions:
     type: secondary
 footer: MIT Licensed | Copyright 2026-present xh
 ---
-<!-- 直接写个Home组件然后在这里使用就行，没必要写md的一大堆html -->
 <HomeDashboard />
