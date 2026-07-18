@@ -25,10 +25,17 @@
 
 :root {
   --xh-font-family: "XH SimKai", "KaiTi",'MSYH', "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --xh-system-code-font-family: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --xh-code-font-family: var(--xh-font-family);
+  --xh-font-size: 16px;
+  --xh-line-height: 1.75;
+  --xh-letter-spacing: 0px;
+  --xh-font-weight: 400;
+  --xh-font-stroke: 0px;
   --font-family: var(--xh-font-family);
-  --code-font-family: var(--xh-font-family);
+  --code-font-family: var(--xh-code-font-family);
   --vp-font-family-base: var(--xh-font-family);
-  --vp-font-family-mono: var(--xh-font-family);
+  --vp-font-family-mono: var(--xh-code-font-family);
 }
 
 html[data-font="lxgw"] {
@@ -41,6 +48,14 @@ html[data-font="fangsong"] {
 
 html[data-font="simkai"] {
   --xh-font-family: "XH SimKai", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+html[data-code-font="system"] {
+  --xh-code-font-family: var(--xh-system-code-font-family);
+}
+
+html[data-code-font="custom"] {
+  --xh-code-font-family: var(--xh-font-family);
 }
 
 // 想新增字体加在这里添加 @font-face 和 html[data-font="xxx"] 的配置即可，
@@ -71,6 +86,117 @@ body,
 .category-wrapper,
 .tag-wrapper {
   font-family: var(--xh-font-family);
+  font-synthesis: weight;
+}
+
+[vp-content],
+.theme-default-content,
+.home-page,
+.article-wrapper,
+.category-wrapper,
+.tag-wrapper {
+  font-size: var(--xh-font-size);
+  font-weight: var(--xh-font-weight);
+  letter-spacing: var(--xh-letter-spacing);
+  line-height: var(--xh-line-height);
+}
+
+[vp-content]
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    p *,
+    li,
+    li *,
+    td,
+    td *,
+    th,
+    th *,
+    blockquote,
+    blockquote *,
+    details,
+    details *,
+    summary,
+    summary *,
+    dd,
+    dd *,
+    dt,
+    dt *,
+    a:not(.header-anchor)
+  ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *)),
+.theme-default-content
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    p *,
+    li,
+    li *,
+    td,
+    td *,
+    th,
+    th *,
+    blockquote,
+    blockquote *,
+    details,
+    details *,
+    summary,
+    summary *,
+    dd,
+    dd *,
+    dt,
+    dt *,
+    a:not(.header-anchor)
+  ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *)),
+.home-page
+  :where(
+    h1,
+    h2,
+    h3,
+    p,
+    p *,
+    li,
+    li *,
+    .tagline,
+    .feature,
+    .feature *,
+    .recent-updates,
+    .recent-updates *,
+    .stats-section,
+    .stats-section *,
+    .tech-stack,
+    .tech-stack *
+  ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *)),
+.article-wrapper
+  :where(
+    .page-title,
+    .empty-text,
+    .article-title,
+    .meta-tag,
+    .meta-tag *,
+    .tag-item,
+    .tag-more,
+    .article-excerpt,
+    .article-excerpt *,
+    .read-more-text
+  ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *)),
+.category-wrapper :where(.category-title, .category-count, .category, .category *):not(:where(svg, svg *)),
+.tag-wrapper :where(.tag-title, .tag-count, .tag, .tag *):not(:where(svg, svg *)) {
+  font-size: var(--xh-font-size) !important;
+  font-weight: var(--xh-font-weight) !important;
+  font-variation-settings: "wght" var(--xh-font-weight);
+  -webkit-text-stroke: var(--xh-font-stroke) currentColor;
+  letter-spacing: var(--xh-letter-spacing) !important;
+  line-height: var(--xh-line-height) !important;
 }
 
 button,
