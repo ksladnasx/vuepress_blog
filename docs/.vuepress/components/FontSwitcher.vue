@@ -5,17 +5,17 @@ const STORAGE_KEY = "xh-font-settings";
 const LEGACY_FONT_KEY = "xh-font";
 
 const fonts = [
-  { key: "simkai", label: "楷体", name: "华文楷体" },
   { key: "lxgw", label: "霞鹜", name: "霞鹜文楷" },
+  { key: "simkai", label: "楷体", name: "华文楷体" },
   { key: "fangsong", label: "仿宋", name: "华文仿宋" },
   { key: "fzstk", label: "方舒", name: "方正舒体" },
 ];
 
 const defaultSettings = {
   font: fonts[0].key,
-  size: 16,
-  lineHeight: 1.75,
-  letterSpacing: 0,
+  size: 20,
+  lineHeight: 1.65,
+  letterSpacing: 1,
   weight: 400,
   codeFont: false,
 };
@@ -36,7 +36,7 @@ const normalizeSettings = (value) => {
   }
 
   next.size = Number.isFinite(Number(next.size))
-    ? Math.min(22, Math.max(14, Number(next.size)))
+    ? Math.min(30, Math.max(14, Number(next.size)))
     : defaultSettings.size;
   next.lineHeight = Number.isFinite(Number(next.lineHeight))
     ? Math.min(2, Math.max(1.4, Number(next.lineHeight)))
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
           :value="settings.size"
           type="range"
           min="14"
-          max="22"
+          max="30"
           step="1"
           @input="updateSetting('size', Number($event.target.value))"
         />

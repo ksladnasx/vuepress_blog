@@ -1,7 +1,6 @@
 <template>
   <div class="home-page">
-    <!-- Hero 区域 -->
-    <div v-if="$frontmatter.home" class="hero">
+    <header v-if="$frontmatter.home" class="hero">
       <img
         v-if="$frontmatter.heroImage"
         :src="$frontmatter.heroImage"
@@ -14,9 +13,8 @@
       <p v-if="$frontmatter.tagline" class="tagline">
         {{ $frontmatter.tagline }}
       </p>
-      
-      <!-- Actions -->
-      <div v-if="$frontmatter.actions" class="actions">
+
+      <nav v-if="$frontmatter.actions" class="actions" aria-label="首页入口">
         <div
           v-for="action in $frontmatter.actions"
           :key="action.text"
@@ -28,10 +26,9 @@
             :class="[action.type, action.size]"
           />
         </div>
-      </div>
-    </div>
-    
-    <!-- Features -->
+      </nav>
+    </header>
+
     <div v-if="$frontmatter.features" class="features">
       <div
         v-for="feature in $frontmatter.features"
@@ -42,11 +39,9 @@
         <p>{{ feature.details }}</p>
       </div>
     </div>
-    
-    <!-- 默认插槽用于显示 README.md 内容 -->
+
     <Content class="theme-default-content custom-content" />
-    
-    <!-- Footer -->
+
     <footer v-if="$frontmatter.footer" class="footer">
       {{ $frontmatter.footer }}
     </footer>
@@ -59,109 +54,176 @@
 
 <style scoped>
 .home-page {
-  max-width: 960px;
+  max-width: var(--homepage-width, 1120px);
   margin: 0 auto;
-  padding: 2rem 2.5rem;
+  padding: 2.25rem 2rem 3rem;
 }
 
 .hero {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
   text-align: center;
-  padding: 4rem 0;
+  padding: 4.5rem 0 3.5rem;
+  border-bottom: 1px solid var(--vp-c-border);
 }
 
 .hero-image {
-  max-height: 280px;
-  margin-bottom: 2rem;
+  width: 172px;
+  height: 172px;
+  object-fit: cover;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  box-shadow: var(--xh-shadow-soft, 0 14px 34px rgb(31 41 55 / 10%));
 }
 
 .hero-text {
-  font-size: 3rem;
-  font-weight: 700;
+  margin: 0;
+  color: var(--vp-c-text);
+  font-size: 3.2rem;
+  font-weight: 800;
   line-height: 1.2;
-  margin-bottom: 1rem;
 }
 
 .tagline {
-  font-size: 1.8rem;
-  font-weight: 300;
-  color: var(--c-text-light);
-  margin-bottom: 2rem;
+  max-width: 42rem;
+  margin: 0;
+  color: var(--vp-c-text-mute);
+  font-size: 1.16rem;
+  font-weight: 400;
+  line-height: 1.85;
 }
 
 .actions {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 0.75rem;
 }
 
 .action-button {
-  padding: 0.8rem 1.6rem;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px !important;
+  font-size: 0.96rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .action-button.primary {
-  background-color: var(--c-brand);
-  color: white;
-  border: none;
+  border: 1px solid var(--vp-c-accent-bg);
+  background: var(--vp-c-accent-bg);
+  color: var(--vp-c-accent-text);
+  box-shadow: 0 12px 28px rgb(var(--xh-accent-rgb, 47 125 99) / 18%);
 }
 
 .action-button.primary:hover {
-  background-color: var(--c-brand-light);
+  border-color: var(--vp-c-accent-hover);
+  background: var(--vp-c-accent-hover);
+  transform: translateY(-1px);
 }
 
 .action-button.secondary {
-  background-color: transparent;
-  color: var(--c-brand);
-  border: 2px solid var(--c-brand);
+  border: 1px solid var(--vp-c-border);
+  background: var(--vp-c-bg-elv);
+  color: var(--vp-c-text);
 }
 
 .action-button.secondary:hover {
-  background-color: var(--c-brand);
-  color: white;
+  border-color: var(--vp-c-accent);
+  color: var(--vp-c-accent);
+  transform: translateY(-1px);
 }
 
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 4rem 0;
+  gap: 1rem;
+  margin: 3rem 0;
   padding: 2rem 0;
-  border-top: 1px solid var(--c-border);
-  border-bottom: 1px solid var(--c-border);
+  border-top: 1px solid var(--vp-c-border);
+  border-bottom: 1px solid var(--vp-c-border);
 }
 
 .feature {
-  padding: 1.5rem;
-  border-radius: 12px;
-  background: var(--c-bg-soft);
-  transition: transform 0.2s ease;
+  padding: 1.2rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  background: var(--vp-c-bg-elv);
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .feature:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--vp-c-accent);
+  box-shadow: var(--xh-shadow-soft, 0 14px 34px rgb(31 41 55 / 10%));
+  transform: translateY(-2px);
 }
 
 .feature h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--c-brand);
+  margin: 0 0 0.65rem;
+  color: var(--vp-c-text);
+  font-size: 1.2rem;
 }
 
 .footer {
   text-align: center;
-  padding: 2rem 0;
-  margin-top: 4rem;
-  border-top: 1px solid var(--c-border);
-  color: var(--c-text-light);
+  padding: 1.75rem 0 0;
+  margin-top: 3rem;
+  border-top: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text-subtle);
   font-size: 0.9rem;
 }
 
 .custom-content {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 1.4rem 1.1rem 2.5rem;
+  }
+
+  .hero {
+    padding: 3rem 0 2.25rem;
+  }
+
+  .hero-image {
+    width: 136px;
+    height: 136px;
+  }
+
+  .hero-text {
+    font-size: 2.35rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 419px) {
+  .actions {
+    width: 100%;
+  }
+
+  .action,
+  .action-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>

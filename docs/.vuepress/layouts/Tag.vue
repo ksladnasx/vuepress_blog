@@ -59,7 +59,7 @@ const routePath = useRoutePath()
   .tag-header {
     text-align: center;
     margin-bottom: 2rem;
-    animation: fadeInDown 0.6s ease-out;
+    // animation: fadeInDown 0.6s ease-out;
     
     .tag-title {
       font-size: 2.5rem;
@@ -99,14 +99,14 @@ const routePath = useRoutePath()
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: fadeInUp 0.5s ease-out;
+    // animation: fadeInUp 0.5s ease-out;
     background: var(--vp-c-bg-soft);
     border: 1px solid var(--vp-c-border);
     color: var(--vp-c-text-1);
     font-size: 0.95rem;
     
     &:hover {
-      transform: translateY(-3px) scale(1.05);
+      // transform: translateY(-3px) scale(1.05);
       border-color: var(--vp-c-brand);
       box-shadow: 0 6px 16px rgba(var(--vp-c-brand-rgb), 0.15);
       background: rgba(var(--vp-c-brand-rgb), 0.05);
@@ -154,42 +154,42 @@ const routePath = useRoutePath()
         background: linear-gradient(45deg, var(--vp-c-brand), var(--vp-c-brand-light));
         z-index: -1;
         opacity: 0.3;
-        animation: rotate 3s linear infinite;
+        // animation: rotate 3s linear infinite;
       }
     }
   }
 }
 
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+// @keyframes fadeInDown {
+//   from {
+//     opacity: 0;
+//     transform: translateY(-20px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+// @keyframes fadeInUp {
+//   from {
+//     opacity: 0;
+//     transform: translateY(20px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+// @keyframes rotate {
+//   from {
+//     transform: rotate(0deg);
+//   }
+//   to {
+//     transform: rotate(360deg);
+//   }
+// }
 
 @media (max-width: 768px) {
   .tag-header .tag-title {
