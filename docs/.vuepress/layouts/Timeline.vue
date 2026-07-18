@@ -2,6 +2,7 @@
 import { useBlogType } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import ArticleList from '../components/ArticleList.vue'
+import FontSwitcher from '../components/FontSwitcher.vue'
 import { computed } from 'vue';
 const timelines = useBlogType('timeline')
 
@@ -16,6 +17,10 @@ const filteredItems = computed(() => {
 
 <template>
   <ParentLayout>
+    <template #navbar-after>
+      <FontSwitcher />
+    </template>
+
     <template #page>
       <main class="page">
         <ArticleList :items="filteredItems" is-timeline />

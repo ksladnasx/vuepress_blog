@@ -3,6 +3,7 @@ import { useBlogCategory } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import { RouteLink, useRoutePath } from 'vuepress/client'
 import ArticleList from '../components/ArticleList.vue'
+import FontSwitcher from '../components/FontSwitcher.vue'
 
 const categoryMap = useBlogCategory('category')
 const routePath = useRoutePath()
@@ -10,6 +11,10 @@ const routePath = useRoutePath()
 
 <template>
   <ParentLayout>
+    <template #navbar-after>
+      <FontSwitcher />
+    </template>
+
     <template #page>
       <main class="page">
         <div class="category-wrapper">

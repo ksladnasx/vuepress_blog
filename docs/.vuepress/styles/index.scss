@@ -1,0 +1,73 @@
+@font-face {
+  font-family: "XH SimKai";
+  src: url("/SIMKAI.TTF") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "XH LXGW WenKai";
+  src: url("/LXGWWENKAI-REGULAR.TTF") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "XH FangSong";
+  src: url("/STFANGSO.TTF") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+:root {
+  --xh-font-family: "XH SimKai", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-family: var(--xh-font-family);
+  --code-font-family: var(--xh-font-family);
+  --vp-font-family-base: var(--xh-font-family);
+  --vp-font-family-mono: var(--xh-font-family);
+}
+
+html[data-font="lxgw"] {
+  --xh-font-family: "XH LXGW WenKai", "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+html[data-font="fangsong"] {
+  --xh-font-family: "XH FangSong", "FangSong", "STFangsong", "SimSun", serif;
+}
+
+html[data-font="simkai"] {
+  --xh-font-family: "XH SimKai", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+html,
+body,
+#app,
+.vp-theme-container,
+.theme-container,
+.vp-navbar,
+.vp-sidebar,
+.vp-page,
+.theme-default-content,
+.home-page,
+.article-wrapper,
+.category-wrapper,
+.tag-wrapper {
+  font-family: var(--xh-font-family);
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--code-font-family);
+}

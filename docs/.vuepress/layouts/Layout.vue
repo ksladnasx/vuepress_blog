@@ -3,6 +3,7 @@ import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
 import { useRoute } from "vuepress/client";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
 import { computed } from "vue";
+import FontSwitcher from "../components/FontSwitcher.vue";
 
 const route = useRoute();
 const isDarkMode = useDarkMode();
@@ -18,6 +19,10 @@ const showComment = computed(() => {
 
 <template>
   <ParentLayout>
+    <template #navbar-after>
+      <FontSwitcher />
+    </template>
+
     <template #page-bottom>
       <div v-if="showComment" class="comment-wrapper">
         <!-- 评论插件：传入 darkmode 以跟随站点明/暗主题 -->
