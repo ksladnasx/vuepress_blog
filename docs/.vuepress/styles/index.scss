@@ -44,7 +44,7 @@
   --xh-home-bg-mobile-dark: url("/min_background_dark0.png");
   --xh-panel-bg: #ffffff;
   --xh-soft-bg: #f4f7f4;
-  --xh-navbar-bg: rgb(255 255 255 / 86%);
+  --xh-navbar-bg: rgb(255 255 255 / 18%);
   --xh-sidebar-bg: rgb(251 252 250 / 92%);
   --xh-shadow-soft: 0 14px 34px rgb(31 41 55 / 10%);
   --xh-shadow-hover: 0 18px 42px rgb(31 41 55 / 14%);
@@ -87,7 +87,7 @@ html[data-theme="dark"] {
   --xh-page-bg: linear-gradient(180deg, #171a1c 0%, #1b1b1f 28rem);
   --xh-panel-bg: #202225;
   --xh-soft-bg: #181b1d;
-  --xh-navbar-bg: rgb(27 29 31 / 84%);
+  --xh-navbar-bg: rgb(27 29 31 / 24%);
   --xh-sidebar-bg: rgb(24 26 28 / 92%);
   --xh-shadow-soft: 0 18px 42px rgb(0 0 0 / 28%);
   --xh-shadow-hover: 0 22px 52px rgb(0 0 0 / 34%);
@@ -743,11 +743,11 @@ html[data-theme="dark"] .vp-navbar {
 
 @media (max-width: 959px) {
   .vp-navbar .vp-navbar-items-wrapper {
-    gap: 0.32rem;
+    gap: 0.18rem;
   }
 
   .vp-navbar .vp-navbar-items {
-    gap: 0.08rem;
+    gap: 0.04rem;
   }
 
   .vp-navbar .vp-navbar-item {
@@ -775,6 +775,14 @@ html[data-theme="dark"] .vp-navbar {
   .vp-navbar .slimsearch-button {
     width: 2.1rem;
     padding: 0;
+  }
+
+  .vp-navbar .vp-toggle-color-mode-button {
+    margin-left: 0.12rem;
+  }
+
+  .vp-navbar .background-switcher {
+    margin-inline-start: 0.12rem;
   }
 }
 
@@ -859,9 +867,13 @@ html[data-theme="dark"] .vp-navbar {
 
   .vp-navbar .vp-navbar-items-wrapper {
     inset-inline-end: 0.5rem;
-    gap: 0.28rem;
+    gap: 0.12rem;
     max-width: calc(100vw - 4rem);
-    padding-inline-start: 0.25rem;
+    padding-inline-start: 0.12rem;
+  }
+
+  .vp-navbar .vp-navbar-items {
+    gap: 0.02rem;
   }
 
   .vp-navbar .vp-navbar-item {
@@ -872,7 +884,7 @@ html[data-theme="dark"] .vp-navbar {
   .vp-navbar .vp-navbar-dropdown-wrapper:not(.mobile) .vp-navbar-dropdown-title {
     height: 1.78rem;
     max-width: 5rem;
-    padding: 0 0.42rem !important;
+    padding: 0 0.2rem !important;
     border-radius: 6px;
   }
 
@@ -884,7 +896,7 @@ html[data-theme="dark"] .vp-navbar {
   .vp-navbar > span > a {
     min-width: 0;
     max-width: 100%;
-    padding-inline: 0.25rem;
+    padding-inline: 0.15rem;
   }
 
   .vp-navbar .vp-site-logo {
@@ -902,7 +914,16 @@ html[data-theme="dark"] .vp-navbar {
   }
 
   .vp-navbar .font-settings {
+    margin-inline-start: 0.08rem;
     font-size: min(calc(var(--xh-font-size) * 0.72), 14px) !important;
+  }
+
+  .vp-navbar .background-switcher {
+    margin-inline-start: 0.08rem;
+  }
+
+  .vp-navbar .vp-toggle-color-mode-button {
+    margin-left: 0.08rem;
   }
 
   .vp-navbar .vp-toggle-color-mode-button,
@@ -927,11 +948,36 @@ html[data-theme="dark"] .vp-navbar {
     font-size: 0.82rem;
   }
 }
+@media(max-width:718px) {
+  .vp-navbar .vp-navbar-item > .auto-link{
+    padding: 0.4rem 0.25rem !important;
+    
+  }
+  .vp-navbar .background-switcher,
+  .vp-navbar .font-settings {
+    margin-inline-start: 0.6rem;
+  }
 
-@media (max-width: 420px) {
+  .vp-navbar .vp-toggle-color-mode-button {
+    margin-right: 0.4rem;
+    margin-left: 0.3rem;
+  }
+}
+@media (max-width: 430px) {
   .vp-navbar .vp-navbar-items-wrapper {
-    gap: 0.18rem;
+    gap: 0.08rem;
     font-size: min(calc(var(--xh-font-size) * 0.78), 14px) !important;
+  }
+  .vp-navbar .vp-navbar-item > .auto-link{
+    padding: 0.1rem 0.1rem !important;
+  }
+  .vp-navbar .background-switcher,
+  .vp-navbar .font-settings {
+    margin-inline-start: 0.04rem;
+  }
+
+  .vp-navbar .vp-toggle-color-mode-button {
+    margin-left: 0.04rem;
   }
 
   .vp-navbar > span {
@@ -952,7 +998,21 @@ html[data-theme="dark"] .vp-navbar {
     height: 1.78rem;
   }
 }
+@media(max-width:330px) {
+  .vp-navbar .vp-navbar-item > .auto-link{
+    padding: 0.1rem 0.05rem !important;
+     font-size: min(calc(var(--xh-font-size) * 0.78),15px) !important;
+  }
+  .vp-navbar .background-switcher,
+  .vp-navbar .font-settings {
+    margin-inline-start: 0.6rem;
+  }
 
+  .vp-navbar .vp-toggle-color-mode-button {
+    margin-right: 0.4rem;
+    margin-left: 0.3rem;
+  }
+}
 .vp-sidebar {
   border-right: 1px solid var(--vp-c-border);
   background: var(--xh-sidebar-bg) !important;

@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 719px) {
   .background-switcher {
-    margin-inline-start: 0.25rem;
+    margin-inline-start: 0.08rem;
   }
 
   .background-switcher-trigger {

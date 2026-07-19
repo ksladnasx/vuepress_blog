@@ -475,7 +475,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 719px) {
   .font-settings {
-    margin-inline-start: 0.25rem;
+    margin-inline-start: 0.08rem;
   }
 
   .font-settings-trigger {
