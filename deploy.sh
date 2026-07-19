@@ -39,10 +39,27 @@ else
   git -C "$WORKTREE_DIR" checkout --orphan "$BRANCH"
 fi
 
+git -C "$WORKTREE_DIR" config core.autocrlf false
+git -C "$WORKTREE_DIR" config core.eol lf
+
 echo "Syncing build output..."
 git -C "$WORKTREE_DIR" rm -r --ignore-unmatch . >/dev/null 2>&1 || true
 cp -R "$DIST_DIR"/. "$WORKTREE_DIR"/
 touch "$WORKTREE_DIR/.nojekyll"
+cat > "$WORKTREE_DIR/.gitattributes" <<'ATTRIBUTES'
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.svg text eol=lf
+*.ttf binary
+*.ttc binary
+*.woff binary
+*.woff2 binary
+ATTRIBUTES
 
 git -C "$WORKTREE_DIR" add -A
 
