@@ -244,12 +244,14 @@ const routePath = useRoutePath()
   }
   
   .category-cloud {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
     
     .category {
-      padding: 0.8rem 2rem 0.8rem 0.95rem;
-      font-size: 1rem;
+      min-width: 0;
+      padding: 0.78rem 1.75rem 0.78rem 0.85rem;
+      border-radius: 0.75rem;
+      font-size: 0.95rem;
     }
   }
 }
@@ -260,12 +262,24 @@ const routePath = useRoutePath()
   }
   
   .category-cloud {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
     
     .category {
-      padding: 0.7rem 1.9rem 0.7rem 0.85rem;
-      font-size: 0.95rem;
+      gap: 0.35rem;
+      padding: 0.68rem 1.55rem 0.68rem 0.7rem;
+      font-size: 0.84rem;
+    }
+
+    .tag-icon {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 auto;
+    }
+
+    .category-num {
+      top: 0.42rem;
+      right: 0.42rem;
     }
   }
 }

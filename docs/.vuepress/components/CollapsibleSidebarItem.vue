@@ -62,14 +62,18 @@ watch(
         v-if="item.link"
         :class="itemClasses"
         :config="item"
-      />
+        :title="item.text"
+      >
+        <span class="xh-sidebar-title">{{ item.text }}</span>
+      </VPAutoLink>
       <button
         v-else
         type="button"
         :class="itemClasses"
+        :title="item.text"
         @click="toggle"
       >
-        {{ item.text }}
+        <span class="xh-sidebar-title">{{ item.text }}</span>
       </button>
 
       <button
@@ -131,21 +135,29 @@ watch(
 .vp-sidebar-item {
   min-width: 0;
   flex: 1;
-  display: -webkit-box;
   overflow: hidden;
   margin: 0;
   border: 0;
   border-radius: 8px;
   appearance: none;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
   background: transparent;
   color: var(--vp-c-text-mute);
   font: inherit;
-  overflow-wrap: anywhere;
   text-align: start;
-  text-overflow: ellipsis;
   cursor: pointer;
+}
+
+.xh-sidebar-title {
+  display: -webkit-box;
+  overflow: hidden;
+  max-height: 2.7em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: inherit;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .vp-sidebar-item:focus,

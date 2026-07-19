@@ -603,7 +603,7 @@ html[data-theme="dark"] .vp-navbar {
   }
 
   .vp-navbar .vp-navbar-item {
-    font-size: calc(var(--xh-font-size) * 0.78) !important;
+    font-size: min(calc(var(--xh-font-size) * 0.78), 16px) !important;
   }
 
   .vp-navbar .vp-navbar-item > .auto-link,
@@ -651,7 +651,7 @@ html[data-theme="dark"] .vp-navbar {
   }
 
   .vp-navbar .vp-navbar-item {
-    font-size: calc(var(--xh-font-size) * 0.72) !important;
+    font-size: min(calc(var(--xh-font-size) * 0.72), 16px) !important;
   }
 
   .vp-navbar .vp-navbar-item > .auto-link,
@@ -682,9 +682,13 @@ html[data-theme="dark"] .vp-navbar {
   .vp-navbar .vp-site-name {
     overflow: hidden;
     max-width: 100%;
-    font-size: clamp(0.86rem, calc(var(--xh-font-size) * 0.72), 1rem);
+    font-size: clamp(13px, calc(var(--xh-font-size) * 0.72), 16px);
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .vp-navbar .font-settings {
+    font-size: min(calc(var(--xh-font-size) * 0.72), 16px) !important;
   }
 
   .vp-navbar .vp-toggle-color-mode-button,
@@ -711,6 +715,7 @@ html[data-theme="dark"] .vp-navbar {
 @media (max-width: 420px) {
   .vp-navbar .vp-navbar-items-wrapper {
     gap: 0.18rem;
+    font-size: min(calc(var(--xh-font-size) * 0.78), 16px) !important
   }
 
   .vp-navbar > span {

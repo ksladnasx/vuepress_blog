@@ -2,11 +2,14 @@
 import { useBlogType } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import { useRouter } from 'vuepress/client'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import FontSwitcher from '../components/FontSwitcher.vue'
 
 const router = useRouter()
 const timelines = useBlogType('timeline')
+const selectedYear = ref('all')
+const selectedMonth = ref('all')
+const openFilter = ref('')
 
 const filteredItems = computed(() =>
   (timelines.value?.items ?? []).filter(
@@ -17,6 +20,95 @@ const filteredItems = computed(() =>
       !item.path.includes('/posts/meaningless/'),
   ),
 )
+
+const getYear = (date) => {
+  if (!date) return ''
+  const year = new Date(date).getFullYear()
+  return Number.isFinite(year) ? String(year) : ''
+}
+
+const getMonth = (date) => {
+  if (!date) return ''
+  const month = new Date(date).getMonth() + 1
+  return Number.isFinite(month) ? String(month).padStart(2, '0') : ''
+}
+
+const yearOptions = computed(() =>
+  Array.from(
+    new Set(filteredItems.value.map((item) => getYear(item.info?.date)).filter(Boolean)),
+  ).sort((a, b) => Number(b) - Number(a)),
+)
+
+const monthOptions = computed(() => {
+  const sourceItems =
+    selectedYear.value === 'all'
+      ? filteredItems.value
+      : filteredItems.value.filter(
+          (item) => getYear(item.info?.date) === selectedYear.value,
+        )
+
+  return Array.from(
+    new Set(sourceItems.map((item) => getMonth(item.info?.date)).filter(Boolean)),
+  ).sort((a, b) => Number(a) - Number(b))
+})
+
+const yearFilterOptions = computed(() => [
+  { value: 'all', label: '全部年份' },
+  ...yearOptions.value.map((year) => ({ value: year, label: `${year} 年` })),
+])
+
+const monthFilterOptions = computed(() => [
+  { value: 'all', label: '全部月份' },
+  ...monthOptions.value.map((month) => ({
+    value: month,
+    label: `${Number(month)} 月`,
+  })),
+])
+
+const selectedYearLabel = computed(
+  () =>
+    yearFilterOptions.value.find((option) => option.value === selectedYear.value)
+      ?.label || '全部年份',
+)
+
+const selectedMonthLabel = computed(
+  () =>
+    monthFilterOptions.value.find((option) => option.value === selectedMonth.value)
+      ?.label || '全部月份',
+)
+
+const visibleItems = computed(() => {
+  return filteredItems.value.filter(
+    (item) =>
+      (selectedYear.value === 'all' ||
+        getYear(item.info?.date) === selectedYear.value) &&
+      (selectedMonth.value === 'all' ||
+        getMonth(item.info?.date) === selectedMonth.value),
+  )
+})
+
+watch(selectedYear, () => {
+  if (
+    selectedMonth.value !== 'all' &&
+    !monthOptions.value.includes(selectedMonth.value)
+  ) {
+    selectedMonth.value = 'all'
+  }
+})
+
+const toggleFilter = (filterName) => {
+  openFilter.value = openFilter.value === filterName ? '' : filterName
+}
+
+const chooseFilter = (filterName, value) => {
+  if (filterName === 'year') {
+    selectedYear.value = value
+  } else {
+    selectedMonth.value = value
+  }
+
+  openFilter.value = ''
+}
 
 const goTo = (path) => {
   if (path) router.push(path)
@@ -61,23 +153,106 @@ const cleanExcerpt = (excerpt) => {
     </template>
 
     <template #page>
-      <main class="timeline-page">
+      <main class="timeline-page" @click="openFilter = ''">
         <section class="timeline-wrapper">
           <header class="timeline-hero">
-            <p class="timeline-kicker">Timeline</p>
-            <h1 class="timeline-title">时间线</h1>
+            <div class="timeline-hero-head">
+              <div>
+                <p class="timeline-kicker">Timeline</p>
+                <h1 class="timeline-title">时间线</h1>
+              </div>
+
+              <div
+                v-if="yearOptions.length"
+                class="timeline-filters"
+                @click.stop
+              >
+                <div class="timeline-select">
+                  <span class="filter-label">年份</span>
+                  <button
+                    class="filter-trigger"
+                    type="button"
+                    :aria-expanded="openFilter === 'year'"
+                    aria-haspopup="listbox"
+                    @click="toggleFilter('year')"
+                    @keydown.escape="openFilter = ''"
+                  >
+                    <span>{{ selectedYearLabel }}</span>
+                    <span class="filter-arrow" aria-hidden="true" />
+                  </button>
+
+                  <Transition name="filter-pop">
+                    <ul
+                      v-if="openFilter === 'year'"
+                      class="filter-menu"
+                      role="listbox"
+                    >
+                      <li v-for="option in yearFilterOptions" :key="option.value">
+                        <button
+                          type="button"
+                          class="filter-option"
+                          :class="{ active: selectedYear === option.value }"
+                          role="option"
+                          :aria-selected="selectedYear === option.value"
+                          @click="chooseFilter('year', option.value)"
+                        >
+                          {{ option.label }}
+                        </button>
+                      </li>
+                    </ul>
+                  </Transition>
+                </div>
+
+                <div class="timeline-select">
+                  <span class="filter-label">月份</span>
+                  <button
+                    class="filter-trigger"
+                    type="button"
+                    :aria-expanded="openFilter === 'month'"
+                    aria-haspopup="listbox"
+                    @click="toggleFilter('month')"
+                    @keydown.escape="openFilter = ''"
+                  >
+                    <span>{{ selectedMonthLabel }}</span>
+                    <span class="filter-arrow" aria-hidden="true" />
+                  </button>
+
+                  <Transition name="filter-pop">
+                    <ul
+                      v-if="openFilter === 'month'"
+                      class="filter-menu"
+                      role="listbox"
+                    >
+                      <li v-for="option in monthFilterOptions" :key="option.value">
+                        <button
+                          type="button"
+                          class="filter-option"
+                          :class="{ active: selectedMonth === option.value }"
+                          role="option"
+                          :aria-selected="selectedMonth === option.value"
+                          @click="chooseFilter('month', option.value)"
+                        >
+                          {{ option.label }}
+                        </button>
+                      </li>
+                    </ul>
+                  </Transition>
+                </div>
+              </div>
+            </div>
+
             <p class="timeline-desc">
-              按时间顺序回看 {{ filteredItems.length }} 篇笔记，保留学习和项目推进的轨迹。
+              按时间顺序回看 {{ visibleItems.length }} 篇笔记，保留学习和项目推进的轨迹。
             </p>
           </header>
 
-          <div v-if="!filteredItems.length" class="timeline-empty">
+          <div v-if="!visibleItems.length" class="timeline-empty">
             暂无可展示的时间线内容。
           </div>
 
           <div v-else class="timeline-track">
             <article
-              v-for="({ info, path }, index) in filteredItems"
+              v-for="({ info, path }, index) in visibleItems"
               :key="path"
               class="timeline-item"
               :class="{ 'is-right': index % 2 === 1 }"
@@ -142,6 +317,13 @@ const cleanExcerpt = (excerpt) => {
   border-bottom: 1px solid var(--vp-c-border);
 }
 
+.timeline-hero-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .timeline-kicker {
   margin: 0;
   color: var(--vp-c-accent);
@@ -155,6 +337,138 @@ const cleanExcerpt = (excerpt) => {
   font-size: calc(var(--xh-font-size) * 2.4);
   font-weight: 820;
   line-height: 1.25;
+}
+
+.timeline-filters {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.timeline-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  background: var(--vp-c-bg-elv);
+  color: var(--vp-c-text-mute);
+}
+
+.filter-label {
+  padding-inline-start: 0.5rem;
+  font-size: calc(var(--xh-font-size) * 0.78);
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.filter-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  min-width: 7rem;
+  height: 1.8rem;
+  padding: 0 0.55rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--vp-c-control);
+  color: var(--vp-c-text);
+  font: inherit;
+  font-size: calc(var(--xh-font-size) * 0.82);
+  font-weight: 750;
+  outline: none;
+  cursor: pointer;
+}
+
+.filter-trigger:hover,
+.filter-trigger[aria-expanded="true"] {
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+}
+
+.filter-trigger:focus-visible {
+  box-shadow: inset 0 0 0 1px rgb(var(--xh-accent-rgb) / 26%);
+}
+
+.filter-arrow {
+  width: 0;
+  height: 0;
+  border-top: 4px solid currentColor;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  opacity: 0.7;
+}
+
+.filter-menu {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 0.18rem;
+  box-sizing: border-box;
+  min-width: 100%;
+  max-height: 16rem;
+  margin: 0;
+  padding: 0.35rem;
+  border: 1px solid rgb(var(--xh-accent-rgb) / 16%);
+  border-radius: 8px;
+  overflow-y: auto;
+  background: var(--vp-c-bg-elv);
+  box-shadow: var(--xh-shadow-soft);
+  list-style: none;
+}
+
+.filter-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2rem;
+  padding: 0 0.72rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--vp-c-text-mute);
+  font: inherit;
+  font-size: calc(var(--xh-font-size) * 0.82);
+  font-weight: 720;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.filter-option:hover,
+.filter-option.active {
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+}
+
+.filter-option.active::after {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-inline-start: 0.8rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.filter-pop-enter-active,
+.filter-pop-leave-active {
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+
+.filter-pop-enter-from,
+.filter-pop-leave-to {
+  opacity: 0;
+  transform: translateY(-0.25rem);
 }
 
 .timeline-desc {
@@ -352,6 +666,52 @@ const cleanExcerpt = (excerpt) => {
 
   .timeline-title {
     font-size: calc(var(--xh-font-size) * 1.9);
+  }
+
+  .timeline-hero-head {
+    align-items: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .timeline-hero-head {
+    display: grid;
+  }
+
+  .timeline-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .timeline-select {
+    min-width: 0;
+    box-sizing: border-box;
+    justify-content: space-between;
+    gap: 0.3rem;
+  }
+
+  .filter-label {
+    padding-inline-start: 0.35rem;
+    font-size: calc(var(--xh-font-size) * 0.72);
+  }
+
+  .filter-trigger {
+    min-width: 0;
+    width: 100%;
+    padding: 0 0.45rem;
+  }
+
+  .filter-trigger span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .filter-menu {
+    right: 0;
+    left: auto;
   }
 }
 </style>
