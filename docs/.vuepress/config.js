@@ -49,12 +49,54 @@ const stablePageOrderPlugin = (name) => ({
   },
 });
 
+const restoreBackgroundScript = `\
+(() => {
+  const storageKey = "xh-background-settings";
+  const toCssUrl = (url) =>
+    \`url("\${String(url).replace(/\\\\/g, "\\\\\\\\").replace(/"/g, '\\\\"')}")\`;
+  const normalizeIndex = (value) =>
+    Number.isInteger(value) && value >= 0 ? value : 0;
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+
+    if (!saved || typeof saved !== "object") return;
+
+    const desktop = normalizeIndex(saved.desktop);
+    const mobile = normalizeIndex(saved.mobile);
+    const root = document.documentElement;
+
+    root.style.setProperty(
+      "--xh-home-bg-desktop",
+      toCssUrl(\`/background\${desktop}.png\`),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-desktop-dark",
+      toCssUrl(\`/background_dark\${desktop}.png\`),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-mobile",
+      toCssUrl(\`/min_background\${mobile}.png\`),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-mobile-dark",
+      toCssUrl(\`/min_background_dark\${mobile}.png\`),
+    );
+  } catch {
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {}
+  }
+})();
+`;
+
 export default defineUserConfig({
   lang: "zh-CN",
   title: "xh's blog ",
   base: "/",
   description: "A VuePress bolg Site for personal useage",
   head: [
+    ["script", {}, restoreBackgroundScript],
     [
       "link",
       {

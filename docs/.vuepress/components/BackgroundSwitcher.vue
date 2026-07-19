@@ -26,6 +26,7 @@ const indexes = ref({
   mobile: 0,
 });
 const isMobile = ref(false);
+const hasDiscoveredBackgrounds = ref(false);
 let mediaQuery = null;
 
 const toCssUrl = (url) =>
@@ -84,13 +85,30 @@ const discoverBackgrounds = async () => {
     desktop: desktop.length ? desktop : fallbackBackgroundSets.desktop,
     mobile: mobile.length ? mobile : fallbackBackgroundSets.mobile,
   };
+  hasDiscoveredBackgrounds.value = true;
   indexes.value = normalizeIndexes(indexes.value);
   applyBackgrounds();
 };
 
+const getExpectedEntry = (mode, index) => {
+  const normalizedIndex = Math.max(0, Number.isInteger(index) ? index : 0);
+
+  return mode === "mobile"
+    ? {
+        light: `/min_background${normalizedIndex}.png`,
+        dark: `/min_background_dark${normalizedIndex}.png`,
+      }
+    : {
+        light: `/background${normalizedIndex}.png`,
+        dark: `/background_dark${normalizedIndex}.png`,
+      };
+};
+
 const getEntry = (mode, index) => {
+  if (!hasDiscoveredBackgrounds.value) return getExpectedEntry(mode, index);
+
   const list = backgroundSets.value[mode];
-  return list[index % list.length] || list[0];
+  return list[normalizeIndex(index, list.length)] || getExpectedEntry(mode, 0);
 };
 
 const getModeImage = (mode, index, theme) => {
@@ -154,8 +172,10 @@ const readSettings = () => {
 };
 
 const currentMode = computed(() => (isMobile.value ? "mobile" : "desktop"));
-const currentCount = computed(() => backgroundSets.value[currentMode.value].length);
 const currentIndex = computed(() => indexes.value[currentMode.value]);
+const currentCount = computed(() =>
+  Math.max(backgroundSets.value[currentMode.value].length, currentIndex.value + 1),
+);
 const buttonTitle = computed(
   () =>
     `切换背景图片 ${currentIndex.value + 1}/${currentCount.value}`,
