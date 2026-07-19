@@ -978,6 +978,7 @@ html[data-theme="dark"] .vp-navbar {
 
   .vp-navbar .vp-toggle-color-mode-button {
     margin-left: 0.04rem;
+    margin-right: 0.03rem;
   }
 
   .vp-navbar > span {
@@ -998,19 +999,28 @@ html[data-theme="dark"] .vp-navbar {
     height: 1.78rem;
   }
 }
-@media(max-width:330px) {
+@media(max-width:340px) {
   .vp-navbar .vp-navbar-item > .auto-link{
-    padding: 0.1rem 0.05rem !important;
-     font-size: min(calc(var(--xh-font-size) * 0.78),15px) !important;
+    padding: 0.1rem 0.01rem !important;
+    font-size: min(calc(var(--xh-font-size) * 0.78),10px) !important;
   }
   .vp-navbar .background-switcher,
   .vp-navbar .font-settings {
-    margin-inline-start: 0.6rem;
+    margin-inline-start: 0.02rem;
   }
 
   .vp-navbar .vp-toggle-color-mode-button {
-    margin-right: 0.4rem;
-    margin-left: 0.3rem;
+    margin-right: 0.01rem;
+    margin-left: 0.01rem;
+    
+  }
+   .vp-navbar .vp-toggle-color-mode-button,
+  .vp-navbar .slimsearch-button,
+  .vp-navbar .background-switcher-trigger,
+  .vp-navbar .font-settings-trigger {
+    width: 1.3rem;
+    min-width: 1.3rem;
+    height: 1.3rem;
   }
 }
 .vp-sidebar {
