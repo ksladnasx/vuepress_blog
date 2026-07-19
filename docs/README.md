@@ -10,6 +10,6 @@ actions:
   - text: 介绍
     link: get-started.md
     type: secondary
-footer: MIT Licensed | Copyright 2026-present xh
+footer: MIT Licensed | Copyright 2026-present xiaohan
 ---
 <HomeDashboard />
