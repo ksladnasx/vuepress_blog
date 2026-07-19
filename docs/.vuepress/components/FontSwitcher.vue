@@ -310,7 +310,7 @@ onBeforeUnmount(() => {
   position: absolute;
   top: calc(100% + 0.6rem);
   right: 0;
-  z-index: 40;
+  z-index: 1000;
   box-sizing: border-box;
   width: min(19rem, calc(100vw - 2rem));
   padding: 0.9rem;

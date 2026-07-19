@@ -1,6 +1,5 @@
 <script setup>
 import VPAutoLink from "@theme/VPAutoLink.vue";
-import { isActiveSidebarItem } from "@theme/isActiveSidebarItem";
 import { computed, nextTick, ref, toRefs, watch } from "vue";
 import { useRoute } from "vuepress/client";
 
@@ -18,11 +17,71 @@ const props = defineProps({
 const { item, depth } = toRefs(props);
 const route = useRoute();
 
+const safeDecode = (value) => {
+  try {
+    return decodeURI(value || "");
+  } catch {
+    return value || "";
+  }
+};
+
+const normalizePath = (path) =>
+  safeDecode(path)
+    .replace(/#.*$/, "")
+    .replace(/(index)?\.(md|html)$/, "");
+
+const normalizeHash = (hash) => safeDecode(hash || "");
+
+const getLinkParts = (link) => {
+  const rawLink = String(link || "");
+  const hashIndex = rawLink.indexOf("#");
+
+  if (hashIndex < 0) {
+    return {
+      path: rawLink,
+      hash: "",
+    };
+  }
+
+  return {
+    path: rawLink.slice(0, hashIndex),
+    hash: rawLink.slice(hashIndex),
+  };
+};
+
+const isLinkActive = (link, currentRoute) => {
+  const { path, hash } = getLinkParts(link);
+
+  if (hash) {
+    return (
+      normalizePath(path || currentRoute.path) === normalizePath(currentRoute.path) &&
+      normalizeHash(hash) === normalizeHash(currentRoute.hash)
+    );
+  }
+
+  return normalizePath(path) === normalizePath(currentRoute.path);
+};
+
+const isSidebarItemActive = (targetItem, currentRoute) => {
+  if (targetItem.link && isLinkActive(targetItem.link, currentRoute)) {
+    return true;
+  }
+
+  if (Array.isArray(targetItem.children)) {
+    return targetItem.children.some((child) =>
+      isSidebarItemActive(child, currentRoute),
+    );
+  }
+
+  return false;
+};
+
 const hasChildren = computed(
   () => Array.isArray(item.value.children) && item.value.children.length > 0,
 );
-const isActive = computed(() => isActiveSidebarItem(item.value, route));
-const isOpen = ref(depth.value < 2 || isActive.value);
+const isActive = computed(() => isSidebarItemActive(item.value, route));
+const isDefaultOpen = computed(() => depth.value === 0 || isActive.value);
+const isOpen = ref(isDefaultOpen.value);
 
 const itemClasses = computed(() => ({
   "vp-sidebar-item": true,
@@ -51,6 +110,13 @@ watch(
     if (isActive.value) {
       isOpen.value = true;
     }
+  },
+);
+
+watch(
+  () => route.path,
+  () => {
+    isOpen.value = isDefaultOpen.value;
   },
 );
 </script>
