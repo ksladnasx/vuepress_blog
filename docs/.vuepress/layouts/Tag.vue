@@ -109,7 +109,6 @@ const routePath = useRoutePath()
     text-decoration: none;
     transition:
       background-color 0.2s ease,
-      border-color 0.2s ease,
       box-shadow 0.2s ease,
       color 0.2s ease,
       transform 0.2s ease;
@@ -164,7 +163,6 @@ const routePath = useRoutePath()
       transform: translateY(-0.04rem);
       transition:
         background-color 0.2s ease,
-        border-color 0.2s ease,
         color 0.2s ease;
     }
     

@@ -101,7 +101,11 @@ const routePath = useRoutePath()
     font-weight: 500;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     animation: fadeInUp 0.5s ease-out;
     background: var(--vp-c-bg-soft);
     border: 1px solid var(--vp-c-border);
@@ -164,7 +168,6 @@ const routePath = useRoutePath()
       font-size: calc(var(--xh-font-size) * 0.8) !important;
       transition:
         background-color 0.2s ease,
-        border-color 0.2s ease,
         color 0.2s ease;
     }
     

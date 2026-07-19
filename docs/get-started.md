@@ -224,7 +224,6 @@ const experiences = [
   font-weight: 800;
   transition:
     background-color var(--vp-t-color),
-    border-color var(--vp-t-color),
     color var(--vp-t-color),
     transform var(--vp-t-transform);
 }
@@ -360,7 +359,6 @@ const experiences = [
   padding: 1rem;
   color: var(--vp-c-text) !important;
   transition:
-    border-color var(--vp-t-color),
     background-color var(--vp-t-color),
     transform var(--vp-t-transform),
     box-shadow var(--vp-t-transform);

@@ -42,7 +42,6 @@ defineProps({
   border-radius: 8px;
   background: var(--vp-c-bg-elv);
   transition:
-    border-color var(--vp-t-color),
     background-color var(--vp-t-color),
     box-shadow var(--vp-t-transform),
     transform var(--vp-t-transform);

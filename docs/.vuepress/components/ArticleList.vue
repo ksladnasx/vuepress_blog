@@ -254,7 +254,10 @@ const handleTagClick = (event, tags) => {
   border: 1px solid var(--vp-c-border);
   border-radius: 12px;
   padding: 1.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -361,7 +364,6 @@ const handleTagClick = (event, tags) => {
   line-height: 1.35;
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease,
     color 0.2s ease;
  
   &:hover {
@@ -411,7 +413,6 @@ const handleTagClick = (event, tags) => {
     white-space: nowrap;
     transition:
       background-color 0.2s ease,
-      border-color 0.2s ease,
       color 0.2s ease;
 
     &:not(:last-child)::after {
@@ -476,7 +477,9 @@ const handleTagClick = (event, tags) => {
   font-weight: 500;
   opacity: 0;
   transform: translateY(10px);
-  transition: all 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
 
   .article-card:hover & {
     opacity: 1;

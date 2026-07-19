@@ -310,7 +310,6 @@ const cleanExcerpt = (excerpt) => {
   box-shadow: none;
   cursor: pointer;
   transition:
-    border-color 0.18s ease,
     box-shadow 0.18s ease,
     transform 0.18s ease,
     background-color 0.18s ease;
@@ -379,7 +378,6 @@ const cleanExcerpt = (excerpt) => {
   border-radius: 8px;
   background: var(--home-surface);
   transition:
-    border-color 0.18s ease,
     box-shadow 0.18s ease,
     transform 0.18s ease,
     background-color 0.18s ease;
@@ -426,7 +424,6 @@ const cleanExcerpt = (excerpt) => {
   background: var(--home-surface);
   overflow: hidden;
   transition:
-    border-color 0.18s ease,
     box-shadow 0.18s ease,
     transform 0.18s ease,
     background-color 0.18s ease;
@@ -512,7 +509,6 @@ const cleanExcerpt = (excerpt) => {
   font-weight: 650;
   text-decoration: none;
   transition:
-    border-color 0.18s ease,
     color 0.18s ease,
     transform 0.18s ease,
     background-color 0.18s ease;
