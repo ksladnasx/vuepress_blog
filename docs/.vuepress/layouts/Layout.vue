@@ -22,8 +22,8 @@ const showComment = computed(() => {
 <template>
   <ParentLayout>
     <template #navbar-after>
-      <BackgroundSwitcher />
       <FontSwitcher />
+      <BackgroundSwitcher />
     </template>
 
     <template #sidebar>

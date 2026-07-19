@@ -29,3 +29,6 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+#测试文件
+tests/
