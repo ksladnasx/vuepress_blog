@@ -9,6 +9,46 @@ import { commentPlugin } from "@vuepress/plugin-comment";
 import { markdownChartPlugin } from "@vuepress/plugin-markdown-chart";
 import markdownItKatex from "markdown-it-katex";
 
+const getPagePathKey = (page) => page.path || page.filePathRelative || "";
+
+const compareText = (textA = "", textB = "") => {
+  if (textA === textB) return 0;
+  return textA < textB ? -1 : 1;
+};
+
+const comparePagePath = (pageA, pageB) =>
+  compareText(getPagePathKey(pageA), getPagePathKey(pageB));
+
+const getPageDateTime = (page) => {
+  const date = page.frontmatter.date;
+  return date ? new Date(date).getTime() : Number.NEGATIVE_INFINITY;
+};
+
+const compareArticlePages = (pageA, pageB) => {
+  const stickyDiff =
+    Number(pageB.frontmatter.sticky || 0) -
+    Number(pageA.frontmatter.sticky || 0);
+
+  if (stickyDiff) return stickyDiff;
+
+  const dateDiff = getPageDateTime(pageB) - getPageDateTime(pageA);
+  if (dateDiff) return dateDiff;
+
+  return comparePagePath(pageA, pageB);
+};
+
+const compareTimelinePages = (pageA, pageB) => {
+  const dateDiff = getPageDateTime(pageB) - getPageDateTime(pageA);
+  return dateDiff || comparePagePath(pageA, pageB);
+};
+
+const stablePageOrderPlugin = (name) => ({
+  name,
+  onInitialized: (app) => {
+    app.pages.sort(comparePagePath);
+  },
+});
+
 export default defineUserConfig({
   lang: "zh-CN",
   title: "xh's blog ",
@@ -146,6 +186,8 @@ export default defineUserConfig({
   }),
 
   plugins: [
+    stablePageOrderPlugin("stable-page-order-before-blog"),
+
     // Mermaid 图表：识别并渲染 ```mermaid 代码块
     markdownChartPlugin({
       mermaid: true,
@@ -180,6 +222,7 @@ export default defineUserConfig({
         {
           key: "category",
           getter: (page) => page.frontmatter.category || [],
+          sorter: compareArticlePages,
           layout: "Category",
           itemLayout: "Category",
           frontmatter: () => ({
@@ -194,6 +237,7 @@ export default defineUserConfig({
         {
           key: "tag",
           getter: (page) => page.frontmatter.tag || [],
+          sorter: compareArticlePages,
           layout: "Tag",
           itemLayout: "Tag",
           frontmatter: () => ({
@@ -218,32 +262,14 @@ export default defineUserConfig({
             sidebar: false,
           }),
           // Sort pages with time and sticky
-          sorter: (pageA, pageB) => {
-            if (pageA.frontmatter.sticky && pageB.frontmatter.sticky)
-              return pageB.frontmatter.sticky - pageA.frontmatter.sticky;
-
-            if (pageA.frontmatter.sticky && !pageB.frontmatter.sticky)
-              return -1;
-
-            if (!pageA.frontmatter.sticky && pageB.frontmatter.sticky) return 1;
-
-            if (!pageB.frontmatter.date) return 1;
-            if (!pageA.frontmatter.date) return -1;
-
-            return (
-              new Date(pageB.frontmatter.date).getTime() -
-              new Date(pageA.frontmatter.date).getTime()
-            );
-          },
+          sorter: compareArticlePages,
         },
         {
           key: "timeline",
           // Only article with date should be added to timeline
           filter: (page) => page.frontmatter.date instanceof Date,
           // Sort pages with time
-          sorter: (pageA, pageB) =>
-            new Date(pageB.frontmatter.date).getTime() -
-            new Date(pageA.frontmatter.date).getTime(),
+          sorter: compareTimelinePages,
           layout: "Timeline",
           frontmatter: () => ({
             title: "Timeline",
@@ -254,6 +280,8 @@ export default defineUserConfig({
 
       hotReload: true,
     }),
+
+    stablePageOrderPlugin("stable-page-order-after-blog"),
 
     // 站点地图（SEO）
     sitemapPlugin({
