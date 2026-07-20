@@ -12,14 +12,20 @@ const backgrounds = [
   { key: "paper", label: "纸页", name: "暖白纸张", scheme: "light" },
   { key: "green", label: "青雾", name: "护眼阅读", scheme: "light" },
   { key: "pearl", label: "珠光", name: "柔亮清晨", scheme: "light" },
+  { key: "linen", label: "月白", name: "清亮书页", scheme: "light" },
   { key: "dusk", label: "暮蓝", name: "低光夜读", scheme: "dark" },
   { key: "ink", label: "墨色", name: "沉浸深读", scheme: "dark" },
+  { key: "midnight", label: "夜航", name: "深蓝低光", scheme: "dark" },
+  { key: "graphite", label: "石墨", name: "中性深灰", scheme: "dark" },
+  { key: "black", label: "极黑", name: "OLED 纯黑", scheme: "dark" },
 ];
 
 const isOpen = ref(false);
 const panelRef = ref(null);
 const currentKey = ref(backgrounds[0].key);
+const modeToast = ref("");
 const isDarkMode = useDarkMode();
+let modeToastTimer = null;
 
 const currentBackground = computed(
   () =>
@@ -36,10 +42,29 @@ const getScheme = (key) =>
   backgrounds.find((background) => background.key === normalizeKey(key))?.scheme ??
   backgrounds[0].scheme;
 
-const setColorMode = (scheme) => {
+const clearModeToastTimer = () => {
+  if (!modeToastTimer) return;
+
+  window.clearTimeout(modeToastTimer);
+  modeToastTimer = null;
+};
+
+const showModeToast = (scheme, backgroundName) => {
+  const modeName = scheme === "dark" ? "暗色" : "亮色";
+
+  clearModeToastTimer();
+  modeToast.value = `已自动切换为${modeName}模式，以适配「${backgroundName}」阅读背景`;
+  modeToastTimer = window.setTimeout(() => {
+    modeToast.value = "";
+    modeToastTimer = null;
+  }, 2800);
+};
+
+const setColorMode = (scheme, { notify = false, backgroundName = "" } = {}) => {
   if (scheme === "auto") return;
 
   const shouldUseDark = scheme === "dark";
+  const hasModeChanged = isDarkMode.value !== shouldUseDark;
   isDarkMode.value = shouldUseDark;
 
   if (typeof document !== "undefined") {
@@ -51,6 +76,10 @@ const setColorMode = (scheme) => {
   } catch {
     // Ignore storage errors in restricted browser modes.
   }
+
+  if (notify && hasModeChanged) {
+    showModeToast(scheme, backgroundName);
+  }
 };
 
 const isCompatibleWithCurrentMode = (key) => {
@@ -61,8 +90,14 @@ const isCompatibleWithCurrentMode = (key) => {
   return scheme === (isDarkMode.value ? "dark" : "light");
 };
 
-const applyBackground = (key, { syncColorMode = true } = {}) => {
+const applyBackground = (
+  key,
+  { syncColorMode = true, notifyModeSwitch = false } = {},
+) => {
   const nextKey = normalizeKey(key);
+  const nextBackground =
+    backgrounds.find((background) => background.key === nextKey) ??
+    backgrounds[0];
 
   currentKey.value = nextKey;
 
@@ -77,12 +112,15 @@ const applyBackground = (key, { syncColorMode = true } = {}) => {
   }
 
   if (syncColorMode) {
-    setColorMode(getScheme(nextKey));
+    setColorMode(nextBackground.scheme, {
+      backgroundName: nextBackground.label,
+      notify: notifyModeSwitch,
+    });
   }
 };
 
 const chooseBackground = (key) => {
-  applyBackground(key);
+  applyBackground(key, { notifyModeSwitch: true });
 };
 
 const resetBackground = () => {
@@ -145,7 +183,7 @@ onMounted(() => {
     savedKey = backgrounds[0].key;
   }
 
-  applyBackground(savedKey);
+  applyBackground(savedKey, { notifyModeSwitch: true });
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
@@ -155,6 +193,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (typeof document === "undefined") return;
 
+  clearModeToastTimer();
   document.removeEventListener("click", handleDocumentClick);
   document.removeEventListener("keydown", handleKeydown);
   document.removeEventListener(PANEL_EVENT, handlePanelOpen);
@@ -215,6 +254,17 @@ onBeforeUnmount(() => {
         恢复默认
       </button>
     </div>
+
+    <Transition name="reading-toast">
+      <div
+        v-if="modeToast"
+        class="reading-mode-toast"
+        role="status"
+        aria-live="polite"
+      >
+        {{ modeToast }}
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -374,12 +424,28 @@ onBeforeUnmount(() => {
   background: linear-gradient(135deg, #f8fbff, #dbe8ff 55%, #f5dedb);
 }
 
+.theme-linen .reading-swatch {
+  background: linear-gradient(135deg, #fffef4, #e8ead8 55%, #d9dfca);
+}
+
 .theme-dusk .reading-swatch {
   background: linear-gradient(135deg, #1c3144, #3a496d 54%, #684c6a);
 }
 
 .theme-ink .reading-swatch {
   background: linear-gradient(135deg, #172427, #243b38 52%, #243044);
+}
+
+.theme-midnight .reading-swatch {
+  background: linear-gradient(135deg, #08111f, #13284d 55%, #171b3a);
+}
+
+.theme-graphite .reading-swatch {
+  background: linear-gradient(135deg, #181818, #2b2b2b 55%, #3a3935);
+}
+
+.theme-black .reading-swatch {
+  background: linear-gradient(135deg, #000, #050505 62%, #111);
 }
 
 .reading-label {
@@ -425,6 +491,38 @@ onBeforeUnmount(() => {
   color: var(--vp-c-accent);
 }
 
+.reading-mode-toast {
+  position: fixed;
+  top: calc(var(--navbar-height) + 0.75rem);
+  right: 1rem;
+  z-index: 1200;
+  box-sizing: border-box;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.72rem 0.9rem;
+  border: 1px solid rgb(var(--xh-accent-rgb) / 24%);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vp-c-bg-elv) 88%, transparent);
+  color: var(--vp-c-text);
+  box-shadow: 0 16px 38px var(--vp-c-shadow);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  backdrop-filter: blur(16px) saturate(1.12);
+  -webkit-backdrop-filter: blur(16px) saturate(1.12);
+}
+
+.reading-toast-enter-active,
+.reading-toast-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.reading-toast-enter-from,
+.reading-toast-leave-to {
+  opacity: 0;
+  transform: translateY(-0.35rem);
+}
+
 @media (max-width: 719px) {
   .reading-background {
     margin-inline-start: 0.08rem;
@@ -446,6 +544,14 @@ onBeforeUnmount(() => {
     right: 0.75rem;
     left: auto;
     width: min(17rem, calc(100vw - 1.5rem));
+  }
+
+  .reading-mode-toast {
+    right: 0.75rem;
+    left: 0.75rem;
+    max-width: none;
+    padding: 0.66rem 0.78rem;
+    font-size: 0.78rem;
   }
 }
 

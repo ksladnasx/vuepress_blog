@@ -121,9 +121,20 @@ const restoreReadingBackgroundScript = `\
 (() => {
   const storageKey = "xh-reading-background";
   const colorSchemeKey = "vuepress-color-scheme";
-  const allowedBackgrounds = ["default", "paper", "green", "pearl", "dusk", "ink"];
-  const lightBackgrounds = ["paper", "green", "pearl"];
-  const darkBackgrounds = ["dusk", "ink"];
+  const allowedBackgrounds = [
+    "default",
+    "paper",
+    "green",
+    "pearl",
+    "linen",
+    "dusk",
+    "ink",
+    "midnight",
+    "graphite",
+    "black",
+  ];
+  const lightBackgrounds = ["paper", "green", "pearl", "linen"];
+  const darkBackgrounds = ["dusk", "ink", "midnight", "graphite", "black"];
 
   const setColorScheme = (scheme) => {
     document.documentElement.dataset.theme = scheme;
