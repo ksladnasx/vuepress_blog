@@ -60,6 +60,11 @@
   --xh-reading-code-bg: rgb(47 125 99 / 13%);
   --xh-reading-code-block-bg: rgb(37 55 47 / 90%);
   --xh-reading-code-block-text: rgb(246 251 247 / 92%);
+  --xh-reading-table-bg: color-mix(in srgb, var(--xh-reading-content-bg) 88%, transparent);
+  --xh-reading-table-head-bg: color-mix(in srgb, var(--xh-reading-code-bg) 72%, var(--xh-reading-content-bg));
+  --xh-reading-table-row-bg: color-mix(in srgb, var(--xh-reading-content-bg) 76%, transparent);
+  --xh-reading-table-row-alt-bg: color-mix(in srgb, var(--xh-reading-code-bg) 62%, transparent);
+  --xh-reading-table-row-hover-bg: color-mix(in srgb, var(--xh-reading-code-bg) 78%, rgb(var(--xh-accent-rgb) / 10%));
   --xh-reading-sidebar-bg: rgb(255 255 250 / 86%);
   --xh-reading-sidebar-border: rgb(47 125 99 / 18%);
   --xh-reading-sidebar-shadow: 10px 0 34px rgb(45 74 60 / 10%);
@@ -131,6 +136,11 @@ html[data-theme="dark"] {
   --xh-reading-code-bg: rgb(111 207 157 / 11%);
   --xh-reading-code-block-bg: rgb(13 25 24 / 84%);
   --xh-reading-code-block-text: rgb(238 248 244 / 92%);
+  --xh-reading-table-bg: color-mix(in srgb, var(--xh-reading-content-bg) 88%, transparent);
+  --xh-reading-table-head-bg: color-mix(in srgb, var(--xh-reading-code-bg) 76%, var(--xh-reading-content-bg));
+  --xh-reading-table-row-bg: color-mix(in srgb, var(--xh-reading-content-bg) 72%, transparent);
+  --xh-reading-table-row-alt-bg: color-mix(in srgb, var(--xh-reading-code-bg) 54%, transparent);
+  --xh-reading-table-row-hover-bg: color-mix(in srgb, var(--xh-reading-code-bg) 78%, rgb(var(--xh-accent-rgb) / 11%));
   --xh-reading-sidebar-bg: rgb(20 31 29 / 86%);
   --xh-reading-sidebar-border: rgb(111 207 157 / 18%);
   --xh-reading-sidebar-shadow: 10px 0 34px rgb(0 0 0 / 26%);
@@ -1745,6 +1755,50 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
 .vp-theme-container:has(.comment-wrapper) .theme-default-content div[class*="language-"],
 .vp-theme-container:has(.comment-wrapper) [vp-content] div[class*="language-"] {
   border-color: var(--xh-reading-content-border) !important;
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table {
+  overflow: hidden;
+  background: var(--xh-reading-table-bg) !important;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 7%);
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table thead,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table thead,
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table tbody,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table tbody {
+  background: transparent !important;
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table tr,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table tr {
+  background: var(--xh-reading-table-row-bg) !important;
+  transition: background-color 0.18s ease;
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table tbody tr:nth-child(2n),
+.vp-theme-container:has(.comment-wrapper) [vp-content] table tbody tr:nth-child(2n),
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table tr:nth-child(2n),
+.vp-theme-container:has(.comment-wrapper) [vp-content] table tr:nth-child(2n) {
+  background: var(--xh-reading-table-row-alt-bg) !important;
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table tbody tr:hover,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table tbody tr:hover {
+  background: var(--xh-reading-table-row-hover-bg) !important;
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table th,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table th {
+  background: var(--xh-reading-table-head-bg) !important;
+  color: var(--xh-reading-text) !important;
+}
+
+.vp-theme-container:has(.comment-wrapper) .theme-default-content table td,
+.vp-theme-container:has(.comment-wrapper) [vp-content] table td {
+  background: transparent !important;
+  color: var(--xh-reading-muted) !important;
 }
 
 .vp-theme-container:has(.comment-wrapper) .theme-default-content :not(pre) > code,
