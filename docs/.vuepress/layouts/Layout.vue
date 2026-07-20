@@ -5,6 +5,7 @@ import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useD
 import { computed } from "vue";
 import FontSwitcher from "../components/FontSwitcher.vue";
 import BackgroundSwitcher from "../components/BackgroundSwitcher.vue";
+import ReadingBackgroundSwitcher from "../components/ReadingBackgroundSwitcher.vue";
 import CollapsibleSidebar from "../components/CollapsibleSidebar.vue";
 
 const route = useRoute();
@@ -23,7 +24,8 @@ const showComment = computed(() => {
   <ParentLayout>
     <template #navbar-after>
       <FontSwitcher />
-      <BackgroundSwitcher />
+      <ReadingBackgroundSwitcher v-if="showComment" />
+      <BackgroundSwitcher v-else />
     </template>
 
     <template #sidebar>

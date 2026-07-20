@@ -117,6 +117,39 @@ const restoreBackgroundScript = `\
 })();
 `;
 
+const restoreReadingBackgroundScript = `\
+(() => {
+  const storageKey = "xh-reading-background";
+  const colorSchemeKey = "vuepress-color-scheme";
+  const allowedBackgrounds = ["default", "paper", "green", "pearl", "dusk", "ink"];
+  const lightBackgrounds = ["paper", "green", "pearl"];
+  const darkBackgrounds = ["dusk", "ink"];
+
+  const setColorScheme = (scheme) => {
+    document.documentElement.dataset.theme = scheme;
+
+    try {
+      localStorage.setItem(colorSchemeKey, scheme);
+    } catch {}
+  };
+
+  try {
+    const saved = localStorage.getItem(storageKey) || "default";
+    const next = allowedBackgrounds.includes(saved) ? saved : "default";
+
+    document.documentElement.dataset.readingBg = next;
+
+    if (darkBackgrounds.includes(next)) {
+      setColorScheme("dark");
+    } else if (lightBackgrounds.includes(next)) {
+      setColorScheme("light");
+    }
+  } catch {
+    document.documentElement.dataset.readingBg = "default";
+  }
+})();
+`;
+
 export default defineUserConfig({
   lang: "zh-CN",
   title: "xh's blog ",
@@ -124,6 +157,7 @@ export default defineUserConfig({
   description: "A VuePress bolg Site for personal useage",
   head: [
     ["script", {}, restoreBackgroundScript],
+    ["script", {}, restoreReadingBackgroundScript],
     [
       "link",
       {
