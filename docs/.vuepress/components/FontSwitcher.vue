@@ -3,6 +3,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 const STORAGE_KEY = "xh-font-settings";
 const LEGACY_FONT_KEY = "xh-font";
+const PANEL_EVENT = "xh-settings-panel-open";
+const PANEL_NAME = "font";
 
 const fonts = [
   { key: "lxgw", label: "霞鹜", name: "霞鹜文楷" },
@@ -98,12 +100,33 @@ const resetSettings = () => {
   applySettings(defaultSettings);
 };
 
+const notifyPanelOpen = () => {
+  if (typeof document === "undefined") return;
+
+  document.dispatchEvent(
+    new CustomEvent(PANEL_EVENT, {
+      detail: PANEL_NAME,
+    }),
+  );
+};
+
 const togglePanel = () => {
-  isOpen.value = !isOpen.value;
+  const nextOpen = !isOpen.value;
+  isOpen.value = nextOpen;
+
+  if (nextOpen) {
+    notifyPanelOpen();
+  }
 };
 
 const closePanel = () => {
   isOpen.value = false;
+};
+
+const handlePanelOpen = (event) => {
+  if (event.detail !== PANEL_NAME) {
+    closePanel();
+  }
 };
 
 const handleDocumentClick = (event) => {
@@ -138,6 +161,7 @@ onMounted(() => {
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
+  document.addEventListener(PANEL_EVENT, handlePanelOpen);
 });
 
 onBeforeUnmount(() => {
@@ -145,6 +169,7 @@ onBeforeUnmount(() => {
 
   document.removeEventListener("click", handleDocumentClick);
   document.removeEventListener("keydown", handleKeydown);
+  document.removeEventListener(PANEL_EVENT, handlePanelOpen);
 });
 </script>
 

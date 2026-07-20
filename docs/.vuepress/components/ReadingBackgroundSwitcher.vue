@@ -4,6 +4,8 @@ import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useD
 
 const STORAGE_KEY = "xh-reading-background";
 const COLOR_SCHEME_KEY = "vuepress-color-scheme";
+const PANEL_EVENT = "xh-settings-panel-open";
+const PANEL_NAME = "reading-background";
 
 const backgrounds = [
   { key: "default", label: "默认", name: "跟随主题", scheme: "auto" },
@@ -87,12 +89,33 @@ const resetBackground = () => {
   applyBackground(backgrounds[0].key);
 };
 
+const notifyPanelOpen = () => {
+  if (typeof document === "undefined") return;
+
+  document.dispatchEvent(
+    new CustomEvent(PANEL_EVENT, {
+      detail: PANEL_NAME,
+    }),
+  );
+};
+
 const togglePanel = () => {
-  isOpen.value = !isOpen.value;
+  const nextOpen = !isOpen.value;
+  isOpen.value = nextOpen;
+
+  if (nextOpen) {
+    notifyPanelOpen();
+  }
 };
 
 const closePanel = () => {
   isOpen.value = false;
+};
+
+const handlePanelOpen = (event) => {
+  if (event.detail !== PANEL_NAME) {
+    closePanel();
+  }
 };
 
 const handleDocumentClick = (event) => {
@@ -126,6 +149,7 @@ onMounted(() => {
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
+  document.addEventListener(PANEL_EVENT, handlePanelOpen);
 });
 
 onBeforeUnmount(() => {
@@ -133,6 +157,7 @@ onBeforeUnmount(() => {
 
   document.removeEventListener("click", handleDocumentClick);
   document.removeEventListener("keydown", handleKeydown);
+  document.removeEventListener(PANEL_EVENT, handlePanelOpen);
 });
 </script>
 
