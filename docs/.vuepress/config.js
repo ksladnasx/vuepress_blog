@@ -8,6 +8,7 @@ import { socialSharePlugin } from "vuepress-plugin-social-share";
 import { commentPlugin } from "@vuepress/plugin-comment";
 import { markdownChartPlugin } from "@vuepress/plugin-markdown-chart";
 import markdownItKatex from "markdown-it-katex";
+import { backgroundGroups } from "./backgrounds.js";
 
 const getPagePathKey = (page) => page.path || page.filePathRelative || "";
 
@@ -49,38 +50,64 @@ const stablePageOrderPlugin = (name) => ({
   },
 });
 
+const backgroundGroupsScript = JSON.stringify(backgroundGroups);
 const restoreBackgroundScript = `\
 (() => {
   const storageKey = "xh-background-settings";
+  const backgroundGroups = ${backgroundGroupsScript};
   const toCssUrl = (url) =>
     \`url("\${String(url).replace(/\\\\/g, "\\\\\\\\").replace(/"/g, '\\\\"')}")\`;
-  const normalizeIndex = (value) =>
-    Number.isInteger(value) && value >= 0 ? value : 0;
+  const normalizeIndex = (value, count) => {
+    if (!count || !Number.isInteger(value)) return 0;
+    return ((value % count) + count) % count;
+  };
+  const getCount = (mode) => {
+    const group = backgroundGroups[mode] || backgroundGroups.desktop;
+
+    return Math.max(group.light.length, group.dark.length);
+  };
+  const getUrl = (mode, theme, index) => {
+    const group = backgroundGroups[mode] || backgroundGroups.desktop;
+    const primaryList = group[theme] || group.light;
+    const fallbackList = theme === "dark" ? group.light : group.dark;
+    const normalizedIndex = normalizeIndex(
+      index,
+      Math.max(primaryList.length, fallbackList.length),
+    );
+
+    return (
+      primaryList[normalizedIndex] ||
+      fallbackList[normalizedIndex] ||
+      primaryList[0] ||
+      fallbackList[0] ||
+      ""
+    );
+  };
 
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
 
     if (!saved || typeof saved !== "object") return;
 
-    const desktop = normalizeIndex(saved.desktop);
-    const mobile = normalizeIndex(saved.mobile);
+    const desktop = normalizeIndex(saved.desktop, getCount("desktop"));
+    const mobile = normalizeIndex(saved.mobile, getCount("mobile"));
     const root = document.documentElement;
 
     root.style.setProperty(
       "--xh-home-bg-desktop",
-      toCssUrl(\`/background\${desktop}.png\`),
+      toCssUrl(getUrl("desktop", "light", desktop)),
     );
     root.style.setProperty(
       "--xh-home-bg-desktop-dark",
-      toCssUrl(\`/background_dark\${desktop}.png\`),
+      toCssUrl(getUrl("desktop", "dark", desktop)),
     );
     root.style.setProperty(
       "--xh-home-bg-mobile",
-      toCssUrl(\`/min_background\${mobile}.png\`),
+      toCssUrl(getUrl("mobile", "light", mobile)),
     );
     root.style.setProperty(
       "--xh-home-bg-mobile-dark",
-      toCssUrl(\`/min_background_dark\${mobile}.png\`),
+      toCssUrl(getUrl("mobile", "dark", mobile)),
     );
   } catch {
     try {

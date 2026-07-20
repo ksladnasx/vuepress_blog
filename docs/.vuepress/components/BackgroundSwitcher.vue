@@ -1,123 +1,34 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+  getBackgroundCount,
+  getBackgroundUrl,
+  normalizeBackgroundIndex,
+} from "../backgrounds.js";
 
 const STORAGE_KEY = "xh-background-settings";
 const MOBILE_QUERY = "(max-width: 719px)";
-const MAX_BACKGROUND_INDEX = 20;
 
-const fallbackBackgroundSets = {
-  desktop: [
-    {
-      light: "/background0.png",
-      dark: "/background_dark0.png",
-    }
-  ],
-  mobile: [
-    {
-      light: "/min_background0.png",
-      dark: "/min_background_dark0.png",
-    },
-  ],
-};
-
-const backgroundSets = ref(fallbackBackgroundSets);
 const indexes = ref({
   desktop: 0,
   mobile: 0,
 });
 const isMobile = ref(false);
-const hasDiscoveredBackgrounds = ref(false);
 let mediaQuery = null;
 
 const toCssUrl = (url) =>
   `url("${String(url).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
 
-const imageExists = (url) =>
-  new Promise((resolve) => {
-    const image = new Image();
-
-    image.onload = () => resolve(true);
-    image.onerror = () => resolve(false);
-    image.src = url;
-  });
-
-const discoverModeBackgrounds = async (lightName, darkName) => {
-  const entries = [];
-
-  for (let index = 0; index <= MAX_BACKGROUND_INDEX; index += 1) {
-    const light = `/${lightName}${index}.png`;
-    const dark = `/${darkName}${index}.png`;
-    const [hasLight, hasDark] = await Promise.all([
-      imageExists(light),
-      imageExists(dark),
-    ]);
-
-    if (hasLight || hasDark) {
-      entries.push({
-        light: hasLight ? light : dark,
-        dark: hasDark ? dark : light,
-      });
-    }
-  }
-
-  return entries;
-};
-
-const normalizeIndex = (value, count) => {
-  if (!count) return 0;
-  if (!Number.isInteger(value)) return 0;
-
-  return ((value % count) + count) % count;
-};
-
-const normalizeIndexes = (nextIndexes) => ({
-  desktop: normalizeIndex(nextIndexes.desktop, backgroundSets.value.desktop.length),
-  mobile: normalizeIndex(nextIndexes.mobile, backgroundSets.value.mobile.length),
+const normalizeIndexes = (nextIndexes = {}) => ({
+  desktop: normalizeBackgroundIndex(
+    nextIndexes.desktop,
+    getBackgroundCount("desktop"),
+  ),
+  mobile: normalizeBackgroundIndex(
+    nextIndexes.mobile,
+    getBackgroundCount("mobile"),
+  ),
 });
-
-const discoverBackgrounds = async () => {
-  const [desktop, mobile] = await Promise.all([
-    discoverModeBackgrounds("background", "background_dark"),
-    discoverModeBackgrounds("min_background", "min_background_dark"),
-  ]);
-
-  backgroundSets.value = {
-    desktop: desktop.length ? desktop : fallbackBackgroundSets.desktop,
-    mobile: mobile.length ? mobile : fallbackBackgroundSets.mobile,
-  };
-  hasDiscoveredBackgrounds.value = true;
-  indexes.value = normalizeIndexes(indexes.value);
-  applyBackgrounds();
-};
-
-const getExpectedEntry = (mode, index) => {
-  const normalizedIndex = Math.max(0, Number.isInteger(index) ? index : 0);
-
-  return mode === "mobile"
-    ? {
-        light: `/min_background${normalizedIndex}.png`,
-        dark: `/min_background_dark${normalizedIndex}.png`,
-      }
-    : {
-        light: `/background${normalizedIndex}.png`,
-        dark: `/background_dark${normalizedIndex}.png`,
-      };
-};
-
-const getEntry = (mode, index) => {
-  if (!hasDiscoveredBackgrounds.value) return getExpectedEntry(mode, index);
-
-  const list = backgroundSets.value[mode];
-  return list[normalizeIndex(index, list.length)] || getExpectedEntry(mode, 0);
-};
-
-const getModeImage = (mode, index, theme) => {
-  const entry = getEntry(mode, index);
-
-  return theme === "dark"
-    ? entry.dark || entry.light
-    : entry.light || entry.dark;
-};
 
 const applyBackgrounds = () => {
   if (typeof document === "undefined") return;
@@ -128,19 +39,19 @@ const applyBackgrounds = () => {
 
   root.style.setProperty(
     "--xh-home-bg-desktop",
-    toCssUrl(getModeImage("desktop", desktopIndex, "light")),
+    toCssUrl(getBackgroundUrl("desktop", "light", desktopIndex)),
   );
   root.style.setProperty(
     "--xh-home-bg-desktop-dark",
-    toCssUrl(getModeImage("desktop", desktopIndex, "dark")),
+    toCssUrl(getBackgroundUrl("desktop", "dark", desktopIndex)),
   );
   root.style.setProperty(
     "--xh-home-bg-mobile",
-    toCssUrl(getModeImage("mobile", mobileIndex, "light")),
+    toCssUrl(getBackgroundUrl("mobile", "light", mobileIndex)),
   );
   root.style.setProperty(
     "--xh-home-bg-mobile-dark",
-    toCssUrl(getModeImage("mobile", mobileIndex, "dark")),
+    toCssUrl(getBackgroundUrl("mobile", "dark", mobileIndex)),
   );
 };
 
@@ -159,26 +70,17 @@ const readSettings = () => {
 
   try {
     const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "{}");
-    indexes.value = {
-      desktop: Number.isInteger(saved.desktop) ? saved.desktop : 0,
-      mobile: Number.isInteger(saved.mobile) ? saved.mobile : 0,
-    };
+    indexes.value = normalizeIndexes(saved);
   } catch {
-    indexes.value = {
-      desktop: 0,
-      mobile: 0,
-    };
+    indexes.value = normalizeIndexes();
   }
 };
 
 const currentMode = computed(() => (isMobile.value ? "mobile" : "desktop"));
 const currentIndex = computed(() => indexes.value[currentMode.value]);
-const currentCount = computed(() =>
-  Math.max(backgroundSets.value[currentMode.value].length, currentIndex.value + 1),
-);
+const currentCount = computed(() => getBackgroundCount(currentMode.value));
 const buttonTitle = computed(
-  () =>
-    `切换背景图片 ${currentIndex.value + 1}/${currentCount.value}`,
+  () => `切换背景图片 ${currentIndex.value + 1}/${currentCount.value}`,
 );
 
 const updateMobileState = () => {
@@ -187,11 +89,11 @@ const updateMobileState = () => {
 
 const switchBackground = () => {
   const mode = currentMode.value;
-  const count = backgroundSets.value[mode].length;
+  const count = getBackgroundCount(mode);
 
   indexes.value = {
     ...indexes.value,
-    [mode]: (indexes.value[mode] + 1) % count,
+    [mode]: normalizeBackgroundIndex(indexes.value[mode] + 1, count),
   };
 };
 
@@ -202,7 +104,6 @@ onMounted(() => {
   updateMobileState();
   mediaQuery.addEventListener("change", updateMobileState);
   applyBackgrounds();
-  discoverBackgrounds();
 });
 
 watch(
