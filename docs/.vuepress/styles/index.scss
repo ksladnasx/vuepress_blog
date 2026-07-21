@@ -1,32 +1,8 @@
-@font-face {
-  font-family: "XH SimKai";
-  src: url("/SIMKAI.TTF") format("truetype");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "XH LXGW WenKai";
-  src: url("/LXGWWENKAI-REGULAR.TTF") format("truetype");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "XH FangSong";
-  src: url("/STFANGSO.TTF") format("truetype");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 400;
-}
-
-
 :root {
-  --xh-font-family: "XH SimKai", "KaiTi",'MSYH', "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --xh-system-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Arial, sans-serif;
+  --xh-font-family: var(--xh-system-font-family);
   --xh-system-code-font-family: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  --xh-code-font-family: var(--xh-font-family);
+  --xh-code-font-family: var(--xh-system-code-font-family);
   --xh-font-size: 16px;
   --xh-line-height: 1.75;
   --xh-letter-spacing: 0px;
@@ -341,22 +317,16 @@ html[data-font="simkai"] {
   --xh-font-family: "XH SimKai", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
+html[data-font="system"] {
+  --xh-font-family: var(--xh-system-font-family);
+}
+
 html[data-code-font="system"] {
   --xh-code-font-family: var(--xh-system-code-font-family);
 }
 
 html[data-code-font="custom"] {
   --xh-code-font-family: var(--xh-font-family);
-}
-
-// 想新增字体加在这里添加 @font-face 和 html[data-font="xxx"] 的配置即可，
-// 然后在FontSwitcher文件的fonts数组中添加字体选项就行 
-@font-face {
-  font-family: "XH FZSTK";
-  src: url("/FZSTK.TTF") format("truetype");
-  font-display: swap;
-  font-style: normal;
-  font-weight: 400;
 }
 
 html[data-font="fzstk"] {

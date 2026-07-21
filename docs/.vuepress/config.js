@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { blogPlugin } from "@vuepress/plugin-blog";
 import { defaultTheme } from "@vuepress/theme-default";
 import { defineUserConfig } from "vuepress";
@@ -9,6 +10,14 @@ import { commentPlugin } from "@vuepress/plugin-comment";
 import { markdownChartPlugin } from "@vuepress/plugin-markdown-chart";
 import markdownItKatex from "markdown-it-katex";
 import { backgroundGroups } from "./backgrounds.js";
+
+const resolveProjectFile = (path) =>
+  fileURLToPath(new URL(`../../${path}`, import.meta.url));
+
+const vueUseCoreEntry = resolveProjectFile("node_modules/@vueuse/core/index.mjs");
+const vueUseSharedEntry = resolveProjectFile(
+  "node_modules/@vueuse/shared/index.mjs",
+);
 
 const getPagePathKey = (page) => page.path || page.filePathRelative || "";
 
@@ -167,6 +176,20 @@ export default defineUserConfig({
   base: "/",
   description: "A VuePress bolg Site for personal useage",
   head: [
+    [
+      "link",
+      {
+        rel: "preconnect",
+        href: "https://i.ibb.co",
+      },
+    ],
+    [
+      "link",
+      {
+        rel: "dns-prefetch",
+        href: "https://i.ibb.co",
+      },
+    ],
     ["script", {}, restoreBackgroundScript],
     ["script", {}, restoreReadingBackgroundScript],
     [
@@ -459,6 +482,28 @@ export default defineUserConfig({
 
   bundler: viteBundler({
     viteOptions: {
+      resolve: {
+        dedupe: [
+          "vue",
+          "vue-router",
+          "@vueuse/core",
+          "@vueuse/shared",
+          "@vuepress/helper",
+        ],
+        alias: [
+          {
+            find: /^@vueuse\/core$/,
+            replacement: vueUseCoreEntry,
+          },
+          {
+            find: /^@vueuse\/shared$/,
+            replacement: vueUseSharedEntry,
+          },
+        ],
+      },
+      optimizeDeps: {
+        include: ["@vueuse/core", "@vueuse/shared"],
+      },
       server: {
         proxy: {
           // 本地开发时代理 GitHub API / 资源，减轻 CORS（Giscus iframe 内请求仍由 giscus.app 发出，部署后无此问题）

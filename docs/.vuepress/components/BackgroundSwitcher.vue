@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
+  backgroundGroups,
   getBackgroundCount,
   getBackgroundUrl,
   normalizeBackgroundIndex,
@@ -8,6 +9,11 @@ import {
 
 const STORAGE_KEY = "xh-background-settings";
 const MOBILE_QUERY = "(max-width: 719px)";
+const BACKGROUND_PREFETCH_ATTR = "data-xh-background-prefetch";
+const PREFETCH_START_DELAY = 1800;
+const PREFETCH_STEP_DELAY = 700;
+const PREFETCH_IDLE_TIMEOUT = 3000;
+const THEMES = ["light", "dark"];
 
 const indexes = ref({
   desktop: 0,
@@ -15,9 +21,191 @@ const indexes = ref({
 });
 const isMobile = ref(false);
 let mediaQuery = null;
+let prefetchQueue = [];
+let pendingPrefetchTask = null;
+const prefetchedUrls = new Set();
 
 const toCssUrl = (url) =>
   `url("${String(url).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+
+const getConnection = () => {
+  if (typeof navigator === "undefined") return null;
+
+  return (
+    navigator.connection ||
+    navigator.mozConnection ||
+    navigator.webkitConnection ||
+    null
+  );
+};
+
+const canPrefetchBackgrounds = () => {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return false;
+  }
+
+  const connection = getConnection();
+
+  if (connection?.saveData) return false;
+  if (["slow-2g", "2g"].includes(connection?.effectiveType)) return false;
+
+  return true;
+};
+
+const getTheme = () =>
+  document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+
+const getOrderedThemes = () => {
+  const theme = getTheme();
+
+  return [theme, ...THEMES.filter((item) => item !== theme)];
+};
+
+const getOrderedModes = () => {
+  const mode = currentMode.value;
+
+  return [mode, ...Object.keys(backgroundGroups).filter((item) => item !== mode)];
+};
+
+const getOrderedIndexes = (mode) => {
+  const count = getBackgroundCount(mode);
+  const current = indexes.value[mode] || 0;
+
+  return Array.from({ length: count }, (_, offset) =>
+    normalizeBackgroundIndex(current + offset + 1, count),
+  );
+};
+
+const normalizePrefetchUrl = (url) => {
+  try {
+    return new URL(url, document.baseURI).href;
+  } catch {
+    return url;
+  }
+};
+
+const isUrlAlreadyPrefetched = (url) => {
+  const normalizedUrl = normalizePrefetchUrl(url);
+
+  if (prefetchedUrls.has(normalizedUrl)) return true;
+
+  return Array.from(
+    document.querySelectorAll(`link[${BACKGROUND_PREFETCH_ATTR}]`),
+  ).some((link) => link.href === normalizedUrl);
+};
+
+const getBackgroundPrefetchUrls = () => {
+  if (typeof document === "undefined") return [];
+
+  const activeUrl = normalizePrefetchUrl(
+    getBackgroundUrl(currentMode.value, getTheme(), currentIndex.value),
+  );
+  const orderedThemes = getOrderedThemes();
+  const urls = [];
+
+  getOrderedModes().forEach((mode) => {
+    getOrderedIndexes(mode).forEach((index) => {
+      orderedThemes.forEach((theme) => {
+        const url = getBackgroundUrl(mode, theme, index);
+        const normalizedUrl = normalizePrefetchUrl(url);
+
+        if (normalizedUrl && normalizedUrl !== activeUrl) {
+          urls.push(url);
+        }
+      });
+    });
+  });
+
+  return Array.from(new Set(urls)).filter((url) => !isUrlAlreadyPrefetched(url));
+};
+
+const prefetchBackgroundUrl = (url) => {
+  if (!url || typeof document === "undefined") return;
+
+  const normalizedUrl = normalizePrefetchUrl(url);
+  if (isUrlAlreadyPrefetched(normalizedUrl)) return;
+
+  const link = document.createElement("link");
+  link.rel = "prefetch";
+  link.as = "image";
+  link.href = url;
+  link.setAttribute("fetchpriority", "low");
+  link.setAttribute(BACKGROUND_PREFETCH_ATTR, "");
+  document.head.appendChild(link);
+  prefetchedUrls.add(normalizedUrl);
+};
+
+const cancelPendingPrefetch = () => {
+  if (!pendingPrefetchTask || typeof window === "undefined") return;
+
+  if (
+    pendingPrefetchTask.type === "idle" &&
+    typeof window.cancelIdleCallback === "function"
+  ) {
+    window.cancelIdleCallback(pendingPrefetchTask.id);
+  } else {
+    window.clearTimeout(pendingPrefetchTask.id);
+  }
+
+  pendingPrefetchTask = null;
+};
+
+const schedulePrefetchStep = (delay = 0) => {
+  if (!canPrefetchBackgrounds()) return;
+
+  cancelPendingPrefetch();
+
+  pendingPrefetchTask = {
+    type: "timeout",
+    id: window.setTimeout(() => {
+      const run = () => {
+        pendingPrefetchTask = null;
+        runBackgroundPrefetch();
+      };
+
+      if (typeof window.requestIdleCallback === "function") {
+        pendingPrefetchTask = {
+          type: "idle",
+          id: window.requestIdleCallback(run, {
+            timeout: PREFETCH_IDLE_TIMEOUT,
+          }),
+        };
+      } else {
+        pendingPrefetchTask = {
+          type: "timeout",
+          id: window.setTimeout(run, 0),
+        };
+      }
+    }, delay),
+  };
+};
+
+const scheduleBackgroundPrefetch = (delay = PREFETCH_START_DELAY) => {
+  if (!canPrefetchBackgrounds()) return;
+
+  prefetchQueue = getBackgroundPrefetchUrls();
+
+  if (prefetchQueue.length) {
+    schedulePrefetchStep(delay);
+  }
+};
+
+const runBackgroundPrefetch = () => {
+  if (!canPrefetchBackgrounds()) return;
+
+  if (document.visibilityState === "hidden") {
+    return;
+  }
+
+  const nextUrl = prefetchQueue.shift();
+  if (!nextUrl) return;
+
+  prefetchBackgroundUrl(nextUrl);
+
+  if (prefetchQueue.length) {
+    schedulePrefetchStep(PREFETCH_STEP_DELAY);
+  }
+};
 
 const normalizeIndexes = (nextIndexes = {}) => ({
   desktop: normalizeBackgroundIndex(
@@ -84,7 +272,12 @@ const buttonTitle = computed(
 );
 
 const updateMobileState = () => {
-  isMobile.value = Boolean(mediaQuery?.matches);
+  const nextIsMobile = Boolean(mediaQuery?.matches);
+
+  if (isMobile.value !== nextIsMobile) {
+    isMobile.value = nextIsMobile;
+    scheduleBackgroundPrefetch(500);
+  }
 };
 
 const switchBackground = () => {
@@ -97,6 +290,16 @@ const switchBackground = () => {
   };
 };
 
+const handleWindowLoad = () => {
+  scheduleBackgroundPrefetch();
+};
+
+const handleVisibilityChange = () => {
+  if (document.visibilityState === "visible") {
+    scheduleBackgroundPrefetch(500);
+  }
+};
+
 onMounted(() => {
   readSettings();
 
@@ -104,6 +307,14 @@ onMounted(() => {
   updateMobileState();
   mediaQuery.addEventListener("change", updateMobileState);
   applyBackgrounds();
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  if (document.readyState === "complete") {
+    scheduleBackgroundPrefetch();
+  } else {
+    window.addEventListener("load", handleWindowLoad, { once: true });
+  }
 });
 
 watch(
@@ -111,11 +322,15 @@ watch(
   () => {
     applyBackgrounds();
     persistSettings();
+    scheduleBackgroundPrefetch(500);
   },
   { deep: true },
 );
 
 onBeforeUnmount(() => {
+  cancelPendingPrefetch();
+  window.removeEventListener("load", handleWindowLoad);
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
   mediaQuery?.removeEventListener("change", updateMobileState);
 });
 </script>

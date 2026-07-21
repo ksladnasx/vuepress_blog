@@ -7,14 +7,42 @@ const PANEL_EVENT = "xh-settings-panel-open";
 const PANEL_NAME = "font";
 
 const fonts = [
+  { key: "system", label: "系统", name: "系统字体" },
   { key: "lxgw", label: "霞鹜", name: "霞鹜文楷" },
   { key: "simkai", label: "楷体", name: "华文楷体" },
   { key: "fangsong", label: "仿宋", name: "华文仿宋" },
   { key: "fzstk", label: "方舒", name: "方正舒体" },
 ];
 
+const customFontFaces = {
+  lxgw: {
+    family: "XH LXGW WenKai",
+    source:
+      'local("LXGW WenKai"), url("/LXGWWENKAI-REGULAR.TTF") format("truetype")',
+  },
+  simkai: {
+    family: "XH SimKai",
+    source:
+      'local("KaiTi"), local("STKaiti"), url("/SIMKAI.TTF") format("truetype")',
+  },
+  fangsong: {
+    family: "XH FangSong",
+    source:
+      'local("FangSong"), local("STFangsong"), url("/STFANGSO.TTF") format("truetype")',
+  },
+  fzstk: {
+    family: "XH FZSTK",
+    source: 'local("FZShuTi"), local("FZSTK"), url("/FZSTK.TTF") format("truetype")',
+  },
+};
+
+const FONT_STYLE_ID = "xh-lazy-font-faces";
+const loadedFontKeys = new Set();
+const loadingFontFaces = new Map();
+let pendingFontLoad = null;
+
 const defaultSettings = {
-  font: fonts[0].key,
+  font: "system",
   size: 20,
   lineHeight: 1.65,
   letterSpacing: 1,
@@ -65,7 +93,135 @@ const persistSettings = () => {
   }
 };
 
-const applySettings = (nextSettings) => {
+const getFontFaceRule = (fontKey) => {
+  const fontFace = customFontFaces[fontKey];
+  if (!fontFace) return "";
+
+  return `@font-face{font-family:"${fontFace.family}";src:${fontFace.source};font-display:swap;font-style:normal;font-weight:400;}`;
+};
+
+const injectFontFaceStyle = (fontKey) => {
+  if (typeof document === "undefined") return;
+
+  const rule = getFontFaceRule(fontKey);
+  if (!rule) return;
+
+  let style = document.getElementById(FONT_STYLE_ID);
+
+  if (!style) {
+    style = document.createElement("style");
+    style.id = FONT_STYLE_ID;
+    document.head.appendChild(style);
+  }
+
+  if (
+    !style.textContent.includes(
+      `font-family:"${customFontFaces[fontKey].family}"`,
+    )
+  ) {
+    style.textContent += rule;
+  }
+
+  loadedFontKeys.add(fontKey);
+};
+
+const ensureFontFace = (fontKey) => {
+  const fontFace = customFontFaces[fontKey];
+  if (!fontFace || typeof document === "undefined") {
+    return Promise.resolve();
+  }
+
+  if (loadedFontKeys.has(fontKey)) {
+    return Promise.resolve();
+  }
+
+  if (loadingFontFaces.has(fontKey)) {
+    return loadingFontFaces.get(fontKey);
+  }
+
+  if (typeof window.FontFace !== "function" || !document.fonts?.add) {
+    injectFontFaceStyle(fontKey);
+    return Promise.resolve();
+  }
+
+  let loader;
+
+  try {
+    loader = new window.FontFace(fontFace.family, fontFace.source, {
+      display: "swap",
+      style: "normal",
+      weight: "400",
+    });
+  } catch {
+    injectFontFaceStyle(fontKey);
+    return Promise.resolve();
+  }
+
+  const promise = loader
+    .load()
+    .then((loadedFace) => {
+      document.fonts.add(loadedFace);
+      loadedFontKeys.add(fontKey);
+    })
+    .catch(() => {
+      injectFontFaceStyle(fontKey);
+    })
+    .finally(() => {
+      loadingFontFaces.delete(fontKey);
+    });
+
+  loadingFontFaces.set(fontKey, promise);
+  return promise;
+};
+
+const cancelPendingFontLoad = () => {
+  if (!pendingFontLoad || typeof window === "undefined") return;
+
+  if (
+    pendingFontLoad.type === "idle" &&
+    typeof window.cancelIdleCallback === "function"
+  ) {
+    window.cancelIdleCallback(pendingFontLoad.id);
+  } else {
+    window.clearTimeout(pendingFontLoad.id);
+  }
+
+  pendingFontLoad = null;
+};
+
+const scheduleFontFaceLoad = (fontKey, defer) => {
+  if (typeof window === "undefined") return;
+
+  cancelPendingFontLoad();
+
+  if (!customFontFaces[fontKey]) return;
+
+  if (!defer) {
+    ensureFontFace(fontKey);
+    return;
+  }
+
+  const load = () => {
+    pendingFontLoad = null;
+    ensureFontFace(fontKey);
+  };
+
+  if (typeof window.requestIdleCallback === "function") {
+    pendingFontLoad = {
+      type: "idle",
+      id: window.requestIdleCallback(load, { timeout: 2500 }),
+    };
+  } else {
+    pendingFontLoad = {
+      type: "timeout",
+      id: window.setTimeout(load, 1200),
+    };
+  }
+};
+
+const applySettings = (nextSettings, options = {}) => {
+  const { deferFontLoad = false } = options;
+
   settings.value = normalizeSettings(nextSettings);
 
   if (typeof document !== "undefined") {
@@ -84,6 +240,8 @@ const applySettings = (nextSettings) => {
       "--xh-font-stroke",
       `${Math.max(0, (settings.value.weight - 400) / 900).toFixed(3)}px`,
     );
+
+    scheduleFontFaceLoad(settings.value.font, deferFontLoad);
   }
 
   persistSettings();
@@ -157,7 +315,7 @@ onMounted(() => {
     savedSettings = null;
   }
 
-  applySettings(savedSettings || defaultSettings);
+  applySettings(savedSettings || defaultSettings, { deferFontLoad: true });
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
@@ -167,6 +325,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (typeof document === "undefined") return;
 
+  cancelPendingFontLoad();
   document.removeEventListener("click", handleDocumentClick);
   document.removeEventListener("keydown", handleKeydown);
   document.removeEventListener(PANEL_EVENT, handlePanelOpen);
