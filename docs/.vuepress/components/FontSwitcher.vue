@@ -12,27 +12,33 @@ const fonts = [
   { key: "simkai", label: "楷体", name: "华文楷体" },
   { key: "fangsong", label: "仿宋", name: "华文仿宋" },
   { key: "fzstk", label: "方舒", name: "方正舒体" },
+  { key: "qingfeng", label: "清风", name: "清风手体" },
 ];
 
 const customFontFaces = {
   lxgw: {
     family: "XH LXGW WenKai",
     source:
-      'local("LXGW WenKai"), url("/LXGWWENKAI-REGULAR.TTF") format("truetype")',
+      'local("LXGW WenKai"), url("/LXGWWENKAI-REGULAR.woff2") format("woff2")',
   },
   simkai: {
     family: "XH SimKai",
     source:
-      'local("KaiTi"), local("STKaiti"), url("/SIMKAI.TTF") format("truetype")',
+      'local("KaiTi"), local("STKaiti"), url("/SIMKAI.woff2") format("woff2")',
   },
   fangsong: {
     family: "XH FangSong",
     source:
-      'local("FangSong"), local("STFangsong"), url("/STFANGSO.TTF") format("truetype")',
+      'local("FangSong"), local("STFangsong"), url("/STFANGSO.woff2") format("woff2")',
   },
   fzstk: {
     family: "XH FZSTK",
-    source: 'local("FZShuTi"), local("FZSTK"), url("/FZSTK.TTF") format("truetype")',
+    source: 'local("FZShuTi"), local("FZSTK"), url("/FZSTK.woff2") format("woff2")',
+  },
+  qingfeng: {
+    family: "XH QingFeng ShouXie",
+    source:
+      'local("KaiXinJiuXiaoLinYuJiuZou"), url("/KaiXinJiuXiaoLinYuJiuZou-2.woff2") format("woff2")',
   },
 };
 
@@ -47,7 +53,7 @@ const defaultSettings = {
   lineHeight: 1.65,
   letterSpacing: 1,
   weight: 400,
-  codeFont: false,
+  codeFont: true,
 };
 
 const isOpen = ref(false);

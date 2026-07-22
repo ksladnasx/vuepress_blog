@@ -13,13 +13,15 @@ export const desktopDarkBackgrounds = [
 export const mobileLightBackgrounds = [
   "https://i.ibb.co/SXSvfMv6/min-background0.webp",
   "https://i.ibb.co/RTQMH3zH/min-background1.webp",
-  "https://i.ibb.co/j9V9WfCL/min-background2.webp"
+  "https://i.ibb.co/j9V9WfCL/min-background2.webp",
+  "https://i.ibb.co/xt6yG8pq/minbcg3.webp"
 ];
 
 export const mobileDarkBackgrounds = [
   "https://i.ibb.co/8DtF8DM5/min-background-dark0.webp",
   "https://i.ibb.co/rfqgsxTC/min-background-dark1.webp",
-  "https://i.ibb.co/8LgkC8YF/min-background2-dark.webp"
+  "https://i.ibb.co/8LgkC8YF/min-background2-dark.webp",
+  "https://i.ibb.co/dsTTc50T/minbcgdark3.webp"
 ];
 
 export const backgroundGroups = {
