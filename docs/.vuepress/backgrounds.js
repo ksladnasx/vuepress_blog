@@ -1,23 +1,25 @@
 export const desktopLightBackgrounds = [
-  "https://i.ibb.co/JjyqpjsF/background0.png",
-  "https://i.ibb.co/bjkRdF3P/background1.png",
-  "https://i.ibb.co/rGn7Yh0Q/background2.png",
+  "https://i.ibb.co/BhYnT7b/background0.webp",
+  "https://i.ibb.co/qY25pDdr/background1.webp",
+  "https://i.ibb.co/21mFb6VD/background2.webp",
 ];
 
 export const desktopDarkBackgrounds = [
-  "https://i.ibb.co/tPPvk19J/background-dark0.jpg",
-  "https://i.ibb.co/5zz7J7x/background-dark1.jpg",
-  "https://i.ibb.co/zVJ7Px42/background-dark2.png",
+  "https://i.ibb.co/WvzTXWn0/background-dark0.webp",
+  "https://i.ibb.co/mVs517MG/background-dark1.webp",
+  "https://i.ibb.co/zVp6zf6V/background-dark2.webp",
 ];
 
 export const mobileLightBackgrounds = [
-  "https://i.ibb.co/0pd3y8GQ/min-background0.jpg",
-  "https://i.ibb.co/WpHsM7vH/min-background1.jpg",
+  "https://i.ibb.co/SXSvfMv6/min-background0.webp",
+  "https://i.ibb.co/RTQMH3zH/min-background1.webp",
+  "https://i.ibb.co/j9V9WfCL/min-background2.webp"
 ];
 
 export const mobileDarkBackgrounds = [
-  "https://i.ibb.co/jZjzhbMp/min-background-dark0.jpg",
-  "https://i.ibb.co/spp1771L/min-background-dark1.png",
+  "https://i.ibb.co/8DtF8DM5/min-background-dark0.webp",
+  "https://i.ibb.co/rfqgsxTC/min-background-dark1.webp",
+  "https://i.ibb.co/8LgkC8YF/min-background2-dark.webp"
 ];
 
 export const backgroundGroups = {
