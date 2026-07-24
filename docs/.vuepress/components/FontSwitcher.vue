@@ -46,6 +46,7 @@ const FONT_STYLE_ID = "xh-lazy-font-faces";
 const loadedFontKeys = new Set();
 const loadingFontFaces = new Map();
 let pendingFontLoad = null;
+let themeObserver = null;
 
 const defaultSettings = {
   font: "system",
@@ -53,16 +54,51 @@ const defaultSettings = {
   lineHeight: 1.65,
   letterSpacing: 1,
   weight: 400,
+  color: "",
   codeFont: true,
 };
 
 const isOpen = ref(false);
 const panelRef = ref(null);
+const activeDefaultColor = ref("#24312b");
 const settings = ref({ ...defaultSettings });
+const pendingColor = ref("");
 
 const currentFont = computed(
   () => fonts.find((font) => font.key === settings.value.font) ?? fonts[0],
 );
+const colorPickerValue = computed(
+  () => pendingColor.value || settings.value.color || activeDefaultColor.value,
+);
+
+const isHexColor = (value) =>
+  typeof value === "string" && /^#[\da-f]{6}$/i.test(value);
+
+const rgbToHex = (value) => {
+  const channels = String(value).match(/\d+(\.\d+)?/g);
+
+  if (!channels || channels.length < 3) return "";
+
+  return `#${channels
+    .slice(0, 3)
+    .map((channel) =>
+      Math.round(Number(channel))
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("")}`;
+};
+
+const updateActiveDefaultColor = () => {
+  if (typeof window === "undefined") return;
+
+  const value = window
+    .getComputedStyle(document.documentElement)
+    .getPropertyValue("--vp-c-text")
+    .trim();
+
+  activeDefaultColor.value = isHexColor(value) ? value : rgbToHex(value) || "#24312b";
+};
 
 const normalizeSettings = (value) => {
   const next = { ...defaultSettings, ...(value || {}) };
@@ -83,6 +119,7 @@ const normalizeSettings = (value) => {
   next.weight = Number.isFinite(Number(next.weight))
     ? Math.min(700, Math.max(300, Number(next.weight)))
     : defaultSettings.weight;
+  next.color = isHexColor(next.color) ? next.color : defaultSettings.color;
   next.codeFont = Boolean(next.codeFont);
 
   return next;
@@ -235,6 +272,7 @@ const applySettings = (nextSettings, options = {}) => {
 
     root.dataset.font = settings.value.font;
     root.dataset.codeFont = settings.value.codeFont ? "custom" : "system";
+    root.dataset.fontColor = settings.value.color ? "custom" : "default";
     root.style.setProperty("--xh-font-size", `${settings.value.size}px`);
     root.style.setProperty("--xh-line-height", String(settings.value.lineHeight));
     root.style.setProperty(
@@ -242,6 +280,28 @@ const applySettings = (nextSettings, options = {}) => {
       `${settings.value.letterSpacing}px`,
     );
     root.style.setProperty("--xh-font-weight", String(settings.value.weight));
+    if (settings.value.color) {
+      root.style.setProperty("--xh-font-color", settings.value.color);
+      root.style.setProperty("--vp-c-text", settings.value.color);
+      root.style.setProperty("--vp-c-text-mute", settings.value.color);
+      root.style.setProperty("--vp-c-text-subtle", settings.value.color);
+      root.style.setProperty("--vp-c-text-1", settings.value.color);
+      root.style.setProperty("--vp-c-text-2", settings.value.color);
+      root.style.setProperty("--vp-c-text-3", settings.value.color);
+      root.style.setProperty("--xh-reading-text", settings.value.color);
+      root.style.setProperty("--xh-reading-muted", settings.value.color);
+    } else {
+      root.style.removeProperty("--xh-font-color");
+      root.style.removeProperty("--vp-c-text");
+      root.style.removeProperty("--vp-c-text-mute");
+      root.style.removeProperty("--vp-c-text-subtle");
+      root.style.removeProperty("--vp-c-text-1");
+      root.style.removeProperty("--vp-c-text-2");
+      root.style.removeProperty("--vp-c-text-3");
+      root.style.removeProperty("--xh-reading-text");
+      root.style.removeProperty("--xh-reading-muted");
+      updateActiveDefaultColor();
+    }
     root.style.setProperty(
       "--xh-font-stroke",
       `${Math.max(0, (settings.value.weight - 400) / 900).toFixed(3)}px`,
@@ -260,7 +320,28 @@ const updateSetting = (key, value) => {
   });
 };
 
+const updatePendingColor = (value) => {
+  if (isHexColor(value)) {
+    pendingColor.value = value;
+  }
+};
+
+const applyPendingColor = () => {
+  const nextColor = pendingColor.value || settings.value.color;
+
+  if (!isHexColor(nextColor)) return;
+
+  pendingColor.value = "";
+  updateSetting("color", nextColor);
+};
+
+const resetColor = () => {
+  pendingColor.value = "";
+  updateSetting("color", "");
+};
+
 const resetSettings = () => {
+  pendingColor.value = "";
   applySettings(defaultSettings);
 };
 
@@ -322,6 +403,14 @@ onMounted(() => {
   }
 
   applySettings(savedSettings || defaultSettings, { deferFontLoad: true });
+  pendingColor.value = "";
+  updateActiveDefaultColor();
+
+  themeObserver = new MutationObserver(updateActiveDefaultColor);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme", "class", "style"],
+  });
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
@@ -332,6 +421,8 @@ onBeforeUnmount(() => {
   if (typeof document === "undefined") return;
 
   cancelPendingFontLoad();
+  themeObserver?.disconnect();
+  themeObserver = null;
   document.removeEventListener("click", handleDocumentClick);
   document.removeEventListener("keydown", handleKeydown);
   document.removeEventListener(PANEL_EVENT, handlePanelOpen);
@@ -428,6 +519,31 @@ onBeforeUnmount(() => {
         />
         <span class="setting-value">{{ settings.weight }}</span>
       </label>
+
+      <label class="setting-row color-setting-row">
+        <span class="setting-label">颜色</span>
+        <input
+          :value="colorPickerValue"
+          type="color"
+          aria-label="选择字体颜色"
+          @input="updatePendingColor($event.target.value)"
+        />
+        <span class="setting-value color-value">{{ pendingColor || settings.color || "默认" }}</span>
+      </label>
+
+      <div class="color-actions">
+        <button class="apply-button" type="button" @click="applyPendingColor">
+          应用颜色
+        </button>
+        <button
+          v-if="settings.color || pendingColor"
+          class="plain-button"
+          type="button"
+          @click="resetColor"
+        >
+          使用主题默认文字色
+        </button>
+      </div>
 
       <label class="setting-toggle">
         <span>
@@ -622,6 +738,29 @@ onBeforeUnmount(() => {
   accent-color: var(--vp-c-accent);
 }
 
+.color-setting-row input[type="color"] {
+  width: 2.4rem;
+  height: 1.8rem;
+  padding: 0.12rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+  cursor: pointer;
+}
+
+.color-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.color-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
 .setting-toggle {
   display: flex;
   align-items: center;
@@ -656,6 +795,40 @@ onBeforeUnmount(() => {
   font: inherit;
   font-size: 0.85rem;
   cursor: pointer;
+}
+
+.plain-button {
+  width: 100%;
+  min-height: 1.9rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--vp-c-control);
+  color: var(--vp-c-text-mute);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.apply-button {
+  width: 100%;
+  min-height: 2rem;
+  border: 1px solid var(--vp-c-accent);
+  border-radius: 6px;
+  background: var(--vp-c-accent);
+  color: var(--vp-c-accent-text, #fff);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.apply-button:hover {
+  border-color: var(--vp-c-accent-hover);
+  background: var(--vp-c-accent-hover);
+}
+
+.plain-button:hover {
+  color: var(--vp-c-accent);
 }
 
 .reset-button:hover {

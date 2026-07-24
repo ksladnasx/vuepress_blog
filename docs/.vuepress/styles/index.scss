@@ -448,7 +448,7 @@ body,
 .theme-default-content
   :where(h1, h2, h3, h4, h5, h6):not(
     :where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *, .home-dashboard, .home-dashboard *)
-  ) {
+) {
   color: var(--vp-c-text);
   font-variation-settings: "wght" clamp(560, calc(var(--xh-font-weight) + 160), 900);
   -webkit-text-stroke: max(var(--xh-font-stroke), 0.03px) currentColor;
@@ -1521,11 +1521,11 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
 
 .theme-default-content p,
 .theme-default-content li {
-  color: var(--vp-c-text-mute);
+  color: var(--xh-font-color, var(--vp-c-text-mute));
 }
 
 .theme-default-content strong {
-  color: var(--vp-c-text);
+  color: var(--xh-font-color, var(--vp-c-text));
 }
 
 .theme-default-content a:not(.header-anchor) {
@@ -1826,4 +1826,70 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
   border-color: var(--vp-c-accent-hover);
   background-color: var(--vp-c-accent-hover);
   color: var(--vp-c-accent-text);
+}
+
+html[data-font-color="custom"]
+  :where(
+    [vp-content],
+    .theme-default-content,
+    .article-wrapper,
+    .category-wrapper,
+    .tag-wrapper,
+    .timeline-page
+  )
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    p *,
+    li,
+    li *,
+    td,
+    td *,
+    th,
+    th *,
+    blockquote,
+    blockquote *,
+    details,
+    details *,
+    summary,
+    summary *,
+    dd,
+    dd *,
+    dt,
+    dt *,
+    strong,
+    .article-title,
+    .article-title *,
+    .empty-text,
+    .meta-tag,
+    .meta-tag *,
+    .tag-more,
+    .article-excerpt,
+    .article-excerpt *,
+    .read-more-text,
+    .category-count,
+    .category,
+    .category *,
+    .tag-count,
+    .tag,
+    .tag *,
+    .timeline-title,
+    .timeline-title *,
+    .timeline-desc,
+    .timeline-desc *,
+    .timeline-date,
+    .timeline-card h2,
+    .timeline-card h2 *,
+    .timeline-excerpt,
+    .timeline-excerpt *,
+    .timeline-category,
+    .timeline-tags,
+    .timeline-tags span
+  ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *, a:not(.header-anchor))) {
+  color: var(--xh-font-color) !important;
 }

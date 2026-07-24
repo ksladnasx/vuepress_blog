@@ -244,18 +244,65 @@ export default defineUserConfig({
           right: 1.5rem !important;
           bottom: 1rem !important;
           background-color: #1C64F2 !important;
+          border: 1px solid rgb(255 255 255 / 28%) !important;
+          box-shadow: 0 14px 34px rgb(28 100 242 / 28%), 0 4px 12px rgb(15 23 42 / 18%) !important;
           z-index: 10001 !important;
+          transition:
+            box-shadow 0.2s ease,
+            transform 0.2s ease !important;
+          user-select: none !important;
+        }
+
+        #dify-chatbot-bubble-button:hover {
+          box-shadow: 0 18px 42px rgb(28 100 242 / 34%), 0 6px 16px rgb(15 23 42 / 22%) !important;
         }
 
         #dify-chatbot-bubble-window {
           position: fixed !important;
-          right: 1.5rem !important;
-          bottom: 5rem !important;
+          right: auto !important;
+          bottom: auto !important;
+          left: 1.5rem !important;
+          top: 5rem !important;
           width: 24rem !important;
           height: 40rem !important;
           max-width: calc(100vw - 2rem) !important;
           max-height: calc(100vh - 6rem) !important;
+          overflow: hidden !important;
+          border: 1px solid rgb(148 163 184 / 24%) !important;
+          border-radius: 18px !important;
+          background:
+            linear-gradient(180deg, rgb(255 255 255 / 96%), rgb(248 250 252 / 94%)) !important;
+          box-shadow:
+            0 28px 80px rgb(15 23 42 / 24%),
+            0 8px 24px rgb(15 23 42 / 14%),
+            inset 0 1px 0 rgb(255 255 255 / 80%) !important;
           z-index: 10000 !important;
+          transition:
+            opacity 0.16s ease,
+            transform 0.16s ease,
+            box-shadow 0.2s ease !important;
+        }
+
+        html[data-theme="dark"] #dify-chatbot-bubble-window {
+          border-color: rgb(148 163 184 / 20%) !important;
+          background:
+            linear-gradient(180deg, rgb(30 41 59 / 96%), rgb(15 23 42 / 96%)) !important;
+          box-shadow:
+            0 30px 88px rgb(0 0 0 / 46%),
+            0 8px 26px rgb(0 0 0 / 28%),
+            inset 0 1px 0 rgb(255 255 255 / 8%) !important;
+        }
+
+        #dify-chatbot-bubble-window:not([data-xh-positioned="true"]) {
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transform: scale(0.98) !important;
+        }
+
+        #dify-chatbot-bubble-window iframe {
+          border: 0 !important;
+          border-radius: 18px !important;
+          background: transparent !important;
         }
 
         @media (max-width: 480px) {
@@ -265,8 +312,10 @@ export default defineUserConfig({
           }
 
           #dify-chatbot-bubble-window {
-            right: 1rem !important;
-            bottom: 5rem !important;
+            right: auto !important;
+            bottom: auto !important;
+            left: 1rem !important;
+            top: 5rem !important;
             width: calc(100vw - 2rem) !important;
             height: min(40rem, calc(100vh - 6rem)) !important;
           }
