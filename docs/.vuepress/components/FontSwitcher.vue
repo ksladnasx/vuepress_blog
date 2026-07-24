@@ -522,19 +522,21 @@ onBeforeUnmount(() => {
 
       <label class="setting-row color-setting-row">
         <span class="setting-label">颜色</span>
-        <input
-          :value="colorPickerValue"
-          type="color"
-          aria-label="选择字体颜色"
-          @input="updatePendingColor($event.target.value)"
-        />
-        <span class="setting-value color-value">{{ pendingColor || settings.color || "默认" }}</span>
+        <span class="color-control">
+          <input
+            :value="colorPickerValue"
+            type="color"
+            aria-label="选择字体颜色"
+            @input="updatePendingColor($event.target.value)"
+          />
+          <span class="setting-value color-value">{{ pendingColor || settings.color || "默认" }}</span>
+        </span>
+        <button class="apply-button" type="button" @click="applyPendingColor">
+          应用
+        </button>
       </label>
 
       <div class="color-actions">
-        <button class="apply-button" type="button" @click="applyPendingColor">
-          应用颜色
-        </button>
         <button
           v-if="settings.color || pendingColor"
           class="plain-button"
@@ -748,6 +750,17 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
+.color-setting-row {
+  grid-template-columns: 2.6rem minmax(0, 1fr) 3.2rem;
+}
+
+.color-control {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .color-value {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -811,7 +824,7 @@ onBeforeUnmount(() => {
 
 .apply-button {
   width: 100%;
-  min-height: 2rem;
+  min-height: 1.9rem;
   border: 1px solid var(--vp-c-accent);
   border-radius: 6px;
   background: var(--vp-c-accent);
@@ -842,8 +855,8 @@ onBeforeUnmount(() => {
   }
 
   .font-settings-trigger {
-    width: 2.35rem;
-    min-width: 2.35rem;
+    width: 1.35rem;
+    min-width: 0.35rem;
     padding: 0;
   }
 
@@ -857,6 +870,109 @@ onBeforeUnmount(() => {
     right: 0.75rem;
     left: 0.75rem;
     width: auto;
+  }
+}
+
+@media (max-width: 719px) {
+  .font-settings-panel {
+    left: auto;
+    right: 0.5rem;
+    width: 230px;
+    max-width: calc(100vw - 1rem);
+    max-height: min(26rem, calc(100vh - var(--navbar-height) - 1rem));
+    padding: 0.58rem;
+    overflow-y: auto;
+  }
+
+  .panel-head {
+    margin-bottom: 0.45rem;
+  }
+
+  .panel-title {
+    font-size: 0.84rem;
+  }
+
+  .close-button {
+    width: 1.45rem;
+    height: 1.45rem;
+    font-size: 0.95rem;
+  }
+
+  .font-options {
+    gap: 0.35rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .font-option {
+    min-height: 2.35rem;
+    padding: 0.38rem 0.45rem;
+  }
+
+  .font-option-label {
+    font-size: 0.78rem;
+  }
+
+  .font-option-name {
+    font-size: 0.64rem;
+  }
+
+  .setting-row,
+  .color-setting-row {
+    grid-template-columns: 2.05rem minmax(0, 1fr) 2.55rem;
+    gap: 0.36rem;
+    margin-top: 0.45rem;
+  }
+
+  .setting-label {
+    font-size: 0.74rem;
+  }
+
+  .setting-value {
+    font-size: 0.66rem;
+  }
+
+  .color-control {
+    gap: 0.28rem;
+  }
+
+  .color-setting-row input[type="color"] {
+    width: 1.8rem;
+    height: 1.45rem;
+  }
+
+  .apply-button {
+    min-height: 1.55rem;
+    font-size: 0.72rem;
+  }
+
+  .color-actions {
+    margin-top: 0.35rem;
+  }
+
+  .setting-toggle {
+    gap: 0.6rem;
+    margin-top: 0.55rem;
+    padding-top: 0.55rem;
+  }
+
+  .setting-toggle input {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .setting-note {
+    font-size: 0.66rem;
+  }
+
+  .plain-button {
+    min-height: 1.55rem;
+    font-size: 0.7rem;
+  }
+
+  .reset-button {
+    height: 1.65rem;
+    margin-top: 0.55rem;
+    font-size: 0.74rem;
   }
 }
 </style>
