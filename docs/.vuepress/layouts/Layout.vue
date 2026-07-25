@@ -7,6 +7,7 @@ import FontSwitcher from "../components/FontSwitcher.vue";
 import BackgroundSwitcher from "../components/BackgroundSwitcher.vue";
 import ReadingBackgroundSwitcher from "../components/ReadingBackgroundSwitcher.vue";
 import CollapsibleSidebar from "../components/CollapsibleSidebar.vue";
+import TextReader from "../components/TextReader.vue";
 
 const route = useRoute();
 const isDarkMode = useDarkMode();
@@ -33,6 +34,7 @@ const showComment = computed(() => {
     </template>
 
     <template #page-bottom>
+      <TextReader v-if="showComment" />
       <div v-if="showComment" class="comment-wrapper">
         <!-- 评论插件：传入 darkmode 以跟随站点明/暗主题 -->
         <CommentService :darkmode="isDarkMode" />
