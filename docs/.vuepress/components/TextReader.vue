@@ -3,10 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue"
 import { useRoute } from "vuepress/client";
 
 const POSITION_KEY = "xh-text-reader-position";
-const LONG_CHUNK_KEY = "xh-text-reader-long-chunk";
 const EDGE_GAP = 12;
-const NORMAL_CHUNK_LENGTH = 180;
-const LONG_CHUNK_LENGTH = 1200;
 
 const route = useRoute();
 const readerRef = ref(null);
@@ -25,7 +22,6 @@ const chunks = ref([]);
 const voices = ref([]);
 const selectedVoiceURI = ref("");
 const startMode = ref("current");
-const longChunkMode = ref(false);
 const rate = ref(1);
 const pitch = ref(1);
 const volume = ref(1);
@@ -102,13 +98,12 @@ const splitText = (text) => {
   if (!normalized) return [];
 
   const sentences = normalized.match(/[^。！？!?；;：:\n]+[。！？!?；;：:]?/g) || [normalized];
-  const maxChunkLength = longChunkMode.value ? LONG_CHUNK_LENGTH : NORMAL_CHUNK_LENGTH;
   const nextChunks = [];
   let buffer = "";
 
   sentences.forEach((sentence) => {
     const next = `${buffer}${sentence}`;
-    if (next.length > maxChunkLength && buffer) {
+    if (next.length > 180 && buffer) {
       nextChunks.push(buffer);
       buffer = sentence;
       return;
@@ -252,37 +247,6 @@ const loadVoices = () => {
     const preferred = nextVoices.find((voice) => voice.lang.toLowerCase().startsWith("zh"));
     selectedVoiceURI.value = (preferred || nextVoices[0]).voiceURI;
   }
-};
-
-const loadLongChunkMode = () => {
-  if (!isBrowser) return;
-
-  try {
-    longChunkMode.value = window.localStorage.getItem(LONG_CHUNK_KEY) === "true";
-  } catch {
-    longChunkMode.value = false;
-  }
-};
-
-const saveLongChunkMode = () => {
-  if (!isBrowser) return;
-
-  try {
-    window.localStorage.setItem(LONG_CHUNK_KEY, String(longChunkMode.value));
-  } catch {
-    // Ignore storage failures in private or restricted modes.
-  }
-};
-
-const toggleLongChunkMode = () => {
-  longChunkMode.value = !longChunkMode.value;
-  saveLongChunkMode();
-  if (!isPlaying.value) {
-    prepareChunks(startMode.value);
-    return;
-  }
-
-  pauseForSettingChange(longChunkMode.value ? "已暂停，长段模式已开启" : "已暂停，标准模式已开启");
 };
 
 const toggleVoiceMenu = () => {
@@ -589,7 +553,6 @@ watch(
 );
 
 onMounted(() => {
-  loadLongChunkMode();
   loadPosition();
   loadVoices();
   window.addEventListener("resize", handleWindowResize);
@@ -705,25 +668,6 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
-      <div class="reader-chunk-row">
-        <strong>长段朗读</strong>
-        <button
-          class="reader-chunk-toggle"
-          type="button"
-          role="switch"
-          :aria-checked="longChunkMode"
-          
-          :class="{ active: longChunkMode }"
-          :disabled="!isSupported"
-          @click="toggleLongChunkMode"
-        >
-          <span class="reader-switch-track" aria-hidden="true">
-            <span class="reader-switch-thumb"></span>
-          </span>
-          
-        </button>
-      </div>
-
       <div class="reader-settings">
         <div class="reader-voice" @click.stop>
           <span>音色</span>
@@ -783,7 +727,6 @@ onBeforeUnmount(() => {
 .reader-play,
 .reader-rate-select button,
 .reader-start-row button,
-.reader-chunk-toggle,
 .reader-voice button {
   font: inherit;
 }
@@ -1185,90 +1128,6 @@ onBeforeUnmount(() => {
   color: var(--vp-c-text);
   background: rgb(var(--xh-accent-rgb) / 16%);
   box-shadow: inset 0 0 0 1px rgb(var(--xh-accent-rgb) / 18%);
-}
-
-.reader-chunk-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 8px;
-  min-height: 38px;
-  margin-top: 10px;
-  padding: 4px 5px 4px 10px;
-  border: 1px solid var(--vp-c-border);
-  border-radius: 8px;
-  color: var(--vp-c-text-mute);
-  background: color-mix(in srgb, var(--vp-c-bg) 74%, transparent);
-  font-size: 12px;
-}
-
-.reader-chunk-row > span {
-  white-space: nowrap;
-}
-
-.reader-chunk-toggle {
-  display: inline-grid;
-  grid-template-columns: auto minmax(0, auto);
-  align-items: center;
-  justify-content: end;
-  gap: 8px;
-  min-width: 0;
-  min-height: 30px;
-  border: 0;
-  border-radius: 6px;
-  color: var(--vp-c-text-mute);
-  background: transparent;
-  cursor: pointer;
-}
-
-.reader-chunk-toggle:disabled {
-  cursor: not-allowed;
-  opacity: 0.52;
-}
-
-.reader-chunk-toggle.active {
-  color: var(--vp-c-text);
-}
-
-.reader-chunk-toggle strong {
-  overflow: hidden;
-  max-width: 88px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.reader-switch-track {
-  position: relative;
-  width: 36px;
-  height: 20px;
-  border-radius: 999px;
-  background: rgb(120 120 120 / 28%);
-  box-shadow: inset 0 0 0 1px rgb(120 120 120 / 20%);
-  transition: background 0.18s ease;
-}
-
-.reader-switch-thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--vp-c-bg);
-  box-shadow: 0 2px 6px rgb(0 0 0 / 18%);
-  transition: transform 0.18s ease;
-}
-
-.reader-chunk-toggle.active .reader-switch-track {
-  background: rgb(var(--xh-accent-rgb) / 72%);
-}
-
-.reader-chunk-toggle.active .reader-switch-thumb {
-  transform: translateX(16px);
 }
 
 .reader-settings {
