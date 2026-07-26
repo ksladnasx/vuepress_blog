@@ -8,7 +8,8 @@ const EDGE_GAP = 12;
 const route = useRoute();
 const readerRef = ref(null);
 const panelRef = ref(null);
-const isSupported = typeof window !== "undefined" && "speechSynthesis" in window;
+const isBrowser = typeof window !== "undefined";
+const isSupported = isBrowser && "speechSynthesis" in window;
 const isPlaying = ref(false);
 const isPaused = ref(false);
 const isExpanded = ref(false);
@@ -33,9 +34,11 @@ let speechRunId = 0;
 let dragState = null;
 
 const rateOptions = [
+  { label: "0.5x 很慢", value: 0.5 },
   { label: "0.85x 舒缓", value: 0.85 },
   { label: "1.0x 标准", value: 1 },
   { label: "1.15x 稍快", value: 1.15 },
+  { label: "1.5x 很快", value: 1.5 },
 ];
 
 const startModeOptions = [
@@ -77,11 +80,14 @@ const cleanText = (text) => text
   .replace(/[#*`>\[\]{}]/g, "")
   .trim();
 
-const getArticleElement = () => document.querySelector(".vp-page [vp-content], .theme-default-content");
+const getArticleElement = () => {
+  if (!isBrowser) return null;
+  return document.querySelector(".vp-page [vp-content], .theme-default-content");
+};
 
 const removeIgnoredContent = (element) => {
   element
-    .querySelectorAll("pre, code, script, style, button, select, .header-anchor, .xh-text-reader")
+    .querySelectorAll("pre, script, style, button, select, .header-anchor, .xh-text-reader")
     .forEach((child) => child.remove());
 };
 
@@ -128,6 +134,8 @@ const getHeadingIndexFromScroll = (headings) => {
 };
 
 const getTextFromHeading = (article, headingIndex) => {
+  if (!isBrowser) return "";
+
   const clone = article.cloneNode(true);
   removeIgnoredContent(clone);
 
@@ -145,6 +153,8 @@ const getTextFromHeading = (article, headingIndex) => {
 };
 
 const updateStartPointText = async () => {
+  if (!isBrowser) return;
+
   await nextTick();
 
   if (startMode.value === "top") {
@@ -173,6 +183,8 @@ const updateStartPointText = async () => {
 };
 
 const getArticleText = (mode = "top") => {
+  if (!isBrowser) return "";
+
   const article = getArticleElement();
   if (!article) return "";
 
@@ -213,9 +225,18 @@ const prepareChunks = async (mode = "top") => {
 const loadVoices = () => {
   if (!isSupported) return;
 
-  const nextVoices = window.speechSynthesis
-    .getVoices()
-    .filter((voice) => voice.localService || !/google/i.test(voice.name));
+  const voiceMap = new Map();
+  window.speechSynthesis.getVoices().forEach((voice) => {
+    voiceMap.set(voice.voiceURI || `${voice.name}-${voice.lang}`, voice);
+  });
+
+  const nextVoices = [...voiceMap.values()].sort((a, b) => {
+    const aIsZh = a.lang.toLowerCase().startsWith("zh");
+    const bIsZh = b.lang.toLowerCase().startsWith("zh");
+    if (aIsZh !== bIsZh) return aIsZh ? -1 : 1;
+    if (a.default !== b.default) return a.default ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
   voices.value = nextVoices;
 
   const selectedStillExists = nextVoices.some((voice) => voice.voiceURI === selectedVoiceURI.value);
@@ -226,7 +247,15 @@ const loadVoices = () => {
   }
 };
 
+const toggleVoiceMenu = () => {
+  loadVoices();
+  isVoiceMenuOpen.value = !isVoiceMenuOpen.value;
+  isRateMenuOpen.value = false;
+};
+
 const cancelSpeech = () => {
+  if (!isSupported) return;
+
   speechRunId += 1;
   window.speechSynthesis.cancel();
   utterance = null;
@@ -367,7 +396,7 @@ const chooseStartMode = (value) => {
 };
 
 const updatePanelPlacement = async () => {
-  if (!isExpanded.value) return;
+  if (!isBrowser || !isExpanded.value) return;
 
   await nextTick();
 
@@ -406,6 +435,8 @@ const closePanel = () => {
 };
 
 const clampPosition = (x, y) => {
+  if (!isBrowser) return { x, y };
+
   const element = readerRef.value;
   const rect = element?.getBoundingClientRect();
   const width = rect?.width || 90;
@@ -420,6 +451,7 @@ const clampPosition = (x, y) => {
 };
 
 const savePosition = () => {
+  if (!isBrowser) return;
   if (!position.value) return;
 
   try {
@@ -430,6 +462,8 @@ const savePosition = () => {
 };
 
 const loadPosition = () => {
+  if (!isBrowser) return;
+
   try {
     const saved = JSON.parse(window.localStorage.getItem(POSITION_KEY) || "null");
     if (saved && Number.isFinite(saved.x) && Number.isFinite(saved.y)) {
@@ -490,6 +524,7 @@ const handleTogglePointerCancel = () => {
 };
 
 const handleWindowResize = () => {
+  if (!isBrowser) return;
   if (!position.value) return;
   position.value = clampPosition(position.value.x, position.value.y);
   savePosition();
@@ -577,7 +612,7 @@ onBeforeUnmount(() => {
 
       <p class="reader-note">
         <span style="color:darkorange;">注意：</span>
-        阅读起点变化需在刷新后生效。
+        起点随阅读内容变化，需在刷新后生效。
       </p>
 
       <div class="reader-control-row">
@@ -638,8 +673,8 @@ onBeforeUnmount(() => {
             class="reader-voice-button"
             type="button"
             :aria-expanded="isVoiceMenuOpen"
-            :disabled="!isSupported || !voices.length"
-            @click="isVoiceMenuOpen = !isVoiceMenuOpen; isRateMenuOpen = false"
+            :disabled="!isSupported"
+            @click="toggleVoiceMenu"
           >
             <span>{{ voiceLabel }}</span>
             <small>{{ selectedVoice?.lang || "默认" }}</small>
