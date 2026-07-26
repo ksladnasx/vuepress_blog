@@ -567,7 +567,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <aside ref="readerRef" class="xh-text-reader" :class="{ expanded: isExpanded, active: isPlaying }" :style="readerStyle">
+  <aside
+    ref="readerRef"
+    class="xh-text-reader"
+    :class="{ expanded: isExpanded, active: isPlaying, playing: isPlaying && !isPaused, paused: isPaused }"
+    :style="readerStyle"
+  >
     <button
       class="reader-toggle"
       type="button"
@@ -772,22 +777,39 @@ onBeforeUnmount(() => {
   box-shadow: inset 0 0 0 5px rgb(255 255 255 / 34%);
 }
 
-.reader-mark::before,
+.reader-mark::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid white;
+}
+
 .reader-mark::after {
+  content: none;
+}
+
+.xh-text-reader.playing .reader-mark::before,
+.xh-text-reader.playing .reader-mark::after {
   content: "";
   position: absolute;
   top: 6px;
   width: 2px;
   height: 8px;
+  border: 0;
   border-radius: 999px;
   background: white;
 }
 
-.reader-mark::before {
+.xh-text-reader.playing .reader-mark::before {
   left: 7px;
 }
 
-.reader-mark::after {
+.xh-text-reader.playing .reader-mark::after {
   right: 7px;
 }
 
