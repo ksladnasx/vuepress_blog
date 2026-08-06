@@ -1554,9 +1554,13 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
   margin: 0.35rem 0;
 }
 
-.theme-default-content table {
+.theme-default-content table,
+[vp-content] table {
   display: block;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   border-collapse: separate;
   border-spacing: 0;
   border: 1px solid var(--vp-c-border);
@@ -1733,7 +1737,8 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
 
 .vp-theme-container:has(.comment-wrapper) .theme-default-content table,
 .vp-theme-container:has(.comment-wrapper) [vp-content] table {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: var(--xh-reading-table-bg) !important;
   box-shadow: 0 12px 30px rgb(0 0 0 / 7%);
 }
