@@ -59,6 +59,77 @@ const stablePageOrderPlugin = (name) => ({
   },
 });
 
+const markdownHighlightPlugin = {
+  name: "conservative-markdown-highlight",
+  extendsMarkdown: (md) => {
+    md.core.ruler.after("inline", "conservative_mark", (state) => {
+      const Token = state.Token;
+      const markPattern = /==(?=\S)([^=\n]*?\S)==/g;
+      const createTextToken = (content) => {
+        const token = new Token("text", "", 0);
+        token.content = content;
+        return token;
+      };
+
+      state.tokens.forEach((token, index) => {
+        const parentType = state.tokens[index - 1]?.type;
+
+        if (
+          token.type !== "inline" ||
+          parentType !== "paragraph_open" ||
+          !token.children?.length
+        ) {
+          return;
+        }
+
+        const nextChildren = [];
+        let hasHighlight = false;
+
+        token.children.forEach((child) => {
+          if (child.type !== "text" || !child.content.includes("==")) {
+            nextChildren.push(child);
+            return;
+          }
+
+          const content = child.content;
+          let lastIndex = 0;
+
+          markPattern.lastIndex = 0;
+
+          for (const match of content.matchAll(markPattern)) {
+            const start = match.index;
+            const end = start + match[0].length;
+
+            if (content[start - 1] === "=" || content[end] === "=") {
+              continue;
+            }
+
+            if (start > lastIndex) {
+              nextChildren.push(createTextToken(content.slice(lastIndex, start)));
+            }
+
+            nextChildren.push(new Token("mark_open", "mark", 1));
+            nextChildren.push(createTextToken(match[1]));
+            nextChildren.push(new Token("mark_close", "mark", -1));
+            hasHighlight = true;
+            lastIndex = end;
+          }
+
+          if (lastIndex === 0) {
+            nextChildren.push(child);
+          } else if (lastIndex < content.length) {
+            nextChildren.push(createTextToken(content.slice(lastIndex)));
+          }
+        });
+
+        if (hasHighlight) {
+          token.children = nextChildren;
+        }
+      });
+    });
+  },
+};
+
 const backgroundGroupsScript = JSON.stringify(backgroundGroups);
 const restoreBackgroundScript = `\
 (() => {
@@ -372,6 +443,8 @@ export default defineUserConfig({
   }),
 
   plugins: [
+    markdownHighlightPlugin,
+
     stablePageOrderPlugin("stable-page-order-before-blog"),
 
     // Mermaid 图表：识别并渲染 ```mermaid 代码块

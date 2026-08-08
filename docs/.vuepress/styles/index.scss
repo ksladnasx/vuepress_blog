@@ -1226,6 +1226,9 @@ html[data-theme="dark"] .vp-navbar {
 .vp-sidebar {
   border-right: 1px solid var(--vp-c-border);
   background: var(--xh-sidebar-bg) !important;
+  transition:
+    border-color var(--vp-t-color),
+    transform var(--vp-t-transform) !important;
 }
 
 .xh-sidebar-collapse-button {
@@ -1526,6 +1529,21 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
 
 .theme-default-content strong {
   color: var(--xh-font-color, var(--vp-c-text));
+}
+
+.theme-default-content mark,
+[vp-content] mark {
+  padding: 0.08em 0.22em;
+  border-radius: 4px;
+  background: linear-gradient(transparent 42%, rgb(255 221 87 / 72%) 42%);
+  color: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+html[data-theme="dark"] .theme-default-content mark,
+html[data-theme="dark"] [vp-content] mark {
+  background: linear-gradient(transparent 42%, rgb(212 166 39 / 56%) 42%);
 }
 
 .theme-default-content a:not(.header-anchor) {
