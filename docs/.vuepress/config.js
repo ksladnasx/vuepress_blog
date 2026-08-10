@@ -130,6 +130,76 @@ const markdownHighlightPlugin = {
   },
 };
 
+const markdownPunctuationStrongPlugin = {
+  name: "punctuation-strong-markdown",
+  extendsMarkdown: (md) => {
+    const punctuationStrongPattern = /^[\p{P}\p{S}]/u;
+    const isEscaped = (source, index) => {
+      let backslashCount = 0;
+
+      for (let i = index - 1; i >= 0 && source[i] === "\\"; i--) {
+        backslashCount += 1;
+      }
+
+      return backslashCount % 2 === 1;
+    };
+
+    md.inline.ruler.before("emphasis", "punctuation_strong", (state, silent) => {
+      const { src, pos, posMax } = state;
+
+      if (
+        pos + 3 >= posMax ||
+        src[pos] !== "*" ||
+        src[pos + 1] !== "*" ||
+        src[pos + 2] === "*"
+      ) {
+        return false;
+      }
+
+      const firstContentChar = src.slice(pos + 2).match(/^./u)?.[0] || "";
+
+      if (!punctuationStrongPattern.test(firstContentChar)) {
+        return false;
+      }
+
+      let closeIndex = pos + 2 + firstContentChar.length;
+
+      while ((closeIndex = src.indexOf("**", closeIndex)) !== -1) {
+        if (!isEscaped(src, closeIndex) && src[closeIndex + 2] !== "*") {
+          break;
+        }
+
+        closeIndex += 2;
+      }
+
+      if (closeIndex === -1) {
+        return false;
+      }
+
+      const content = src.slice(pos + 2, closeIndex);
+
+      if (!/\S/.test(content)) {
+        return false;
+      }
+
+      if (!silent) {
+        const strongOpen = state.push("strong_open", "strong", 1);
+        strongOpen.markup = "**";
+
+        const strongContent = state.push("text", "", 0);
+        strongContent.content = content;
+
+        const strongClose = state.push("strong_close", "strong", -1);
+        strongClose.markup = "**";
+      }
+
+      state.pos = closeIndex + 2;
+
+      return true;
+    });
+  },
+};
+
 const backgroundGroupsScript = JSON.stringify(backgroundGroups);
 const restoreBackgroundScript = `\
 (() => {
@@ -297,6 +367,7 @@ export default defineUserConfig({
       `
         window.difyChatbotConfig = {
           token: 'PRFQL6hdwlirsgQK',
+          baseUrl: 'https://udify.app',
           inputs: {},
           systemVariables: {},
           userVariables: {
@@ -314,53 +385,77 @@ export default defineUserConfig({
           position: fixed !important;
           right: 1.5rem !important;
           bottom: 1rem !important;
-          background-color: #1C64F2 !important;
-          border: 1px solid rgb(255 255 255 / 28%) !important;
-          box-shadow: 0 14px 34px rgb(28 100 242 / 28%), 0 4px 12px rgb(15 23 42 / 18%) !important;
+          width: 3.625rem !important;
+          height: 3.625rem !important;
+          border: 1px solid rgb(255 255 255 / 46%) !important;
+          border-radius: 999px !important;
+          background:
+            radial-gradient(circle at 28% 20%, rgb(255 255 255 / 34%), transparent 34%),
+            linear-gradient(135deg, #2563eb 0%, #0f9f8f 100%) !important;
+          box-shadow:
+            0 18px 42px rgb(37 99 235 / 28%),
+            0 8px 18px rgb(15 23 42 / 18%),
+            inset 0 1px 0 rgb(255 255 255 / 42%) !important;
           z-index: 10001 !important;
           transition:
             box-shadow 0.2s ease,
+            filter 0.2s ease,
             transform 0.2s ease !important;
           user-select: none !important;
         }
 
         #dify-chatbot-bubble-button:hover {
-          box-shadow: 0 18px 42px rgb(28 100 242 / 34%), 0 6px 16px rgb(15 23 42 / 22%) !important;
+          filter: saturate(1.08) brightness(1.03) !important;
+          transform: translateY(-2px) scale(1.02) !important;
+          box-shadow:
+            0 24px 54px rgb(37 99 235 / 34%),
+            0 10px 24px rgb(15 23 42 / 22%),
+            inset 0 1px 0 rgb(255 255 255 / 46%) !important;
+        }
+
+        #dify-chatbot-bubble-button:active {
+          transform: translateY(0) scale(0.98) !important;
+        }
+
+        #dify-chatbot-bubble-button:focus-visible {
+          outline: 3px solid rgb(56 189 248 / 42%) !important;
+          outline-offset: 4px !important;
         }
 
         #dify-chatbot-bubble-window {
           position: fixed !important;
-          right: auto !important;
-          bottom: auto !important;
-          left: 1.5rem !important;
-          top: 5rem !important;
-          width: 24rem !important;
-          height: 40rem !important;
+          right: 1.5rem !important;
+          bottom: 5.5rem !important;
+          left: auto !important;
+          top: auto !important;
+          width: min(24rem, calc(100vw - 2rem)) !important;
+          height: min(40rem, calc(100vh - 6rem)) !important;
           max-width: calc(100vw - 2rem) !important;
           max-height: calc(100vh - 6rem) !important;
           overflow: hidden !important;
-          border: 1px solid rgb(148 163 184 / 24%) !important;
-          border-radius: 18px !important;
+          border: 1px solid rgb(148 163 184 / 28%) !important;
+          border-radius: 16px !important;
           background:
-            linear-gradient(180deg, rgb(255 255 255 / 96%), rgb(248 250 252 / 94%)) !important;
+            linear-gradient(180deg, rgb(255 255 255 / 98%), rgb(248 250 252 / 96%)) !important;
           box-shadow:
-            0 28px 80px rgb(15 23 42 / 24%),
-            0 8px 24px rgb(15 23 42 / 14%),
+            0 28px 76px rgb(15 23 42 / 26%),
+            0 8px 24px rgb(15 23 42 / 16%),
             inset 0 1px 0 rgb(255 255 255 / 80%) !important;
           z-index: 10000 !important;
           transition:
             opacity 0.16s ease,
             transform 0.16s ease,
             box-shadow 0.2s ease !important;
+          transform-origin: bottom right !important;
         }
 
         html[data-theme="dark"] #dify-chatbot-bubble-window {
-          border-color: rgb(148 163 184 / 20%) !important;
+          border-color: rgb(148 163 184 / 24%) !important;
           background:
-            linear-gradient(180deg, rgb(30 41 59 / 96%), rgb(15 23 42 / 96%)) !important;
+            linear-gradient(180deg, rgb(30 41 59 / 98%), rgb(15 23 42 / 98%)) !important;
           box-shadow:
-            0 30px 88px rgb(0 0 0 / 46%),
-            0 8px 26px rgb(0 0 0 / 28%),
+            0 30px 86px rgb(0 0 0 / 50%),
+            0 8px 26px rgb(0 0 0 / 30%),
             inset 0 1px 0 rgb(255 255 255 / 8%) !important;
         }
 
@@ -372,7 +467,7 @@ export default defineUserConfig({
 
         #dify-chatbot-bubble-window iframe {
           border: 0 !important;
-          border-radius: 18px !important;
+          border-radius: 16px !important;
           background: transparent !important;
         }
 
@@ -380,13 +475,15 @@ export default defineUserConfig({
           #dify-chatbot-bubble-button {
             right: 1rem !important;
             bottom: 1rem !important;
+            width: 3.375rem !important;
+            height: 3.375rem !important;
           }
 
           #dify-chatbot-bubble-window {
-            right: auto !important;
-            bottom: auto !important;
-            left: 1rem !important;
-            top: 5rem !important;
+            right: 1rem !important;
+            bottom: 5.5rem !important;
+            left: auto !important;
+            top: auto !important;
             width: calc(100vw - 2rem) !important;
             height: min(40rem, calc(100vh - 6rem)) !important;
           }
@@ -443,6 +540,8 @@ export default defineUserConfig({
   }),
 
   plugins: [
+    markdownPunctuationStrongPlugin,
+
     markdownHighlightPlugin,
 
     stablePageOrderPlugin("stable-page-order-before-blog"),

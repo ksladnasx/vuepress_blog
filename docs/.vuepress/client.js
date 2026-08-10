@@ -81,6 +81,18 @@ const getClampedButtonPosition = (button, x, y) => {
   };
 };
 
+const getDifyWindowSize = (chatWindow) => {
+  const rect = chatWindow.getBoundingClientRect();
+  const rem = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+  const maxWidth = Math.max(0, window.innerWidth - DIFY_EDGE_GAP * 2);
+  const maxHeight = Math.max(0, window.innerHeight - rem * 6);
+
+  return {
+    width: Math.min(rect.width || rem * 24, maxWidth),
+    height: Math.min(rect.height || rem * 40, maxHeight),
+  };
+};
+
 const positionDifyWindow = () => {
   const button = document.querySelector(DIFY_BUTTON_SELECTOR);
   const chatWindow = document.querySelector(DIFY_WINDOW_SELECTOR);
@@ -88,9 +100,7 @@ const positionDifyWindow = () => {
   if (!button || !chatWindow) return;
 
   const buttonRect = button.getBoundingClientRect();
-  const windowRect = chatWindow.getBoundingClientRect();
-  const width = Math.min(windowRect.width || 384, window.innerWidth - DIFY_EDGE_GAP * 2);
-  const height = Math.min(windowRect.height || 640, window.innerHeight - DIFY_EDGE_GAP * 2);
+  const { width, height } = getDifyWindowSize(chatWindow);
   const preferredTop = buttonRect.top - height - DIFY_EDGE_GAP;
   const fallbackTop = buttonRect.bottom + DIFY_EDGE_GAP;
   const top = preferredTop >= DIFY_EDGE_GAP
@@ -127,6 +137,7 @@ const applySavedDifyPosition = (button) => {
   const next = getClampedButtonPosition(button, startX, startY);
 
   setFixedPosition(button, next.x, next.y);
+  positionDifyWindow();
   scheduleDifyWindowPosition();
 };
 
@@ -206,7 +217,10 @@ const wireDifyDrag = (button) => {
     "click",
     (event) => {
       if (!suppressClick) {
-        window.setTimeout(scheduleDifyWindowPosition, 0);
+        positionDifyWindow();
+        window.queueMicrotask(positionDifyWindow);
+        scheduleDifyWindowPosition();
+        window.setTimeout(positionDifyWindow, 0);
         return;
       }
 
@@ -236,6 +250,7 @@ const makeDifyChatbotDraggable = () => {
 
   difyDragObserver = new MutationObserver(() => {
     setup();
+    positionDifyWindow();
     scheduleDifyWindowPosition();
   });
 
