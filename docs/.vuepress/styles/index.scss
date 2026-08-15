@@ -1535,79 +1535,79 @@ html[data-theme="dark"] .vp-theme-container:has(.article-wrapper) .article-card:
 }
 
 :root {
-  --xh-mark-bg: linear-gradient(104deg, rgb(255 234 115 / 48%), rgb(255 213 82 / 62%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(244 182 45 / 20%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(255 236 156 / 46%), rgb(255 220 116 / 56%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(207 150 45 / 14%);
   --xh-mark-text: var(--vp-c-text);
   --xh-strong-text: #225f4b;
 }
 
 html[data-theme="dark"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(230 180 83 / 30%), rgb(225 134 72 / 42%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(225 126 59 / 18%);
-  --xh-mark-text: rgb(244 239 220 / 94%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(58 119 91 / 42%), rgb(74 101 132 / 38%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(92 170 132 / 16%);
+  --xh-mark-text: rgb(238 248 241 / 94%);
   --xh-strong-text: #a8ddb8;
 }
 
 html[data-reading-bg="paper"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(222 172 88 / 36%), rgb(201 134 63 / 48%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(181 111 42 / 16%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(218 174 104 / 34%), rgb(196 141 86 / 46%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(156 97 43 / 13%);
   --xh-mark-text: #46341f;
   --xh-strong-text: #79522d;
 }
 
 html[data-reading-bg="green"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(167 208 123 / 36%), rgb(101 178 121 / 46%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(80 149 83 / 16%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(174 207 126 / 34%), rgb(106 173 120 / 44%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(74 135 78 / 13%);
   --xh-mark-text: #213b24;
   --xh-strong-text: #2f6e3f;
 }
 
 html[data-reading-bg="pearl"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(204 170 221 / 34%), rgb(131 187 225 / 40%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(111 153 205 / 15%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(211 175 206 / 32%), rgb(144 187 220 / 38%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(107 144 190 / 12%);
   --xh-mark-text: #303852;
   --xh-strong-text: #526f9d;
 }
 
 html[data-reading-bg="linen"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(197 198 111 / 36%), rgb(163 181 96 / 42%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(129 148 65 / 15%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(204 199 123 / 34%), rgb(169 181 111 / 40%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(127 141 70 / 12%);
   --xh-mark-text: #343823;
   --xh-strong-text: #68783f;
 }
 
 html[data-reading-bg="dusk"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(210 158 95 / 28%), rgb(151 122 198 / 38%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(150 108 190 / 14%);
-  --xh-mark-text: rgb(241 235 226 / 94%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(112 87 128 / 48%), rgb(78 119 147 / 38%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(156 128 176 / 14%);
+  --xh-mark-text: rgb(242 239 248 / 94%);
   --xh-strong-text: #d9c28e;
 }
 
 html[data-reading-bg="ink"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(91 185 154 / 30%), rgb(80 151 195 / 38%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(67 164 162 / 14%);
-  --xh-mark-text: rgb(230 243 240 / 94%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(45 123 108 / 48%), rgb(52 96 134 / 40%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(83 184 159 / 14%);
+  --xh-mark-text: rgb(232 247 243 / 94%);
   --xh-strong-text: #93d9bf;
 }
 
 html[data-reading-bg="midnight"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(91 136 210 / 32%), rgb(104 94 196 / 38%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(84 98 188 / 14%);
-  --xh-mark-text: rgb(232 239 249 / 95%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(58 91 151 / 48%), rgb(77 68 151 / 44%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(113 133 220 / 14%);
+  --xh-mark-text: rgb(235 242 255 / 95%);
   --xh-strong-text: #9fbee8;
 }
 
 html[data-reading-bg="graphite"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(198 169 103 / 28%), rgb(169 142 82 / 38%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(169 127 54 / 13%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(111 103 82 / 48%), rgb(83 105 101 / 38%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(178 158 112 / 12%);
   --xh-mark-text: rgb(238 235 225 / 94%);
   --xh-strong-text: #d0c49e;
 }
 
 html[data-reading-bg="black"] {
-  --xh-mark-bg: linear-gradient(104deg, rgb(212 205 79 / 34%), rgb(76 182 163 / 34%));
-  --xh-mark-shadow: inset 0 -0.05em 0 rgb(78 182 164 / 14%);
-  --xh-mark-text: rgb(244 244 223 / 96%);
+  --xh-mark-bg: linear-gradient(104deg, rgb(54 92 86 / 56%), rgb(73 74 112 / 42%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(83 184 165 / 14%);
+  --xh-mark-text: rgb(238 247 244 / 96%);
   --xh-strong-text: #d8d49a;
 }
 
