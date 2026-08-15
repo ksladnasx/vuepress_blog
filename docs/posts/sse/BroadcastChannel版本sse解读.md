@@ -5,6 +5,7 @@ category:
 tag:
   - SSE
   - BroadcastChannel
+  - 代码解读
 ---
 
 # sseService文件解读(BroadcastChannel版)
