@@ -24,6 +24,14 @@ const showComment = computed(() => {
 <template>
   <ParentLayout>
     <template #navbar-after>
+      <a class="xh-admin-entry" href="/admin/" aria-label="打开文章后台" title="文章后台">
+        <span class="xh-admin-entry-icon" aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+      </a>
       <FontSwitcher />
       <ReadingBackgroundSwitcher v-if="showComment" />
       <BackgroundSwitcher v-else />

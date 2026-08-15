@@ -2,14 +2,20 @@ const REPOSITORY = "ksladnasx/vuepress_blog";
 const BRANCH = "main";
 const POSTS_ROOT = "docs/posts/";
 const UPLOADS_ROOT = "docs/.vuepress/public/uploads/";
+const THEME_KEY = "vuepress-color-scheme";
+const UNCATEGORISED = "未分类";
 
 const state = {
   token: "",
   articles: [],
   selectedPath: "",
   selectedSha: "",
+  selectedCategories: [],
+  selectedTags: [],
   folders: [],
-  user: null,
+  expandedCategories: new Set(),
+  openMulti: "",
+  toastTimer: 0,
 };
 
 const elements = {
@@ -20,28 +26,66 @@ const elements = {
   tokenVisibility: document.querySelector("#token-visibility"),
   accessSubmit: document.querySelector("#access-submit"),
   accessStatus: document.querySelector("#access-status"),
+  themeToggle: document.querySelector("#theme-toggle"),
   accountName: document.querySelector("#account-name"),
   signOut: document.querySelector("#sign-out"),
+  newArticle: document.querySelector("#new-article"),
+  emptyCreate: document.querySelector("#empty-create"),
   articleCount: document.querySelector("#article-count"),
+  emptyCount: document.querySelector("#empty-count"),
   articleSearch: document.querySelector("#article-search"),
   articleList: document.querySelector("#article-list"),
-  newArticle: document.querySelector("#new-article"),
+  editorEmpty: document.querySelector("#editor-empty"),
+  editorLoading: document.querySelector("#editor-loading"),
+  editorPanel: document.querySelector("#editor-panel"),
+  mobileBack: document.querySelector("#mobile-back"),
   resetEditor: document.querySelector("#reset-editor"),
+  deleteArticle: document.querySelector("#delete-article"),
   publishArticle: document.querySelector("#publish-article"),
   editorMode: document.querySelector("#editor-mode"),
   filePath: document.querySelector("#file-path"),
-  title: document.querySelector("#article-title"),
   date: document.querySelector("#article-date"),
   folder: document.querySelector("#article-folder"),
-  category: document.querySelector("#article-category"),
-  tags: document.querySelector("#article-tags"),
+  categoryControl: document.querySelector("#category-control"),
+  categoryChips: document.querySelector("#category-chips"),
+  categoryInput: document.querySelector("#category-input"),
+  categoryMenu: document.querySelector("#category-menu"),
+  tagControl: document.querySelector("#tag-control"),
+  tagChips: document.querySelector("#tag-chips"),
+  tagInput: document.querySelector("#tag-input"),
+  tagMenu: document.querySelector("#tag-menu"),
   extra: document.querySelector("#article-extra"),
   body: document.querySelector("#article-body"),
-  articleForm: document.querySelector("#article-form"),
   publishStatus: document.querySelector("#publish-status"),
   folderOptions: document.querySelector("#folder-options"),
   imageUpload: document.querySelector("#image-upload"),
+  deleteDialog: document.querySelector("#delete-dialog"),
+  deleteDescription: document.querySelector("#delete-description"),
+  confirmDelete: document.querySelector("#confirm-delete"),
+  toast: document.querySelector("#toast"),
+  toastCopy: document.querySelector("#toast-copy"),
 };
+
+const multiSelects = {
+  category: {
+    control: elements.categoryControl,
+    chips: elements.categoryChips,
+    input: elements.categoryInput,
+    menu: elements.categoryMenu,
+    stateKey: "selectedCategories",
+    sourceKey: "categories",
+  },
+  tag: {
+    control: elements.tagControl,
+    chips: elements.tagChips,
+    input: elements.tagInput,
+    menu: elements.tagMenu,
+    stateKey: "selectedTags",
+    sourceKey: "tags",
+  },
+};
+
+const isMobile = () => window.matchMedia("(max-width: 780px)").matches;
 
 const setStatus = (target, message = "", type = "") => {
   target.textContent = message;
@@ -55,6 +99,22 @@ const setBusy = (button, busy, text) => {
 
   button.disabled = busy;
   button.textContent = busy ? text : button.dataset.defaultText;
+};
+
+const showToast = (message, type = "success", duration = 4500) => {
+  window.clearTimeout(state.toastTimer);
+  elements.toast.hidden = false;
+  elements.toast.className = `toast is-${type}`;
+  elements.toastCopy.textContent = message;
+  elements.toast.style.removeProperty("--toast-duration");
+
+  if (!duration) return;
+
+  elements.toast.classList.add("is-timed");
+  elements.toast.style.setProperty("--toast-duration", `${duration}ms`);
+  state.toastTimer = window.setTimeout(() => {
+    elements.toast.hidden = true;
+  }, duration);
 };
 
 const encodePath = (path) => path.split("/").map(encodeURIComponent).join("/");
@@ -114,6 +174,34 @@ const githubRequest = async (path, options = {}) => {
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+const getTheme = () => {
+  try {
+    const saved = window.localStorage.getItem(THEME_KEY);
+    if (saved === "light" || saved === "dark") return saved;
+  } catch {}
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+};
+
+const applyTheme = (theme, persist = false) => {
+  document.documentElement.dataset.theme = theme;
+  elements.themeToggle.setAttribute(
+    "aria-label",
+    theme === "dark" ? "切换到浅色主题" : "切换到深色主题",
+  );
+
+  if (!persist) return;
+
+  try {
+    window.localStorage.setItem(THEME_KEY, theme);
+  } catch {}
+};
+
+const toggleTheme = () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  applyTheme(next, true);
+};
+
 const slugify = (value) => {
   const slug = value
     .trim()
@@ -132,17 +220,10 @@ const normaliseFolder = (value) =>
     .replace(/^\/+|\/+$/g, "")
     .replace(/[^a-zA-Z0-9_\-\u4e00-\u9fff/]/g, "");
 
-const splitList = (value) =>
-  value
-    .split(/[，,]/)
-    .map((item) => item.trim())
-    .filter(Boolean);
+const normaliseMetaValue = (value) => value.trim().replace(/\s+/g, " ");
 
 const serialiseList = (key, items) => {
-  if (!items.length) {
-    return "";
-  }
-
+  if (!items.length) return "";
   return `${key}:\n${items.map((item) => `  - ${item}`).join("\n")}`;
 };
 
@@ -209,63 +290,75 @@ const removeKnownFrontmatter = (frontmatter) => {
   return result.join("\n").trim();
 };
 
+const extractTitle = (source) => {
+  const heading = source.match(/^#\s+(.+?)\s*$/m);
+  return heading?.[1]?.trim() || "";
+};
+
 const parseArticle = (source) => {
   const { frontmatter, content } = parseFrontmatter(source);
-  const heading = content.match(/^#\s+(.+?)\s*(?:\r?\n|$)/);
-  const title = heading?.[1]?.trim() || "";
 
   return {
-    title,
+    title: extractTitle(content),
     date: frontmatter.match(/^date:\s*([^\r\n]+)/m)?.[1]?.trim() || today(),
-    category: parseListValue(frontmatter, "category"),
+    categories: parseListValue(frontmatter, "category"),
     tags: parseListValue(frontmatter, "tag"),
     extra: removeKnownFrontmatter(frontmatter),
-    body: heading ? content.slice(heading[0].length).replace(/^\r?\n/, "") : content,
+    body: content,
   };
 };
 
 const articleSource = () => {
   const metadata = [
     `date: ${elements.date.value || today()}`,
-    serialiseList("category", splitList(elements.category.value)),
-    serialiseList("tag", splitList(elements.tags.value)),
+    serialiseList("category", state.selectedCategories),
+    serialiseList("tag", state.selectedTags),
     elements.extra.value.trim(),
   ]
     .filter(Boolean)
     .join("\n");
-
-  const title = elements.title.value.trim();
   const body = elements.body.value.replace(/^\s+/, "");
 
-  return `---\n${metadata}\n---\n\n# ${title}\n\n${body}`;
+  return `---\n${metadata}\n---\n\n${body}`;
 };
 
-const articlePath = () => {
+const articlePath = (title) => {
   const folder = normaliseFolder(elements.folder.value);
-  return `${POSTS_ROOT}${folder}/${slugify(elements.title.value)}.md`;
-};
-
-const setEditor = (article = null) => {
-  const isExisting = Boolean(article);
-  state.selectedPath = article?.path || "";
-  state.selectedSha = article?.sha || "";
-  elements.editorMode.textContent = isExisting ? "编辑文章" : "新文章";
-  elements.filePath.textContent = isExisting ? article.path : "发布时将自动创建文件";
-  elements.title.value = article?.title || "";
-  elements.date.value = article?.date || today();
-  elements.folder.value = article?.folder || state.folders[0] || "otherlearning";
-  elements.folder.readOnly = isExisting;
-  elements.folder.title = isExisting ? "已有文章保留原有文件路径" : "";
-  elements.category.value = article?.category?.join(", ") || "";
-  elements.tags.value = article?.tags?.join(", ") || "";
-  elements.extra.value = article?.extra || "";
-  elements.body.value = article?.body || "";
-  renderArticleList();
+  return `${POSTS_ROOT}${folder}/${slugify(title)}.md`;
 };
 
 const articleLabel = (path) => path.split("/").pop().replace(/\.md$/i, "");
 
-const renderFolders = () => {
+const getFolderFromPath = (path) =>
+  path.slice(POSTS_ROOT.length).split("/").slice(0, -1).join("/");
+
+const sortArticles = (articles) =>
+  [...articles].sort((articleA, articleB) => {
+    const dateDifference =
+      new Date(articleB.date || 0).getTime() - new Date(articleA.date || 0).getTime();
+
+    if (dateDifference) return dateDifference;
+    return articleA.title.localeCompare(articleB.title, "zh-CN");
+  });
+
+const mapWithConcurrency = async (items, limit, callback) => {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      results[index] = await callback(items[index]);
+    }
+  });
+
+  await Promise.all(workers);
+  return results;
+};
+
+const refreshFolderOptions = () => {
+  state.folders = [...new Set(state.articles.map((article) => article.folder).filter(Boolean))]
+    .sort((folderA, folderB) => folderA.localeCompare(folderB, "zh-CN"));
   elements.folderOptions.replaceChildren(
     ...state.folders.map((folder) => {
       const option = document.createElement("option");
@@ -275,37 +368,267 @@ const renderFolders = () => {
   );
 };
 
-const renderArticleList = () => {
-  const query = elements.articleSearch.value.trim().toLocaleLowerCase();
-  const articles = state.articles.filter((article) =>
-    `${article.title} ${article.path}`.toLocaleLowerCase().includes(query),
+const setMobileView = (view) => {
+  if (isMobile()) {
+    elements.workspace.dataset.mobileView = view;
+  }
+};
+
+const updateEditorMode = (isExisting) => {
+  elements.editorMode.textContent = isExisting ? "编辑文章" : "新文章";
+  elements.deleteArticle.hidden = !isExisting;
+};
+
+const getKnownMetaValues = (kind) => {
+  const sourceKey = multiSelects[kind].sourceKey;
+  const values = state.articles.flatMap((article) => article[sourceKey] || []);
+
+  return [...new Set(values.map(normaliseMetaValue).filter(Boolean))]
+    .sort((valueA, valueB) => valueA.localeCompare(valueB, "zh-CN"));
+};
+
+const getSelectedMetaValues = (kind) => state[multiSelects[kind].stateKey];
+
+const setSelectedMetaValues = (kind, values) => {
+  state[multiSelects[kind].stateKey] = [...new Set(values.map(normaliseMetaValue).filter(Boolean))];
+};
+
+const renderMultiSelect = (kind) => {
+  const config = multiSelects[kind];
+  const selected = getSelectedMetaValues(kind);
+  const query = normaliseMetaValue(config.input.value);
+  const knownValues = getKnownMetaValues(kind);
+  const availableValues = knownValues.filter(
+    (value) =>
+      !selected.includes(value) &&
+      (!query || value.toLocaleLowerCase().includes(query.toLocaleLowerCase())),
+  );
+  const hasExactMatch = knownValues.some(
+    (value) => value.toLocaleLowerCase() === query.toLocaleLowerCase(),
   );
 
-  elements.articleList.replaceChildren();
-  elements.articleCount.textContent = `${state.articles.length} 篇文章`;
+  config.chips.replaceChildren(
+    ...selected.map((value) => {
+      const chip = document.createElement("span");
+      const label = document.createElement("span");
+      const remove = document.createElement("button");
 
-  if (!articles.length) {
+      chip.className = "multi-chip";
+      label.className = "multi-chip-label";
+      label.textContent = value;
+      remove.className = "multi-chip-remove";
+      remove.type = "button";
+      remove.dataset.multiRemove = kind;
+      remove.dataset.value = value;
+      remove.setAttribute("aria-label", `移除${value}`);
+      remove.textContent = "×";
+      chip.append(label, remove);
+      return chip;
+    }),
+  );
+
+  config.menu.replaceChildren(
+    ...availableValues.map((value) => {
+      const option = document.createElement("button");
+      const text = document.createElement("span");
+      const meta = document.createElement("span");
+
+      option.type = "button";
+      option.className = "multi-option";
+      option.dataset.multiSelect = kind;
+      option.dataset.value = value;
+      text.textContent = value;
+      meta.className = "multi-option-meta";
+      meta.textContent = "选择";
+      option.append(text, meta);
+      return option;
+    }),
+  );
+
+  if (query && !selected.includes(query) && !hasExactMatch) {
+    const create = document.createElement("button");
+    const text = document.createElement("span");
+    const meta = document.createElement("span");
+
+    create.type = "button";
+    create.className = "multi-option is-add";
+    create.dataset.multiAdd = kind;
+    create.dataset.value = query;
+    text.textContent = `新增 “${query}”`;
+    meta.className = "multi-option-meta";
+    meta.textContent = "添加";
+    create.append(text, meta);
+    config.menu.append(create);
+  }
+
+  config.menu.hidden = state.openMulti !== kind;
+};
+
+const renderMultiSelects = () => {
+  renderMultiSelect("category");
+  renderMultiSelect("tag");
+};
+
+const addMetaValue = (kind, value) => {
+  const normalised = normaliseMetaValue(value);
+  if (!normalised) return;
+
+  setSelectedMetaValues(kind, [...getSelectedMetaValues(kind), normalised]);
+  multiSelects[kind].input.value = "";
+  state.openMulti = kind;
+  renderMultiSelects();
+  multiSelects[kind].input.focus();
+};
+
+const removeMetaValue = (kind, value) => {
+  setSelectedMetaValues(
+    kind,
+    getSelectedMetaValues(kind).filter((item) => item !== value),
+  );
+  renderMultiSelects();
+};
+
+const fillEditor = (article = null) => {
+  const isExisting = Boolean(article);
+  state.selectedPath = article?.path || "";
+  state.selectedSha = article?.sha || "";
+  updateEditorMode(isExisting);
+  elements.filePath.textContent = isExisting ? article.path : "发布时将创建新文件";
+  elements.date.value = article?.date || today();
+  elements.folder.value = article?.folder || state.folders[0] || "otherlearning";
+  elements.folder.readOnly = isExisting;
+  elements.folder.title = isExisting ? "已有文章保留原有文件路径" : "";
+  setSelectedMetaValues("category", article?.categories || []);
+  setSelectedMetaValues("tag", article?.tags || []);
+  elements.extra.value = article?.extra || "";
+  elements.body.value = article?.body || "";
+  state.openMulti = "";
+  renderMultiSelects();
+};
+
+const showOverview = () => {
+  elements.editorPanel.hidden = true;
+  elements.editorLoading.hidden = true;
+  elements.editorEmpty.hidden = false;
+  setMobileView("library");
+  renderArticleList();
+};
+
+const showLoadingEditor = () => {
+  elements.editorEmpty.hidden = true;
+  elements.editorPanel.hidden = true;
+  elements.editorLoading.hidden = false;
+  setMobileView("editor");
+  renderArticleList();
+};
+
+const showEditor = () => {
+  elements.editorEmpty.hidden = true;
+  elements.editorLoading.hidden = true;
+  elements.editorPanel.hidden = false;
+  setMobileView("editor");
+  renderArticleList();
+};
+
+const updateSummary = () => {
+  const categoryCount = new Set(
+    state.articles.flatMap((article) => article.categories.length ? article.categories : [UNCATEGORISED]),
+  ).size;
+  elements.articleCount.textContent = `${state.articles.length} 篇文章 · ${categoryCount} 个分类`;
+  elements.emptyCount.textContent = `${state.articles.length} 篇文章 · ${categoryCount} 个分类`;
+};
+
+const getVisibleGroups = () => {
+  const query = elements.articleSearch.value.trim().toLocaleLowerCase();
+  const groups = new Map();
+
+  state.articles.forEach((article) => {
+    const categories = article.categories.length ? article.categories : [UNCATEGORISED];
+    const articleSearchText = [
+      article.title,
+      article.path,
+      article.folder,
+      ...categories,
+      ...article.tags,
+    ]
+      .join(" ")
+      .toLocaleLowerCase();
+
+    if (query && !articleSearchText.includes(query)) return;
+
+    categories.forEach((category) => {
+      const group = groups.get(category) || [];
+      group.push(article);
+      groups.set(category, group);
+    });
+  });
+
+  return [...groups.entries()]
+    .sort(([categoryA], [categoryB]) => {
+      if (categoryA === UNCATEGORISED) return 1;
+      if (categoryB === UNCATEGORISED) return -1;
+      return categoryA.localeCompare(categoryB, "zh-CN");
+    })
+    .map(([category, articles]) => ({ category, articles: sortArticles(articles) }));
+};
+
+const renderArticleList = () => {
+  const groups = getVisibleGroups();
+  const isSearching = Boolean(elements.articleSearch.value.trim());
+  elements.articleList.replaceChildren();
+  updateSummary();
+
+  if (!groups.length) {
     const empty = document.createElement("p");
     empty.className = "empty-list";
-    empty.textContent = query ? "没有匹配的文章" : "还没有文章";
+    empty.textContent = isSearching ? "没有匹配的文章" : "还没有文章";
     elements.articleList.append(empty);
     return;
   }
 
-  articles.forEach((article) => {
-    const button = document.createElement("button");
-    const title = document.createElement("span");
-    const path = document.createElement("span");
+  groups.forEach(({ category, articles }) => {
+    const group = document.createElement("section");
+    const toggle = document.createElement("button");
+    const chevron = document.createElement("span");
+    const name = document.createElement("span");
+    const count = document.createElement("span");
+    const articleContainer = document.createElement("div");
+    const isExpanded = isSearching || state.expandedCategories.has(category);
 
-    button.type = "button";
-    button.className = `article-item${article.path === state.selectedPath ? " is-active" : ""}`;
-    button.dataset.path = article.path;
-    title.className = "article-item-title";
-    title.textContent = article.title || articleLabel(article.path);
-    path.className = "article-item-path";
-    path.textContent = article.path.replace(POSTS_ROOT, "");
-    button.append(title, path);
-    elements.articleList.append(button);
+    group.className = "category-group";
+    toggle.type = "button";
+    toggle.className = "category-toggle";
+    toggle.dataset.category = category;
+    toggle.setAttribute("aria-expanded", String(isExpanded));
+    chevron.className = "chevron-glyph";
+    chevron.setAttribute("aria-hidden", "true");
+    name.className = "category-name";
+    name.textContent = category;
+    count.className = "category-count";
+    count.textContent = String(articles.length);
+    toggle.append(chevron, name, count);
+
+    articleContainer.className = "category-articles";
+    articleContainer.hidden = !isExpanded;
+
+    articles.forEach((article) => {
+      const button = document.createElement("button");
+      const title = document.createElement("span");
+      const path = document.createElement("span");
+
+      button.type = "button";
+      button.className = `article-item${article.path === state.selectedPath ? " is-active" : ""}`;
+      button.dataset.path = article.path;
+      title.className = "article-item-title";
+      title.textContent = article.title || articleLabel(article.path);
+      path.className = "article-item-path";
+      path.textContent = article.folder || article.path.replace(POSTS_ROOT, "");
+      button.append(title, path);
+      articleContainer.append(button);
+    });
+
+    group.append(toggle, articleContainer);
+    elements.articleList.append(group);
   });
 };
 
@@ -319,51 +642,95 @@ const loadArticleIndex = async () => {
       item.path.toLowerCase().endsWith(".md"),
   );
 
-  state.folders = [...new Set(posts.map((item) => item.path.slice(POSTS_ROOT.length).split("/").slice(0, -1).join("/")))]
-    .filter(Boolean)
-    .sort((a, b) => a.localeCompare(b));
-  state.articles = posts
-    .map((item) => ({ path: item.path, sha: item.sha, title: articleLabel(item.path) }))
-    .sort((a, b) => a.path.localeCompare(b.path, "zh-CN"));
+  const articles = await mapWithConcurrency(posts, 6, async (item) => {
+    try {
+      const blob = await githubRequest(`/repos/${REPOSITORY}/git/blobs/${item.sha}`);
+      const parsed = parseArticle(decodeBase64(blob.content));
 
-  renderFolders();
+      return {
+        ...parsed,
+        path: item.path,
+        sha: item.sha,
+        folder: getFolderFromPath(item.path),
+      };
+    } catch {
+      return {
+        path: item.path,
+        sha: item.sha,
+        folder: getFolderFromPath(item.path),
+        title: articleLabel(item.path),
+        date: "",
+        categories: [],
+        tags: [],
+        extra: "",
+        body: "",
+      };
+    }
+  });
+
+  state.articles = sortArticles(articles);
+  refreshFolderOptions();
   renderArticleList();
 };
 
 const loadArticle = async (path) => {
-  setStatus(elements.publishStatus, "正在打开文章...");
-  const article = await githubRequest(
-    `/repos/${REPOSITORY}/contents/${encodePath(path)}?ref=${encodeURIComponent(BRANCH)}`,
-  );
-  const parsed = parseArticle(decodeBase64(article.content));
+  state.selectedPath = path;
+  state.selectedSha = "";
+  showLoadingEditor();
 
-  setEditor({
-    ...parsed,
-    path,
-    sha: article.sha,
-    folder: path.slice(POSTS_ROOT.length).split("/").slice(0, -1).join("/"),
-  });
-  setStatus(elements.publishStatus);
+  try {
+    const article = await githubRequest(
+      `/repos/${REPOSITORY}/contents/${encodePath(path)}?ref=${encodeURIComponent(BRANCH)}`,
+    );
+    const parsed = parseArticle(decodeBase64(article.content));
+    const completeArticle = {
+      ...parsed,
+      path,
+      sha: article.sha,
+      folder: getFolderFromPath(path),
+    };
+
+    fillEditor(completeArticle);
+    showEditor();
+    setStatus(elements.publishStatus);
+  } catch (error) {
+    state.selectedPath = "";
+    state.selectedSha = "";
+    showOverview();
+    showToast(`文章读取失败：${error.message}`, "error", 5500);
+  }
+};
+
+const beginNewArticle = () => {
+  fillEditor();
+  showEditor();
+  elements.body.focus();
 };
 
 const saveArticle = async () => {
-  const title = elements.title.value.trim();
   const folder = normaliseFolder(elements.folder.value);
+  const title = extractTitle(elements.body.value);
 
-  if (!title || !folder) {
-    setStatus(elements.publishStatus, "请先填写标题和存放目录。", "error");
+  if (!folder) {
+    setStatus(elements.publishStatus, "请先填写存放目录。", "error");
     return;
   }
 
-  const path = state.selectedPath || articlePath();
+  if (!title) {
+    setStatus(elements.publishStatus, "请在正文中添加一级标题，例如 # 文章标题。", "error");
+    return;
+  }
 
+  const path = state.selectedPath || articlePath(title);
   setBusy(elements.publishArticle, true, "正在发布");
-  setStatus(elements.publishStatus, "正在提交到 GitHub...");
+  setStatus(elements.publishStatus);
+  showToast("正在提交到 GitHub...", "progress", 0);
 
   try {
+    const source = articleSource();
     const payload = {
       message: `${state.selectedPath ? "docs: 更新" : "docs: 发布"} ${title}`,
-      content: encodeBase64(articleSource()),
+      content: encodeBase64(source),
       branch: BRANCH,
     };
 
@@ -379,25 +746,33 @@ const saveArticle = async () => {
         body: JSON.stringify(payload),
       },
     );
+    const parsed = parseArticle(source);
+    const updatedArticle = {
+      ...parsed,
+      path,
+      sha: response.content.sha,
+      folder: getFolderFromPath(path),
+    };
 
     state.selectedPath = path;
     state.selectedSha = response.content.sha;
-    elements.filePath.textContent = path;
-    elements.editorMode.textContent = "编辑文章";
-    setStatus(elements.publishStatus, "已提交。GitHub 正在自动构建并发布网站。", "success");
-
-    await loadArticleIndex();
+    state.articles = sortArticles([
+      ...state.articles.filter((article) => article.path !== path),
+      updatedArticle,
+    ]);
+    refreshFolderOptions();
+    fillEditor(updatedArticle);
+    renderArticleList();
+    showToast("已提交，GitHub 正在构建并发布网站。", "success", 4500);
   } catch (error) {
-    setStatus(elements.publishStatus, `发布失败：${error.message}`, "error");
+    showToast(`发布失败：${error.message}`, "error", 6000);
   } finally {
     setBusy(elements.publishArticle, false);
   }
 };
 
 const uploadImage = async (file) => {
-  if (!file) {
-    return;
-  }
+  if (!file) return;
 
   const safeName = file.name
     .normalize("NFKD")
@@ -428,6 +803,46 @@ const uploadImage = async (file) => {
   }
 };
 
+const deleteSelectedArticle = async () => {
+  const article = state.articles.find((item) => item.path === state.selectedPath);
+
+  if (!article || !state.selectedSha) return;
+
+  setBusy(elements.confirmDelete, true, "正在删除");
+
+  try {
+    await githubRequest(`/repos/${REPOSITORY}/contents/${encodePath(state.selectedPath)}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `docs: 删除 ${article.title || articleLabel(article.path)}`,
+        sha: state.selectedSha,
+        branch: BRANCH,
+      }),
+    });
+    state.articles = state.articles.filter((item) => item.path !== state.selectedPath);
+    state.selectedPath = "";
+    state.selectedSha = "";
+    refreshFolderOptions();
+    elements.deleteDialog.close();
+    showOverview();
+    showToast("文章已删除，GitHub 正在构建并发布网站。", "success", 4500);
+  } catch (error) {
+    elements.deleteDescription.textContent = `删除失败：${error.message}`;
+  } finally {
+    setBusy(elements.confirmDelete, false);
+  }
+};
+
+const openDeleteDialog = () => {
+  const article = state.articles.find((item) => item.path === state.selectedPath);
+
+  if (!article) return;
+
+  elements.deleteDescription.textContent = `“${article.title || articleLabel(article.path)}”将从仓库中移除。`;
+  elements.deleteDialog.showModal();
+};
+
 const insertAtCursor = (input, text) => {
   const start = input.selectionStart;
   const end = input.selectionEnd;
@@ -450,24 +865,32 @@ const wrapSelection = (type) => {
 
 const signOut = () => {
   state.token = "";
-  state.user = null;
   state.articles = [];
   state.selectedPath = "";
   state.selectedSha = "";
+  state.selectedCategories = [];
+  state.selectedTags = [];
+  state.folders = [];
+  state.expandedCategories.clear();
+  state.openMulti = "";
   elements.token.value = "";
   elements.workspace.hidden = true;
   elements.accessView.hidden = false;
+  elements.toast.hidden = true;
   setStatus(elements.accessStatus);
   setStatus(elements.publishStatus);
+};
+
+const openMulti = (kind) => {
+  state.openMulti = kind;
+  renderMultiSelects();
 };
 
 elements.accessForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   state.token = elements.token.value.trim();
 
-  if (!state.token) {
-    return;
-  }
+  if (!state.token) return;
 
   setBusy(elements.accessSubmit, true, "验证中");
   setStatus(elements.accessStatus, "正在验证 GitHub Token...");
@@ -477,13 +900,11 @@ elements.accessForm.addEventListener("submit", async (event) => {
       githubRequest("/user"),
       githubRequest(`/repos/${REPOSITORY}`),
     ]);
-    state.user = user;
     elements.accountName.textContent = user.login;
-
     await loadArticleIndex();
     elements.accessView.hidden = true;
     elements.workspace.hidden = false;
-    setEditor();
+    showOverview();
   } catch (error) {
     state.token = "";
     setStatus(elements.accessStatus, `无法进入：${error.message}`, "error");
@@ -498,33 +919,82 @@ elements.tokenVisibility.addEventListener("click", () => {
   elements.tokenVisibility.setAttribute("aria-label", isPassword ? "隐藏 Token" : "显示 Token");
 });
 
+elements.themeToggle.addEventListener("click", toggleTheme);
 elements.signOut.addEventListener("click", signOut);
-elements.newArticle.addEventListener("click", () => {
-  setEditor();
-  elements.title.focus();
-});
+elements.newArticle.addEventListener("click", beginNewArticle);
+elements.emptyCreate.addEventListener("click", beginNewArticle);
+elements.mobileBack.addEventListener("click", showOverview);
 elements.resetEditor.addEventListener("click", () => {
   if (state.selectedPath) {
-    loadArticle(state.selectedPath).catch((error) =>
-      setStatus(elements.publishStatus, `重置失败：${error.message}`, "error"),
-    );
+    loadArticle(state.selectedPath);
     return;
   }
 
-  setEditor();
+  beginNewArticle();
 });
+elements.deleteArticle.addEventListener("click", openDeleteDialog);
+elements.confirmDelete.addEventListener("click", deleteSelectedArticle);
 elements.publishArticle.addEventListener("click", saveArticle);
 elements.articleSearch.addEventListener("input", renderArticleList);
 elements.articleList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-path]");
+  const categoryToggle = event.target.closest("[data-category]");
+  const articleButton = event.target.closest("[data-path]");
 
-  if (button) {
-    loadArticle(button.dataset.path).catch((error) =>
-      setStatus(elements.publishStatus, `文章读取失败：${error.message}`, "error"),
-    );
+  if (categoryToggle) {
+    const { category } = categoryToggle.dataset;
+    if (state.expandedCategories.has(category)) {
+      state.expandedCategories.delete(category);
+    } else {
+      state.expandedCategories.add(category);
+    }
+    renderArticleList();
+    return;
+  }
+
+  if (articleButton) {
+    loadArticle(articleButton.dataset.path);
   }
 });
 elements.imageUpload.addEventListener("change", () => uploadImage(elements.imageUpload.files[0]));
 document.querySelectorAll("[data-wrap]").forEach((button) => {
   button.addEventListener("click", () => wrapSelection(button.dataset.wrap));
 });
+
+Object.entries(multiSelects).forEach(([kind, config]) => {
+  config.control.addEventListener("click", () => openMulti(kind));
+  config.input.addEventListener("focus", () => openMulti(kind));
+  config.input.addEventListener("input", () => openMulti(kind));
+  config.input.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== ",") return;
+    event.preventDefault();
+    addMetaValue(kind, config.input.value);
+  });
+});
+
+document.addEventListener("click", (event) => {
+  const remove = event.target.closest("[data-multi-remove]");
+  const select = event.target.closest("[data-multi-select]");
+  const add = event.target.closest("[data-multi-add]");
+
+  if (remove) {
+    removeMetaValue(remove.dataset.multiRemove, remove.dataset.value);
+    return;
+  }
+
+  if (select) {
+    addMetaValue(select.dataset.multiSelect, select.dataset.value);
+    return;
+  }
+
+  if (add) {
+    addMetaValue(add.dataset.multiAdd, add.dataset.value);
+    return;
+  }
+
+  if (!event.target.closest(".multi-field") && state.openMulti) {
+    state.openMulti = "";
+    renderMultiSelects();
+  }
+});
+
+applyTheme(getTheme());

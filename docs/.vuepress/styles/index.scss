@@ -1927,6 +1927,48 @@ html[data-reading-bg="black"] {
   color: var(--vp-c-accent-text);
 }
 
+.xh-admin-entry {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  padding: 0;
+  color: var(--vp-c-text-mute);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  text-decoration: none;
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease,
+    background-color 0.16s ease;
+}
+
+.xh-admin-entry:hover {
+  color: var(--vp-c-accent);
+  border-color: rgb(var(--xh-accent-rgb) / 24%);
+  background: var(--vp-c-accent-soft);
+}
+
+.xh-admin-entry:focus-visible {
+  outline: 3px solid rgb(var(--xh-accent-rgb) / 34%);
+  outline-offset: 2px;
+}
+
+.xh-admin-entry-icon {
+  display: grid;
+  width: 0.82rem;
+  height: 0.82rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.12rem;
+}
+
+.xh-admin-entry-icon i {
+  display: block;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+
 html[data-font-color="custom"]
   :where(
     [vp-content],

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; connect-src https://api.github.com; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
@@ -15,9 +15,9 @@
     <main class="shell">
       <section class="access-view" id="access-view" aria-labelledby="access-title">
         <div class="access-panel">
-          <p class="eyebrow">XH BLOG</p>
+          <p class="eyebrow">XH BLOG / ADMIN</p>
           <h1 id="access-title">文章后台</h1>
-          <p class="access-copy">使用专门为此仓库创建的 GitHub Token 进入写作区。</p>
+          <p class="access-copy">使用专门为此仓库创建的 GitHub Token 进入。</p>
 
           <form id="access-form" class="access-form">
             <label for="token">GitHub Token</label>
@@ -37,137 +37,235 @@
                 aria-label="显示 Token"
                 data-tooltip="显示或隐藏"
               >
-                <span aria-hidden="true">◉</span>
+                <span class="visibility-glyph" aria-hidden="true"></span>
               </button>
             </div>
-            <p class="form-note">令牌只在当前标签页使用，本站不会保存它。</p>
+            <p class="form-note">令牌仅在当前标签页内使用。</p>
             <button class="primary-button" id="access-submit" type="submit">进入后台</button>
           </form>
           <p class="access-status" id="access-status" role="status"></p>
         </div>
       </section>
 
-      <section class="workspace" id="workspace" hidden>
+      <section class="workspace" id="workspace" data-mobile-view="library" hidden>
         <header class="app-header">
           <a class="brand" href="/" aria-label="返回博客首页">
             <span class="brand-mark">XH</span>
             <span>文章后台</span>
           </a>
-          <div class="account">
-            <span id="account-name"></span>
-            <button class="quiet-button" id="sign-out" type="button">退出</button>
+
+          <div class="header-actions">
+            <button
+              class="icon-button"
+              id="theme-toggle"
+              type="button"
+              aria-label="切换明暗主题"
+              data-tooltip="切换主题"
+            >
+              <span class="theme-glyph" aria-hidden="true"></span>
+            </button>
+            <button class="primary-button new-article-button" id="new-article" type="button">
+              <span class="plus-glyph" aria-hidden="true"></span>
+              <span>新建文章</span>
+            </button>
+            <span class="account-name" id="account-name"></span>
+            <button
+              class="icon-button"
+              id="sign-out"
+              type="button"
+              aria-label="退出后台"
+              data-tooltip="退出"
+            >
+              <span class="exit-glyph" aria-hidden="true"></span>
+            </button>
           </div>
         </header>
 
         <div class="app-layout">
-          <aside class="article-panel" aria-label="文章列表">
-            <div class="panel-header">
+          <aside class="article-panel" aria-label="文章库">
+            <div class="article-panel-header">
               <div>
-                <p class="eyebrow">文章</p>
-                <p class="article-count" id="article-count">载入中</p>
+                <p class="eyebrow">文章库</p>
+                <p class="article-count" id="article-count">正在读取文章</p>
               </div>
-              <button
-                class="icon-button accent"
-                id="new-article"
-                type="button"
-                aria-label="新建文章"
-                data-tooltip="新建文章"
-              >
-                <span aria-hidden="true">+</span>
-              </button>
             </div>
-            <label class="sr-only" for="article-search">筛选文章</label>
-            <input
-              class="search-input"
-              id="article-search"
-              type="search"
-              placeholder="筛选文章"
-              autocomplete="off"
-            />
-            <nav class="article-list" id="article-list"></nav>
+            <label class="sr-only" for="article-search">搜索文章</label>
+            <div class="search-field">
+              <span class="search-glyph" aria-hidden="true"></span>
+              <input
+                id="article-search"
+                type="search"
+                placeholder="搜索文章、分类或目录"
+                autocomplete="off"
+              />
+            </div>
+            <nav class="article-list" id="article-list" aria-label="按分类浏览文章"></nav>
           </aside>
 
-          <section class="editor-panel" aria-label="文章编辑器">
-            <div class="editor-header">
-              <div>
-                <p class="eyebrow" id="editor-mode">新文章</p>
-                <p class="file-path" id="file-path">尚未创建文件</p>
+          <section class="editor-shell" aria-label="文章工作台">
+            <div class="editor-empty" id="editor-empty">
+              <p class="eyebrow">文章工作台</p>
+              <h2>选择一篇文章</h2>
+              <p class="empty-count" id="empty-count"></p>
+              <button class="primary-button" id="empty-create" type="button">
+                <span class="plus-glyph" aria-hidden="true"></span>
+                <span>新建文章</span>
+              </button>
+            </div>
+
+            <div class="editor-loading" id="editor-loading" aria-live="polite" hidden>
+              <div class="loading-copy">
+                <p class="eyebrow">正在读取</p>
+                <h2>加载文章内容</h2>
               </div>
-              <div class="editor-actions">
-                <button class="quiet-button" id="reset-editor" type="button">重置</button>
-                <button class="primary-button" id="publish-article" type="button">发布更新</button>
+              <div class="loading-lines" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
               </div>
             </div>
 
-            <form id="article-form" class="article-form">
-              <div class="metadata-grid">
-                <label class="field field-wide">
-                  <span>标题</span>
-                  <input id="article-title" type="text" required placeholder="输入文章标题" />
-                </label>
-                <label class="field">
-                  <span>日期</span>
-                  <input id="article-date" type="date" required />
-                </label>
-                <label class="field">
-                  <span>存放目录</span>
-                  <input
-                    id="article-folder"
-                    type="text"
-                    list="folder-options"
-                    required
-                    placeholder="例如 vuelearning"
-                    spellcheck="false"
-                  />
-                  <datalist id="folder-options"></datalist>
-                </label>
-                <label class="field">
-                  <span>分类</span>
-                  <input id="article-category" type="text" placeholder="多个分类用逗号分隔" />
-                </label>
-                <label class="field">
-                  <span>标签</span>
-                  <input id="article-tags" type="text" placeholder="多个标签用逗号分隔" />
-                </label>
-              </div>
+            <section class="editor-panel" id="editor-panel" hidden>
+              <header class="editor-header">
+                <div class="editor-identification">
+                  <button
+                    class="icon-button mobile-back-button"
+                    id="mobile-back"
+                    type="button"
+                    aria-label="返回文章库"
+                    data-tooltip="返回文章库"
+                  >
+                    <span class="back-glyph" aria-hidden="true"></span>
+                  </button>
+                  <div>
+                    <p class="eyebrow" id="editor-mode">编辑文章</p>
+                    <p class="file-path" id="file-path"></p>
+                  </div>
+                </div>
+                <div class="editor-actions">
+                  <button class="quiet-button" id="reset-editor" type="button">还原</button>
+                  <button
+                    class="icon-button danger-button"
+                    id="delete-article"
+                    type="button"
+                    aria-label="删除文章"
+                    data-tooltip="删除文章"
+                    hidden
+                  >
+                    <span class="trash-glyph" aria-hidden="true"></span>
+                  </button>
+                  <button class="primary-button" id="publish-article" type="button">发布更新</button>
+                </div>
+              </header>
 
-              <details class="advanced-fields">
-                <summary>其他文章信息</summary>
-                <label class="field">
-                  <span>额外 Frontmatter</span>
+              <form id="article-form" class="article-form">
+                <div class="editor-scroll">
+                  <div class="metadata-grid">
+                    <label class="field">
+                      <span>日期</span>
+                      <input id="article-date" type="date" required />
+                    </label>
+                    <label class="field">
+                      <span>存放目录</span>
+                      <input
+                        id="article-folder"
+                        type="text"
+                        list="folder-options"
+                        required
+                        placeholder="例如 vuelearning"
+                        spellcheck="false"
+                      />
+                      <datalist id="folder-options"></datalist>
+                    </label>
+
+                    <div class="field multi-field">
+                      <span>分类</span>
+                      <div class="multi-control" id="category-control">
+                        <div class="multi-chips" id="category-chips"></div>
+                        <input
+                          id="category-input"
+                          type="text"
+                          placeholder="搜索或新增分类"
+                          autocomplete="off"
+                        />
+                      </div>
+                      <div class="multi-menu" id="category-menu" hidden></div>
+                    </div>
+
+                    <div class="field multi-field">
+                      <span>标签</span>
+                      <div class="multi-control" id="tag-control">
+                        <div class="multi-chips" id="tag-chips"></div>
+                        <input
+                          id="tag-input"
+                          type="text"
+                          placeholder="搜索或新增标签"
+                          autocomplete="off"
+                        />
+                      </div>
+                      <div class="multi-menu" id="tag-menu" hidden></div>
+                    </div>
+                  </div>
+
+                  <details class="advanced-fields">
+                    <summary>其他文章信息</summary>
+                    <label class="field">
+                      <span>额外 Frontmatter</span>
+                      <textarea
+                        id="article-extra"
+                        rows="4"
+                        placeholder="author: xh&#10;sticky: 1"
+                        spellcheck="false"
+                      ></textarea>
+                    </label>
+                  </details>
+
+                  <div class="content-toolbar" aria-label="Markdown 工具">
+                    <button class="tool-button" type="button" data-wrap="strong" title="加粗">B</button>
+                    <button class="tool-button italic" type="button" data-wrap="emphasis" title="斜体">I</button>
+                    <button class="tool-button code-tool" type="button" data-wrap="code" title="行内代码">&lt;/&gt;</button>
+                    <button class="tool-button" type="button" data-wrap="link" title="链接">链接</button>
+                    <label class="upload-button" title="上传图片">
+                      <input id="image-upload" type="file" accept="image/*" />
+                      图片
+                    </label>
+                  </div>
+                  <label class="sr-only" for="article-body">正文</label>
                   <textarea
-                    id="article-extra"
-                    rows="4"
-                    placeholder="author: xh&#10;sticky: 1"
-                    spellcheck="false"
+                    id="article-body"
+                    class="body-editor"
+                    placeholder="# 文章标题&#10;&#10;从这里开始写正文..."
+                    spellcheck="true"
                   ></textarea>
-                </label>
-              </details>
+                </div>
+              </form>
 
-              <div class="content-toolbar" aria-label="Markdown 工具">
-                <button class="tool-button" type="button" data-wrap="strong" title="加粗">B</button>
-                <button class="tool-button italic" type="button" data-wrap="emphasis" title="斜体">I</button>
-                <button class="tool-button code-tool" type="button" data-wrap="code" title="行内代码">&lt;/&gt;</button>
-                <button class="tool-button" type="button" data-wrap="link" title="链接">链接</button>
-                <label class="upload-button" title="上传图片">
-                  <input id="image-upload" type="file" accept="image/*" />
-                  图片
-                </label>
-              </div>
-              <label class="sr-only" for="article-body">正文</label>
-              <textarea
-                id="article-body"
-                class="body-editor"
-                placeholder="从这里开始写正文..."
-                spellcheck="true"
-              ></textarea>
-            </form>
-
-            <p class="publish-status" id="publish-status" role="status"></p>
+              <p class="publish-status" id="publish-status" role="status"></p>
+            </section>
           </section>
         </div>
       </section>
     </main>
+
+    <dialog class="delete-dialog" id="delete-dialog" aria-labelledby="delete-title">
+      <form method="dialog">
+        <p class="eyebrow">删除文章</p>
+        <h2 id="delete-title">确定删除这篇文章？</h2>
+        <p id="delete-description"></p>
+        <div class="dialog-actions">
+          <button class="quiet-button" value="cancel" type="submit">取消</button>
+          <button class="danger-action" id="confirm-delete" value="confirm" type="button">删除文章</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+      <span class="toast-copy" id="toast-copy"></span>
+      <span class="toast-progress" id="toast-progress"></span>
+    </div>
+
     <script type="module" src="./app.js"></script>
   </body>
 </html>
