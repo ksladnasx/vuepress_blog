@@ -130,6 +130,19 @@ const markdownHighlightPlugin = {
   },
 };
 
+const markdownImagePathPlugin = {
+  name: "normalise-html-image-paths",
+  extendsMarkdown: (md) => {
+    md.core.ruler.before("normalize", "normalise_html_image_paths", (state) => {
+      state.src = state.src.replace(
+        /(<img\b[^>]*?\bsrc\s*=\s*)(["'])(.*?)\2/gi,
+        (_, prefix, quote, source) =>
+          `${prefix}${quote}${source.replace(/\\/g, "/")}${quote}`,
+      );
+    });
+  },
+};
+
 const markdownPunctuationStrongPlugin = {
   name: "punctuation-strong-markdown",
   extendsMarkdown: (md) => {
@@ -541,6 +554,8 @@ export default defineUserConfig({
 
   plugins: [
     markdownPunctuationStrongPlugin,
+
+    markdownImagePathPlugin,
 
     markdownHighlightPlugin,
 
