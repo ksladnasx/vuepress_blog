@@ -40,9 +40,13 @@
                 <span class="visibility-glyph" aria-hidden="true"></span>
               </button>
             </div>
-            <p class="form-note">令牌仅在当前标签页内使用。</p>
+            <p class="form-note">令牌会保存在本机浏览器中，退出后台后会清除。</p>
             <button class="primary-button" id="access-submit" type="submit">进入后台</button>
           </form>
+          <div class="access-loading" id="access-loading" aria-live="polite" hidden>
+            <span class="access-spinner" aria-hidden="true"></span>
+            <span id="access-loading-text">正在进入后台...</span>
+          </div>
           <p class="access-status" id="access-status" role="status"></p>
         </div>
       </section>
@@ -63,6 +67,11 @@
               data-tooltip="切换主题"
             >
               <span class="theme-glyph" aria-hidden="true"></span>
+            </button>
+            <button class="primary-button publish-all-button" id="publish-all" type="button" disabled>
+              <span class="publish-glyph" aria-hidden="true"></span>
+              <span>发布修改</span>
+              <span class="change-badge" id="change-badge" hidden>0</span>
             </button>
             <button class="primary-button new-article-button" id="new-article" type="button">
               <span class="plus-glyph" aria-hidden="true"></span>
@@ -145,23 +154,28 @@
                   </div>
                 </div>
                 <div class="editor-actions">
+                  <span class="draft-status" id="draft-status">已同步</span>
                   <button class="quiet-button" id="reset-editor" type="button">还原</button>
+                  <button class="quiet-button" id="undo-delete" type="button" hidden>撤销删除</button>
                   <button
                     class="icon-button danger-button"
                     id="delete-article"
                     type="button"
-                    aria-label="删除文章"
-                    data-tooltip="删除文章"
+                    aria-label="标记删除"
+                    data-tooltip="标记删除"
                     hidden
                   >
                     <span class="trash-glyph" aria-hidden="true"></span>
                   </button>
-                  <button class="primary-button" id="publish-article" type="button">发布更新</button>
                 </div>
               </header>
 
               <form id="article-form" class="article-form">
                 <div class="editor-scroll">
+                  <div class="delete-banner" id="delete-banner" hidden>
+                    <p>这篇文章已加入待删除队列。发布修改前，你仍然可以撤销。</p>
+                  </div>
+
                   <div class="metadata-grid">
                     <label class="field">
                       <span>日期</span>
@@ -227,7 +241,7 @@
                     <button class="tool-button italic" type="button" data-wrap="emphasis" title="斜体">I</button>
                     <button class="tool-button code-tool" type="button" data-wrap="code" title="行内代码">&lt;/&gt;</button>
                     <button class="tool-button" type="button" data-wrap="link" title="链接">链接</button>
-                    <label class="upload-button" title="上传图片">
+                    <label class="upload-button" title="添加图片草稿">
                       <input id="image-upload" type="file" accept="image/*" />
                       图片
                     </label>
@@ -251,12 +265,12 @@
 
     <dialog class="delete-dialog" id="delete-dialog" aria-labelledby="delete-title">
       <form method="dialog">
-        <p class="eyebrow">删除文章</p>
-        <h2 id="delete-title">确定删除这篇文章？</h2>
+        <p class="eyebrow">标记删除</p>
+        <h2 id="delete-title">加入待删除队列？</h2>
         <p id="delete-description"></p>
         <div class="dialog-actions">
           <button class="quiet-button" value="cancel" type="submit">取消</button>
-          <button class="danger-action" id="confirm-delete" value="confirm" type="button">删除文章</button>
+          <button class="danger-action" id="confirm-delete" value="confirm" type="button">标记删除</button>
         </div>
       </form>
     </dialog>

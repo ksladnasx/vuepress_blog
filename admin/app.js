@@ -3,19 +3,26 @@ const BRANCH = "main";
 const POSTS_ROOT = "docs/posts/";
 const UPLOADS_ROOT = "docs/.vuepress/public/uploads/";
 const THEME_KEY = "vuepress-color-scheme";
+const TOKEN_KEY = "xh-blog-admin-token";
 const UNCATEGORISED = "未分类";
+const DB_NAME = "xh-blog-admin";
+const DB_VERSION = 1;
+const DRAFT_STORE = "drafts";
 
 const state = {
   token: "",
-  articles: [],
-  selectedPath: "",
-  selectedSha: "",
+  db: null,
+  remoteArticles: [],
+  drafts: new Map(),
+  currentId: "",
   selectedCategories: [],
   selectedTags: [],
   folders: [],
   expandedCategories: new Set(),
   openMulti: "",
   toastTimer: 0,
+  saveTimer: 0,
+  isHydrating: false,
 };
 
 const elements = {
@@ -26,9 +33,13 @@ const elements = {
   tokenVisibility: document.querySelector("#token-visibility"),
   accessSubmit: document.querySelector("#access-submit"),
   accessStatus: document.querySelector("#access-status"),
+  accessLoading: document.querySelector("#access-loading"),
+  accessLoadingText: document.querySelector("#access-loading-text"),
   themeToggle: document.querySelector("#theme-toggle"),
   accountName: document.querySelector("#account-name"),
   signOut: document.querySelector("#sign-out"),
+  publishAll: document.querySelector("#publish-all"),
+  changeBadge: document.querySelector("#change-badge"),
   newArticle: document.querySelector("#new-article"),
   emptyCreate: document.querySelector("#empty-create"),
   articleCount: document.querySelector("#article-count"),
@@ -40,8 +51,10 @@ const elements = {
   editorPanel: document.querySelector("#editor-panel"),
   mobileBack: document.querySelector("#mobile-back"),
   resetEditor: document.querySelector("#reset-editor"),
+  undoDelete: document.querySelector("#undo-delete"),
   deleteArticle: document.querySelector("#delete-article"),
-  publishArticle: document.querySelector("#publish-article"),
+  deleteBanner: document.querySelector("#delete-banner"),
+  draftStatus: document.querySelector("#draft-status"),
   editorMode: document.querySelector("#editor-mode"),
   filePath: document.querySelector("#file-path"),
   date: document.querySelector("#article-date"),
@@ -85,7 +98,59 @@ const multiSelects = {
   },
 };
 
+const editableFields = [
+  elements.date,
+  elements.folder,
+  elements.categoryInput,
+  elements.tagInput,
+  elements.extra,
+  elements.body,
+  elements.imageUpload,
+];
+
 const isMobile = () => window.matchMedia("(max-width: 780px)").matches;
+
+const openDatabase = () =>
+  new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(DRAFT_STORE)) {
+        db.createObjectStore(DRAFT_STORE, { keyPath: "id" });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+
+const storeRequest = (mode, callback) =>
+  new Promise((resolve, reject) => {
+    const transaction = state.db.transaction(DRAFT_STORE, mode);
+    const store = transaction.objectStore(DRAFT_STORE);
+    const request = callback(store);
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+
+const loadDrafts = async () => {
+  const drafts = await storeRequest("readonly", (store) => store.getAll());
+  state.drafts = new Map(drafts.map((draft) => [draft.id, draft]));
+};
+
+const saveDraftRecord = async (draft) => {
+  draft.updatedAt = Date.now();
+  await storeRequest("readwrite", (store) => store.put(draft));
+  state.drafts.set(draft.id, draft);
+  refreshAfterDraftChange();
+};
+
+const removeDraftRecord = async (id) => {
+  await storeRequest("readwrite", (store) => store.delete(id));
+  state.drafts.delete(id);
+  refreshAfterDraftChange();
+};
 
 const setStatus = (target, message = "", type = "") => {
   target.textContent = message;
@@ -99,6 +164,13 @@ const setBusy = (button, busy, text) => {
 
   button.disabled = busy;
   button.textContent = busy ? text : button.dataset.defaultText;
+};
+
+const setAccessLoading = (loading, message = "") => {
+  elements.accessLoading.hidden = !loading;
+  if (message) elements.accessLoadingText.textContent = message;
+  elements.token.disabled = loading;
+  elements.tokenVisibility.disabled = loading;
 };
 
 const showToast = (message, type = "success", duration = 4500) => {
@@ -159,16 +231,10 @@ const githubRequest = async (path, options = {}) => {
     },
   });
 
-  if (response.status === 204) {
-    return null;
-  }
+  if (response.status === 204) return null;
 
   const payload = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(payload.message || "GitHub 请求失败。");
-  }
-
+  if (!response.ok) throw new Error(payload.message || "GitHub 请求失败。");
   return payload;
 };
 
@@ -181,6 +247,26 @@ const getTheme = () => {
   } catch {}
 
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+};
+
+const readStoredToken = () => {
+  try {
+    return window.localStorage.getItem(TOKEN_KEY) || "";
+  } catch {
+    return "";
+  }
+};
+
+const saveStoredToken = (token) => {
+  try {
+    window.localStorage.setItem(TOKEN_KEY, token);
+  } catch {}
+};
+
+const clearStoredToken = () => {
+  try {
+    window.localStorage.removeItem(TOKEN_KEY);
+  } catch {}
 };
 
 const applyTheme = (theme, persist = false) => {
@@ -233,10 +319,7 @@ const parseFrontmatter = (source) => {
   }
 
   const marker = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-
-  if (!marker) {
-    return { frontmatter: "", content: source };
-  }
+  if (!marker) return { frontmatter: "", content: source };
 
   return {
     frontmatter: marker[1],
@@ -257,15 +340,12 @@ const parseListValue = (frontmatter, key) => {
   }
 
   const inline = frontmatter.match(new RegExp(`^${key}:\\s*\\[(.*)\\]\\s*$`, "m"));
+  if (!inline) return [];
 
-  if (inline) {
-    return inline[1]
-      .split(",")
-      .map((item) => item.trim().replace(/^["']|["']$/g, ""))
-      .filter(Boolean);
-  }
-
-  return [];
+  return inline[1]
+    .split(",")
+    .map((item) => item.trim().replace(/^["']|["']$/g, ""))
+    .filter(Boolean);
 };
 
 const removeKnownFrontmatter = (frontmatter) => {
@@ -308,24 +388,30 @@ const parseArticle = (source) => {
   };
 };
 
-const articleSource = () => {
+const buildSource = ({ date, categories, tags, extra, body }) => {
   const metadata = [
-    `date: ${elements.date.value || today()}`,
-    serialiseList("category", state.selectedCategories),
-    serialiseList("tag", state.selectedTags),
-    elements.extra.value.trim(),
+    `date: ${date || today()}`,
+    serialiseList("category", categories || []),
+    serialiseList("tag", tags || []),
+    (extra || "").trim(),
   ]
     .filter(Boolean)
     .join("\n");
-  const body = elements.body.value.replace(/^\s+/, "");
 
-  return `---\n${metadata}\n---\n\n${body}`;
+  return `---\n${metadata}\n---\n\n${(body || "").replace(/^\s+/, "")}`;
 };
 
-const articlePath = (title) => {
-  const folder = normaliseFolder(elements.folder.value);
-  return `${POSTS_ROOT}${folder}/${slugify(title)}.md`;
-};
+const articleSourceFromEditor = () =>
+  buildSource({
+    date: elements.date.value,
+    categories: state.selectedCategories,
+    tags: state.selectedTags,
+    extra: elements.extra.value,
+    body: elements.body.value,
+  });
+
+const getArticlePath = (title, folderValue) =>
+  `${POSTS_ROOT}${normaliseFolder(folderValue)}/${slugify(title)}.md`;
 
 const articleLabel = (path) => path.split("/").pop().replace(/\.md$/i, "");
 
@@ -338,7 +424,7 @@ const sortArticles = (articles) =>
       new Date(articleB.date || 0).getTime() - new Date(articleA.date || 0).getTime();
 
     if (dateDifference) return dateDifference;
-    return articleA.title.localeCompare(articleB.title, "zh-CN");
+    return (articleA.title || "").localeCompare(articleB.title || "", "zh-CN");
   });
 
 const mapWithConcurrency = async (items, limit, callback) => {
@@ -356,9 +442,46 @@ const mapWithConcurrency = async (items, limit, callback) => {
   return results;
 };
 
+const getRemoteById = (id) => state.remoteArticles.find((article) => article.id === id);
+
+const getEffectiveArticles = () => {
+  const byId = new Map(state.remoteArticles.map((article) => [article.id, { ...article }]));
+
+  state.drafts.forEach((draft) => {
+    if (draft.type === "delete") {
+      const remote = byId.get(draft.id);
+      if (remote) {
+        byId.set(draft.id, { ...remote, draft, isDraft: true, isDelete: true });
+      }
+      return;
+    }
+
+    const parsed = parseArticle(draft.source);
+    byId.set(draft.id, {
+      ...parsed,
+      id: draft.id,
+      path: draft.path,
+      sha: draft.baseSha || "",
+      folder: getFolderFromPath(draft.path),
+      source: draft.source,
+      draft,
+      isDraft: true,
+      isNew: draft.isNew,
+      isDelete: false,
+    });
+  });
+
+  return sortArticles([...byId.values()]);
+};
+
+const getCurrentArticle = () =>
+  getEffectiveArticles().find((article) => article.id === state.currentId);
+
 const refreshFolderOptions = () => {
-  state.folders = [...new Set(state.articles.map((article) => article.folder).filter(Boolean))]
-    .sort((folderA, folderB) => folderA.localeCompare(folderB, "zh-CN"));
+  state.folders = [
+    ...new Set(getEffectiveArticles().map((article) => article.folder).filter(Boolean)),
+  ].sort((folderA, folderB) => folderA.localeCompare(folderB, "zh-CN"));
+
   elements.folderOptions.replaceChildren(
     ...state.folders.map((folder) => {
       const option = document.createElement("option");
@@ -374,14 +497,76 @@ const setMobileView = (view) => {
   }
 };
 
-const updateEditorMode = (isExisting) => {
-  elements.editorMode.textContent = isExisting ? "编辑文章" : "新文章";
-  elements.deleteArticle.hidden = !isExisting;
+const getChangeCount = () => state.drafts.size;
+
+const updatePublishButton = () => {
+  if (elements.publishAll.dataset.busy === "true") return;
+
+  const count = getChangeCount();
+  elements.publishAll.disabled = count === 0;
+  elements.changeBadge.hidden = count === 0;
+  elements.changeBadge.textContent = String(count);
+};
+
+const refreshAfterDraftChange = () => {
+  refreshFolderOptions();
+  renderArticleList();
+  renderMultiSelects();
+  updatePublishButton();
+
+  if (state.currentId) {
+    updateEditorChrome();
+  }
+};
+
+const setDraftStatus = (article) => {
+  if (!article?.isDraft) {
+    elements.draftStatus.textContent = "已同步";
+    elements.draftStatus.className = "draft-status";
+    return;
+  }
+
+  if (article.isDelete) {
+    elements.draftStatus.textContent = "待删除";
+    elements.draftStatus.className = "draft-status is-delete";
+    return;
+  }
+
+  elements.draftStatus.textContent = article.isNew ? "新草稿" : "未发布";
+  elements.draftStatus.className = "draft-status is-draft";
+};
+
+const setEditorDisabled = (disabled) => {
+  editableFields.forEach((field) => {
+    field.disabled = disabled;
+  });
+  document.querySelectorAll(".multi-chip-remove").forEach((button) => {
+    button.disabled = disabled;
+  });
+};
+
+const updateEditorChrome = () => {
+  const article = getCurrentArticle();
+  if (!article) return;
+
+  const isExisting = !article.isNew;
+  elements.editorMode.textContent = article.isDelete
+    ? "待删除"
+    : article.isNew
+      ? "新文章"
+      : "编辑文章";
+  elements.filePath.textContent = article.path;
+  elements.deleteArticle.hidden = !isExisting || article.isDelete;
+  elements.undoDelete.hidden = !article.isDelete;
+  elements.deleteBanner.hidden = !article.isDelete;
+  elements.resetEditor.textContent = article.isNew ? "丢弃草稿" : "还原";
+  setDraftStatus(article);
+  setEditorDisabled(article.isDelete);
 };
 
 const getKnownMetaValues = (kind) => {
   const sourceKey = multiSelects[kind].sourceKey;
-  const values = state.articles.flatMap((article) => article[sourceKey] || []);
+  const values = getEffectiveArticles().flatMap((article) => article[sourceKey] || []);
 
   return [...new Set(values.map(normaliseMetaValue).filter(Boolean))]
     .sort((valueA, valueB) => valueA.localeCompare(valueB, "zh-CN"));
@@ -390,7 +575,9 @@ const getKnownMetaValues = (kind) => {
 const getSelectedMetaValues = (kind) => state[multiSelects[kind].stateKey];
 
 const setSelectedMetaValues = (kind, values) => {
-  state[multiSelects[kind].stateKey] = [...new Set(values.map(normaliseMetaValue).filter(Boolean))];
+  state[multiSelects[kind].stateKey] = [
+    ...new Set(values.map(normaliseMetaValue).filter(Boolean)),
+  ];
 };
 
 const renderMultiSelect = (kind) => {
@@ -421,7 +608,8 @@ const renderMultiSelect = (kind) => {
       remove.dataset.multiRemove = kind;
       remove.dataset.value = value;
       remove.setAttribute("aria-label", `移除${value}`);
-      remove.textContent = "×";
+      remove.textContent = "x";
+      remove.disabled = getCurrentArticle()?.isDelete || false;
       chip.append(label, remove);
       return chip;
     }),
@@ -454,14 +642,14 @@ const renderMultiSelect = (kind) => {
     create.className = "multi-option is-add";
     create.dataset.multiAdd = kind;
     create.dataset.value = query;
-    text.textContent = `新增 “${query}”`;
+    text.textContent = `新增 "${query}"`;
     meta.className = "multi-option-meta";
     meta.textContent = "添加";
     create.append(text, meta);
     config.menu.append(create);
   }
 
-  config.menu.hidden = state.openMulti !== kind;
+  config.menu.hidden = state.openMulti !== kind || getCurrentArticle()?.isDelete;
 };
 
 const renderMultiSelects = () => {
@@ -471,39 +659,42 @@ const renderMultiSelects = () => {
 
 const addMetaValue = (kind, value) => {
   const normalised = normaliseMetaValue(value);
-  if (!normalised) return;
+  if (!normalised || getCurrentArticle()?.isDelete) return;
 
   setSelectedMetaValues(kind, [...getSelectedMetaValues(kind), normalised]);
   multiSelects[kind].input.value = "";
   state.openMulti = kind;
   renderMultiSelects();
+  scheduleCurrentDraftSave();
   multiSelects[kind].input.focus();
 };
 
 const removeMetaValue = (kind, value) => {
+  if (getCurrentArticle()?.isDelete) return;
+
   setSelectedMetaValues(
     kind,
     getSelectedMetaValues(kind).filter((item) => item !== value),
   );
   renderMultiSelects();
+  scheduleCurrentDraftSave();
 };
 
-const fillEditor = (article = null) => {
-  const isExisting = Boolean(article);
-  state.selectedPath = article?.path || "";
-  state.selectedSha = article?.sha || "";
-  updateEditorMode(isExisting);
-  elements.filePath.textContent = isExisting ? article.path : "发布时将创建新文件";
-  elements.date.value = article?.date || today();
-  elements.folder.value = article?.folder || state.folders[0] || "otherlearning";
-  elements.folder.readOnly = isExisting;
-  elements.folder.title = isExisting ? "已有文章保留原有文件路径" : "";
-  setSelectedMetaValues("category", article?.categories || []);
-  setSelectedMetaValues("tag", article?.tags || []);
-  elements.extra.value = article?.extra || "";
-  elements.body.value = article?.body || "";
+const fillEditor = (article) => {
+  state.isHydrating = true;
+  state.currentId = article.id;
+  elements.date.value = article.date || today();
+  elements.folder.value = article.folder || state.folders[0] || "otherlearning";
+  elements.folder.readOnly = !article.isNew;
+  elements.folder.title = article.isNew ? "" : "已有文章保留原有文件路径";
+  setSelectedMetaValues("category", article.categories || []);
+  setSelectedMetaValues("tag", article.tags || []);
+  elements.extra.value = article.extra || "";
+  elements.body.value = article.body || "";
   state.openMulti = "";
   renderMultiSelects();
+  updateEditorChrome();
+  state.isHydrating = false;
 };
 
 const showOverview = () => {
@@ -531,23 +722,28 @@ const showEditor = () => {
 };
 
 const updateSummary = () => {
+  const articles = getEffectiveArticles();
   const categoryCount = new Set(
-    state.articles.flatMap((article) => article.categories.length ? article.categories : [UNCATEGORISED]),
+    articles.flatMap((article) => article.categories.length ? article.categories : [UNCATEGORISED]),
   ).size;
-  elements.articleCount.textContent = `${state.articles.length} 篇文章 · ${categoryCount} 个分类`;
-  elements.emptyCount.textContent = `${state.articles.length} 篇文章 · ${categoryCount} 个分类`;
+  const changeCount = getChangeCount();
+  const suffix = changeCount ? ` · ${changeCount} 条未发布` : "";
+  elements.articleCount.textContent = `${articles.length} 篇文章 · ${categoryCount} 个分类${suffix}`;
+  elements.emptyCount.textContent = `${articles.length} 篇文章 · ${categoryCount} 个分类${suffix}`;
 };
 
 const getVisibleGroups = () => {
   const query = elements.articleSearch.value.trim().toLocaleLowerCase();
   const groups = new Map();
 
-  state.articles.forEach((article) => {
+  getEffectiveArticles().forEach((article) => {
     const categories = article.categories.length ? article.categories : [UNCATEGORISED];
     const articleSearchText = [
       article.title,
       article.path,
       article.folder,
+      article.isDraft ? "未发布 草稿 修改" : "",
+      article.isDelete ? "待删除 删除" : "",
       ...categories,
       ...article.tags,
     ]
@@ -570,6 +766,13 @@ const getVisibleGroups = () => {
       return categoryA.localeCompare(categoryB, "zh-CN");
     })
     .map(([category, articles]) => ({ category, articles: sortArticles(articles) }));
+};
+
+const getArticleStatusText = (article) => {
+  if (article.isDelete) return "待删除";
+  if (article.isNew) return "新草稿";
+  if (article.isDraft) return "未发布";
+  return "";
 };
 
 const renderArticleList = () => {
@@ -615,15 +818,31 @@ const renderArticleList = () => {
       const button = document.createElement("button");
       const title = document.createElement("span");
       const path = document.createElement("span");
+      const status = getArticleStatusText(article);
 
       button.type = "button";
-      button.className = `article-item${article.path === state.selectedPath ? " is-active" : ""}`;
-      button.dataset.path = article.path;
+      button.className = [
+        "article-item",
+        article.id === state.currentId ? "is-active" : "",
+        article.isDraft ? "has-draft" : "",
+        article.isDelete ? "is-delete" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      button.dataset.id = article.id;
       title.className = "article-item-title";
       title.textContent = article.title || articleLabel(article.path);
       path.className = "article-item-path";
       path.textContent = article.folder || article.path.replace(POSTS_ROOT, "");
       button.append(title, path);
+
+      if (status) {
+        const statusEl = document.createElement("span");
+        statusEl.className = "article-status-pill";
+        statusEl.textContent = status;
+        button.append(statusEl);
+      }
+
       articleContainer.append(button);
     });
 
@@ -645,16 +864,23 @@ const loadArticleIndex = async () => {
   const articles = await mapWithConcurrency(posts, 6, async (item) => {
     try {
       const blob = await githubRequest(`/repos/${REPOSITORY}/git/blobs/${item.sha}`);
-      const parsed = parseArticle(decodeBase64(blob.content));
+      const source = decodeBase64(blob.content);
+      const parsed = parseArticle(source);
 
       return {
         ...parsed,
+        id: item.path,
         path: item.path,
         sha: item.sha,
         folder: getFolderFromPath(item.path),
+        source,
+        isDraft: false,
+        isNew: false,
+        isDelete: false,
       };
     } catch {
       return {
+        id: item.path,
         path: item.path,
         sha: item.sha,
         folder: getFolderFromPath(item.path),
@@ -664,115 +890,154 @@ const loadArticleIndex = async () => {
         tags: [],
         extra: "",
         body: "",
+        source: "",
+        isDraft: false,
+        isNew: false,
+        isDelete: false,
       };
     }
   });
 
-  state.articles = sortArticles(articles);
+  state.remoteArticles = sortArticles(articles);
   refreshFolderOptions();
-  renderArticleList();
+  refreshAfterDraftChange();
 };
 
-const loadArticle = async (path) => {
-  state.selectedPath = path;
-  state.selectedSha = "";
+const loadArticle = (id) => {
+  state.currentId = id;
   showLoadingEditor();
 
-  try {
-    const article = await githubRequest(
-      `/repos/${REPOSITORY}/contents/${encodePath(path)}?ref=${encodeURIComponent(BRANCH)}`,
-    );
-    const parsed = parseArticle(decodeBase64(article.content));
-    const completeArticle = {
-      ...parsed,
-      path,
-      sha: article.sha,
-      folder: getFolderFromPath(path),
-    };
+  const article = getEffectiveArticles().find((item) => item.id === id);
 
-    fillEditor(completeArticle);
+  if (!article) {
+    state.currentId = "";
+    showOverview();
+    showToast("文章不存在或已被移除。", "error", 4500);
+    return;
+  }
+
+  window.setTimeout(() => {
+    fillEditor(article);
     showEditor();
     setStatus(elements.publishStatus);
-  } catch (error) {
-    state.selectedPath = "";
-    state.selectedSha = "";
-    showOverview();
-    showToast(`文章读取失败：${error.message}`, "error", 5500);
-  }
+  }, 120);
 };
 
-const beginNewArticle = () => {
-  fillEditor();
-  showEditor();
-  elements.body.focus();
-};
-
-const saveArticle = async () => {
+const createDraftFromEditor = () => {
+  const source = articleSourceFromEditor();
+  const parsed = parseArticle(source);
+  const title = parsed.title;
   const folder = normaliseFolder(elements.folder.value);
-  const title = extractTitle(elements.body.value);
 
   if (!folder) {
     setStatus(elements.publishStatus, "请先填写存放目录。", "error");
-    return;
+    return null;
   }
 
   if (!title) {
     setStatus(elements.publishStatus, "请在正文中添加一级标题，例如 # 文章标题。", "error");
+    return null;
+  }
+
+  const current = getCurrentArticle();
+  const remote = current?.isNew ? null : getRemoteById(state.currentId);
+  const path = current?.isNew ? getArticlePath(title, folder) : current.path;
+  const baseSha = current?.isNew ? "" : remote?.sha || current?.sha || "";
+  const draft = {
+    id: state.currentId || `new:${Date.now()}`,
+    type: "upsert",
+    isNew: current?.isNew || state.currentId.startsWith("new:"),
+    path,
+    basePath: current?.isNew ? "" : path,
+    baseSha,
+    source,
+    attachments: current?.draft?.attachments || [],
+    createdAt: current?.draft?.createdAt || Date.now(),
+    updatedAt: Date.now(),
+  };
+
+  const remoteSource = remote?.source || "";
+  if (!draft.isNew && !draft.attachments.length && source === remoteSource) {
+    return { unchanged: true, draft };
+  }
+
+  return { unchanged: false, draft };
+};
+
+const saveCurrentDraftNow = async () => {
+  if (state.isHydrating || !state.currentId || getCurrentArticle()?.isDelete) return;
+
+  const result = createDraftFromEditor();
+  if (!result) return;
+
+  if (result.unchanged) {
+    await removeDraftRecord(result.draft.id);
+    elements.draftStatus.textContent = "已同步";
     return;
   }
 
-  const path = state.selectedPath || articlePath(title);
-  setBusy(elements.publishArticle, true, "正在发布");
-  setStatus(elements.publishStatus);
-  showToast("正在提交到 GitHub...", "progress", 0);
+  await saveDraftRecord(result.draft);
+  state.currentId = result.draft.id;
+  elements.filePath.textContent = result.draft.path;
+  elements.draftStatus.textContent = "已自动保存";
+};
 
-  try {
-    const source = articleSource();
-    const payload = {
-      message: `${state.selectedPath ? "docs: 更新" : "docs: 发布"} ${title}`,
-      content: encodeBase64(source),
-      branch: BRANCH,
-    };
+const scheduleCurrentDraftSave = () => {
+  if (state.isHydrating || !state.currentId || getCurrentArticle()?.isDelete) return;
 
-    if (state.selectedSha) {
-      payload.sha = state.selectedSha;
-    }
+  window.clearTimeout(state.saveTimer);
+  elements.draftStatus.textContent = "保存中";
+  state.saveTimer = window.setTimeout(() => {
+    saveCurrentDraftNow().catch((error) => {
+      showToast(`草稿保存失败：${error.message}`, "error", 5500);
+    });
+  }, 400);
+};
 
-    const response = await githubRequest(
-      `/repos/${REPOSITORY}/contents/${encodePath(path)}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
-    const parsed = parseArticle(source);
-    const updatedArticle = {
-      ...parsed,
-      path,
-      sha: response.content.sha,
-      folder: getFolderFromPath(path),
-    };
+const beginNewArticle = async () => {
+  const id = `new:${Date.now()}`;
+  const body = `# 新文章\n\n`;
+  const source = buildSource({
+    date: today(),
+    categories: [],
+    tags: [],
+    extra: "",
+    body,
+  });
+  const draft = {
+    id,
+    type: "upsert",
+    isNew: true,
+    path: getArticlePath("新文章", state.folders[0] || "otherlearning"),
+    basePath: "",
+    baseSha: "",
+    source,
+    attachments: [],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
 
-    state.selectedPath = path;
-    state.selectedSha = response.content.sha;
-    state.articles = sortArticles([
-      ...state.articles.filter((article) => article.path !== path),
-      updatedArticle,
-    ]);
-    refreshFolderOptions();
-    fillEditor(updatedArticle);
-    renderArticleList();
-    showToast("已提交，GitHub 正在构建并发布网站。", "success", 4500);
-  } catch (error) {
-    showToast(`发布失败：${error.message}`, "error", 6000);
-  } finally {
-    setBusy(elements.publishArticle, false);
+  await saveDraftRecord(draft);
+  loadArticle(id);
+  elements.body.focus();
+};
+
+const resetCurrentArticle = async () => {
+  const current = getCurrentArticle();
+  if (!current) return;
+
+  await removeDraftRecord(current.id);
+  if (current.isNew) {
+    state.currentId = "";
+    showOverview();
+    return;
   }
+
+  loadArticle(current.id);
 };
 
 const uploadImage = async (file) => {
-  if (!file) return;
+  if (!file || getCurrentArticle()?.isDelete) return;
 
   const safeName = file.name
     .normalize("NFKD")
@@ -780,67 +1045,150 @@ const uploadImage = async (file) => {
     .replace(/-+/g, "-");
   const year = new Date().getFullYear();
   const path = `${UPLOADS_ROOT}${year}/${Date.now()}-${safeName}`;
+  const publicUrl = `/uploads/${year}/${path.split("/").pop()}`;
+  const base64 = await readFileAsBase64(file);
 
-  setStatus(elements.publishStatus, "正在上传图片...");
+  insertAtCursor(elements.body, `![${file.name}](${publicUrl})`);
+  await saveCurrentDraftNow();
 
-  try {
-    const payload = {
-      message: `docs: 上传图片 ${safeName}`,
-      content: await readFileAsBase64(file),
-      branch: BRANCH,
-    };
-    await githubRequest(`/repos/${REPOSITORY}/contents/${encodePath(path)}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    insertAtCursor(elements.body, `![${file.name}](/uploads/${year}/${path.split("/").pop()})`);
-    setStatus(elements.publishStatus, "图片已提交。文章发布时会引用它。", "success");
-  } catch (error) {
-    setStatus(elements.publishStatus, `图片上传失败：${error.message}`, "error");
-  } finally {
-    elements.imageUpload.value = "";
-  }
+  const current = getCurrentArticle();
+  const draft = current?.draft || state.drafts.get(state.currentId);
+  if (!draft) return;
+
+  draft.attachments = [
+    ...(draft.attachments || []),
+    { path, publicUrl, name: file.name, base64 },
+  ];
+  await saveDraftRecord(draft);
+  showToast("图片已加入草稿，发布修改时会一起上传。", "success", 4200);
+  elements.imageUpload.value = "";
 };
 
-const deleteSelectedArticle = async () => {
-  const article = state.articles.find((item) => item.path === state.selectedPath);
+const markSelectedArticleForDelete = async () => {
+  const article = getCurrentArticle();
+  if (!article) return;
 
-  if (!article || !state.selectedSha) return;
-
-  setBusy(elements.confirmDelete, true, "正在删除");
-
-  try {
-    await githubRequest(`/repos/${REPOSITORY}/contents/${encodePath(state.selectedPath)}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: `docs: 删除 ${article.title || articleLabel(article.path)}`,
-        sha: state.selectedSha,
-        branch: BRANCH,
-      }),
-    });
-    state.articles = state.articles.filter((item) => item.path !== state.selectedPath);
-    state.selectedPath = "";
-    state.selectedSha = "";
-    refreshFolderOptions();
-    elements.deleteDialog.close();
-    showOverview();
-    showToast("文章已删除，GitHub 正在构建并发布网站。", "success", 4500);
-  } catch (error) {
-    elements.deleteDescription.textContent = `删除失败：${error.message}`;
-  } finally {
-    setBusy(elements.confirmDelete, false);
+  if (article.isNew) {
+    await resetCurrentArticle();
+    showToast("新文章草稿已丢弃。", "success", 3600);
+    return;
   }
+
+  const draft = {
+    id: article.id,
+    type: "delete",
+    isNew: false,
+    path: article.path,
+    basePath: article.path,
+    baseSha: article.sha,
+    source: article.source,
+    attachments: [],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+
+  await saveDraftRecord(draft);
+  fillEditor(getEffectiveArticles().find((item) => item.id === draft.id));
+  showToast("已加入待删除队列。", "success", 3600);
+};
+
+const undoDelete = async () => {
+  const current = getCurrentArticle();
+  if (!current?.isDelete) return;
+
+  await removeDraftRecord(current.id);
+  loadArticle(current.id);
 };
 
 const openDeleteDialog = () => {
-  const article = state.articles.find((item) => item.path === state.selectedPath);
-
+  const article = getCurrentArticle();
   if (!article) return;
 
-  elements.deleteDescription.textContent = `“${article.title || articleLabel(article.path)}”将从仓库中移除。`;
+  if (article.isNew) {
+    elements.deleteDescription.textContent = "这篇新文章还没有发布，确认后会丢弃本地草稿。";
+  } else {
+    elements.deleteDescription.textContent = `"${article.title || articleLabel(article.path)}" 会进入待删除队列，点击顶部“发布修改”后才会真正从 GitHub 删除。`;
+  }
   elements.deleteDialog.showModal();
+};
+
+const publishFile = async ({ path, content, sha, message }) => {
+  const payload = {
+    message,
+    content,
+    branch: BRANCH,
+  };
+
+  if (sha) payload.sha = sha;
+
+  return githubRequest(`/repos/${REPOSITORY}/contents/${encodePath(path)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+};
+
+const deleteFile = async ({ path, sha, message }) =>
+  githubRequest(`/repos/${REPOSITORY}/contents/${encodePath(path)}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, sha, branch: BRANCH }),
+  });
+
+const publishAllDrafts = async () => {
+  const drafts = [...state.drafts.values()].sort((draftA, draftB) => draftA.updatedAt - draftB.updatedAt);
+  if (!drafts.length) return;
+
+  elements.publishAll.dataset.busy = "true";
+  elements.publishAll.disabled = true;
+  showToast(`正在发布 ${drafts.length} 条修改...`, "progress", 0);
+
+  try {
+    for (const draft of drafts) {
+      const parsed = parseArticle(draft.source || "");
+      const title = parsed.title || articleLabel(draft.path);
+
+      if (draft.type === "delete") {
+        await deleteFile({
+          path: draft.path,
+          sha: draft.baseSha,
+          message: `docs: 删除 ${title}`,
+        });
+        await removeDraftRecord(draft.id);
+        continue;
+      }
+
+      const referencedAttachments = (draft.attachments || []).filter((attachment) =>
+        draft.source.includes(attachment.publicUrl),
+      );
+
+      for (const attachment of referencedAttachments) {
+        await publishFile({
+          path: attachment.path,
+          content: attachment.base64,
+          message: `docs: 上传图片 ${attachment.name}`,
+        });
+      }
+
+      await publishFile({
+        path: draft.path,
+        content: encodeBase64(draft.source),
+        sha: draft.isNew ? "" : draft.baseSha,
+        message: `${draft.isNew ? "docs: 发布" : "docs: 更新"} ${title}`,
+      });
+      await removeDraftRecord(draft.id);
+    }
+
+    state.currentId = "";
+    await loadArticleIndex();
+    showOverview();
+    showToast("全部修改已发布，GitHub 正在构建网站。", "success", 5200);
+  } catch (error) {
+    showToast(`发布中断：${error.message}`, "error", 7000);
+  } finally {
+    elements.publishAll.dataset.busy = "false";
+    updatePublishButton();
+  }
 };
 
 const insertAtCursor = (input, text) => {
@@ -848,6 +1196,7 @@ const insertAtCursor = (input, text) => {
   const end = input.selectionEnd;
   input.setRangeText(text, start, end, "end");
   input.focus();
+  scheduleCurrentDraftSave();
 };
 
 const wrapSelection = (type) => {
@@ -864,10 +1213,10 @@ const wrapSelection = (type) => {
 };
 
 const signOut = () => {
+  clearStoredToken();
   state.token = "";
-  state.articles = [];
-  state.selectedPath = "";
-  state.selectedSha = "";
+  state.remoteArticles = [];
+  state.currentId = "";
   state.selectedCategories = [];
   state.selectedTags = [];
   state.folders = [];
@@ -882,35 +1231,57 @@ const signOut = () => {
 };
 
 const openMulti = (kind) => {
+  if (getCurrentArticle()?.isDelete) return;
   state.openMulti = kind;
   renderMultiSelects();
 };
 
-elements.accessForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  state.token = elements.token.value.trim();
+const enterBackend = async (token, { auto = false } = {}) => {
+  const normalizedToken = token.trim();
+  if (!normalizedToken) return;
 
-  if (!state.token) return;
-
-  setBusy(elements.accessSubmit, true, "验证中");
-  setStatus(elements.accessStatus, "正在验证 GitHub Token...");
+  state.token = normalizedToken;
+  setBusy(elements.accessSubmit, true, auto ? "进入中" : "验证中");
+  setAccessLoading(true, auto ? "正在使用已保存的 Token 进入后台..." : "正在进入后台...");
+  setStatus(elements.accessStatus, auto ? "正在恢复后台会话..." : "正在验证 GitHub Token...");
 
   try {
+    if (!state.db) {
+      setAccessLoading(true, "正在打开本地草稿...");
+      state.db = await openDatabase();
+      await loadDrafts();
+    }
+
+    setAccessLoading(true, "正在验证 GitHub 权限...");
     const [user] = await Promise.all([
       githubRequest("/user"),
       githubRequest(`/repos/${REPOSITORY}`),
     ]);
     elements.accountName.textContent = user.login;
+    setAccessLoading(true, "正在读取文章列表...");
     await loadArticleIndex();
+    saveStoredToken(normalizedToken);
     elements.accessView.hidden = true;
     elements.workspace.hidden = false;
     showOverview();
+    showToast(auto ? "已自动进入后台。" : "已进入后台，Token 已保存在本机浏览器。");
   } catch (error) {
     state.token = "";
-    setStatus(elements.accessStatus, `无法进入：${error.message}`, "error");
+    clearStoredToken();
+    setStatus(
+      elements.accessStatus,
+      auto ? `已保存的 Token 无法使用，请重新填写：${error.message}` : `无法进入：${error.message}`,
+      "error",
+    );
   } finally {
+    setAccessLoading(false);
     setBusy(elements.accessSubmit, false);
   }
+};
+
+elements.accessForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  enterBackend(elements.token.value);
 });
 
 elements.tokenVisibility.addEventListener("click", () => {
@@ -921,24 +1292,26 @@ elements.tokenVisibility.addEventListener("click", () => {
 
 elements.themeToggle.addEventListener("click", toggleTheme);
 elements.signOut.addEventListener("click", signOut);
-elements.newArticle.addEventListener("click", beginNewArticle);
-elements.emptyCreate.addEventListener("click", beginNewArticle);
+elements.publishAll.addEventListener("click", publishAllDrafts);
+elements.newArticle.addEventListener("click", () => beginNewArticle().catch((error) => showToast(error.message, "error", 5000)));
+elements.emptyCreate.addEventListener("click", () => beginNewArticle().catch((error) => showToast(error.message, "error", 5000)));
 elements.mobileBack.addEventListener("click", showOverview);
 elements.resetEditor.addEventListener("click", () => {
-  if (state.selectedPath) {
-    loadArticle(state.selectedPath);
-    return;
-  }
-
-  beginNewArticle();
+  resetCurrentArticle().catch((error) => showToast(`还原失败：${error.message}`, "error", 5000));
 });
 elements.deleteArticle.addEventListener("click", openDeleteDialog);
-elements.confirmDelete.addEventListener("click", deleteSelectedArticle);
-elements.publishArticle.addEventListener("click", saveArticle);
+elements.undoDelete.addEventListener("click", () => undoDelete().catch((error) => showToast(error.message, "error", 5000)));
+elements.confirmDelete.addEventListener("click", () => {
+  markSelectedArticleForDelete()
+    .then(() => elements.deleteDialog.close())
+    .catch((error) => {
+      elements.deleteDescription.textContent = `操作失败：${error.message}`;
+    });
+});
 elements.articleSearch.addEventListener("input", renderArticleList);
 elements.articleList.addEventListener("click", (event) => {
   const categoryToggle = event.target.closest("[data-category]");
-  const articleButton = event.target.closest("[data-path]");
+  const articleButton = event.target.closest("[data-id]");
 
   if (categoryToggle) {
     const { category } = categoryToggle.dataset;
@@ -951,13 +1324,19 @@ elements.articleList.addEventListener("click", (event) => {
     return;
   }
 
-  if (articleButton) {
-    loadArticle(articleButton.dataset.path);
-  }
+  if (articleButton) loadArticle(articleButton.dataset.id);
 });
-elements.imageUpload.addEventListener("change", () => uploadImage(elements.imageUpload.files[0]));
+elements.imageUpload.addEventListener("change", () => {
+  uploadImage(elements.imageUpload.files[0]).catch((error) =>
+    showToast(`图片草稿失败：${error.message}`, "error", 5500),
+  );
+});
 document.querySelectorAll("[data-wrap]").forEach((button) => {
   button.addEventListener("click", () => wrapSelection(button.dataset.wrap));
+});
+
+[elements.date, elements.folder, elements.extra, elements.body].forEach((field) => {
+  field.addEventListener("input", scheduleCurrentDraftSave);
 });
 
 Object.entries(multiSelects).forEach(([kind, config]) => {
@@ -998,3 +1377,10 @@ document.addEventListener("click", (event) => {
 });
 
 applyTheme(getTheme());
+updatePublishButton();
+
+const storedToken = readStoredToken();
+if (storedToken) {
+  elements.token.value = storedToken;
+  enterBackend(storedToken, { auto: true });
+}
