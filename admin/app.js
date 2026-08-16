@@ -5,6 +5,8 @@ const UPLOADS_ROOT = "docs/.vuepress/public/uploads/";
 const THEME_KEY = "vuepress-color-scheme";
 const TOKEN_KEY = "xh-blog-admin-token";
 const AUTO_SAVE_DELAY = 30 * 1000;
+const DEFAULT_IMAGE_STYLE = "width: 80%; height: auto;";
+const DEFAULT_IMAGE_WRAPPER_STYLE = "text-align: center;";
 const UNCATEGORISED = "未分类";
 const DB_NAME = "xh-blog-admin";
 const DB_VERSION = 1;
@@ -337,6 +339,9 @@ const normaliseFolder = (value) =>
     .replace(/[^a-zA-Z0-9_\-\u4e00-\u9fff/]/g, "");
 
 const normaliseMetaValue = (value) => value.trim().replace(/\s+/g, " ");
+
+const escapeHtmlAttribute = (value) =>
+  String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 const serialiseList = (key, items) => {
   if (!items.length) return "";
@@ -1320,8 +1325,13 @@ const uploadImage = async (file) => {
   const path = `${UPLOADS_ROOT}${year}/${Date.now()}-${safeName}`;
   const publicUrl = `/uploads/${year}/${path.split("/").pop()}`;
   const base64 = await readFileAsBase64(file);
+  const imageMarkup = [
+    `<p style="${DEFAULT_IMAGE_WRAPPER_STYLE}">`,
+    `  <img src="${publicUrl}" alt="${escapeHtmlAttribute(file.name)}" style="${DEFAULT_IMAGE_STYLE}" />`,
+    "</p>",
+  ].join("\n");
 
-  insertAtCursor(elements.body, `![${file.name}](${publicUrl})`);
+  insertAtCursor(elements.body, `\n\n${imageMarkup}\n\n`);
   await saveCurrentDraftNow();
 
   const current = getCurrentArticle();
