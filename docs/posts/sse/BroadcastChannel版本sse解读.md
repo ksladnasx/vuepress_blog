@@ -8,7 +8,7 @@ tag:
   - 代码解读
 ---
 
-# sseService文件解读(BroadcastChannel版)
+# sseService文件解读 (BroadcastChannel版)
 
 源文件地址：[sseServiceWithBroadcastChannel.js](../codes/sseServiceWithBroadcastChannel.md)
 

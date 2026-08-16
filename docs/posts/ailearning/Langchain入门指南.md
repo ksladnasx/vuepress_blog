@@ -1,4 +1,12 @@
-# 第一章 LangChain 基础认知
+---
+date: 2026-08-15
+category:
+  - 说明文档
+tag:
+  - 大模型基础
+---
+
+#  LangChain 基础
 
 
 
