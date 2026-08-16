@@ -62,9 +62,9 @@ body {
   min-width: 320px;
   margin: 0;
   background:
-    linear-gradient(90deg, rgb(47 125 99 / 8%) 1px, transparent 1px),
-    linear-gradient(rgb(47 125 99 / 8%) 1px, transparent 1px),
-    linear-gradient(135deg, transparent 0 68%, rgb(47 125 99 / 5%) 68% 69%, transparent 69%),
+    linear-gradient(90deg, rgb(47 125 99 / 14%) 1px, transparent 1px),
+    linear-gradient(rgb(47 125 99 / 14%) 1px, transparent 1px),
+    linear-gradient(135deg, transparent 0 67%, rgb(47 125 99 / 10%) 67% 69%, transparent 69%),
     var(--admin-bg);
   background-size:
     28px 28px,
@@ -81,19 +81,19 @@ body::before {
     repeating-linear-gradient(
       135deg,
       transparent 0 18px,
-      rgb(47 125 99 / 3%) 18px 19px,
+      rgb(47 125 99 / 7%) 18px 19px,
       transparent 19px 38px
     ),
-    linear-gradient(180deg, rgb(255 255 255 / 38%), transparent 34%);
+    linear-gradient(180deg, rgb(255 255 255 / 50%), transparent 38%);
   content: "";
   pointer-events: none;
 }
 
 html[data-theme="dark"] body {
   background:
-    linear-gradient(90deg, rgb(111 207 157 / 8%) 1px, transparent 1px),
-    linear-gradient(rgb(111 207 157 / 8%) 1px, transparent 1px),
-    linear-gradient(135deg, transparent 0 68%, rgb(111 207 157 / 5%) 68% 69%, transparent 69%),
+    linear-gradient(90deg, rgb(111 207 157 / 13%) 1px, transparent 1px),
+    linear-gradient(rgb(111 207 157 / 13%) 1px, transparent 1px),
+    linear-gradient(135deg, transparent 0 67%, rgb(111 207 157 / 10%) 67% 69%, transparent 69%),
     var(--admin-bg);
   background-size:
     28px 28px,
@@ -107,10 +107,10 @@ html[data-theme="dark"] body::before {
     repeating-linear-gradient(
       135deg,
       transparent 0 18px,
-      rgb(111 207 157 / 4%) 18px 19px,
+      rgb(111 207 157 / 8%) 18px 19px,
       transparent 19px 38px
     ),
-    linear-gradient(180deg, rgb(255 255 255 / 4%), transparent 34%);
+    linear-gradient(180deg, rgb(255 255 255 / 8%), transparent 38%);
 }
 
 button,
