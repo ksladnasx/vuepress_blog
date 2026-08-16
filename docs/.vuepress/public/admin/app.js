@@ -44,7 +44,7 @@ const elements = {
   accessLoadingText: document.querySelector("#access-loading-text"),
   themeToggle: document.querySelector("#theme-toggle"),
   themeIcon: document.querySelector("#theme-icon"),
-  accountName: document.querySelector("#account-name"),
+  brandMark: document.querySelector(".brand-mark"),
   signOut: document.querySelector("#sign-out"),
   publishAll: document.querySelector("#publish-all"),
   changeBadge: document.querySelector("#change-badge"),
@@ -1568,6 +1568,8 @@ const signOut = () => {
   state.folderMenuOpen = false;
   state.dateMenuOpen = false;
   elements.token.value = "";
+  elements.brandMark.removeAttribute("data-tooltip");
+  elements.brandMark.removeAttribute("aria-label");
   elements.workspace.hidden = true;
   elements.accessView.hidden = false;
   elements.toast.hidden = true;
@@ -1602,7 +1604,8 @@ const enterBackend = async (token, { auto = false } = {}) => {
       githubRequest("/user"),
       githubRequest(`/repos/${REPOSITORY}`),
     ]);
-    elements.accountName.textContent = user.login;
+    elements.brandMark.dataset.tooltip = `名称:${user.login}`;
+    elements.brandMark.setAttribute("aria-label", `当前账号 ${user.login}`);
     setAccessLoading(true, "正在读取文章列表...");
     await loadArticleIndex();
     saveStoredToken(normalizedToken);
