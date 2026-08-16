@@ -124,7 +124,7 @@ button {
 }
 
 button:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.62;
 }
 
@@ -404,6 +404,7 @@ h2 {
 .visibility-glyph,
 .theme-glyph,
 .exit-glyph,
+.home-glyph,
 .back-glyph,
 .trash-glyph,
 .publish-glyph,
@@ -467,6 +468,41 @@ h2 {
 .exit-glyph::after {
   transform: rotate(-45deg);
   transform-origin: right;
+}
+
+.home-glyph {
+  width: 17px;
+  height: 14px;
+  margin-top: 4px;
+  border: 1.7px solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 3px 3px;
+}
+
+.home-glyph::before,
+.home-glyph::after {
+  position: absolute;
+  content: "";
+}
+
+.home-glyph::before {
+  top: -8px;
+  left: 50%;
+  width: 13px;
+  height: 13px;
+  border-top: 1.7px solid currentColor;
+  border-left: 1.7px solid currentColor;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.home-glyph::after {
+  right: 5px;
+  bottom: -1px;
+  width: 4px;
+  height: 7px;
+  border: 1.5px solid currentColor;
+  border-bottom: 0;
+  border-radius: 2px 2px 0 0;
 }
 
 .back-glyph {
@@ -663,6 +699,10 @@ h2 {
 
 .publish-all-button[data-busy="true"] .publish-glyph {
   animation: publish-breathe 0.8s ease-in-out infinite alternate;
+}
+
+.publish-all-button[data-busy="true"] {
+  cursor: wait;
 }
 
 .change-badge {
