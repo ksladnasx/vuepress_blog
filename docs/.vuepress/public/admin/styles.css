@@ -402,9 +402,6 @@ h2 {
 }
 
 .visibility-glyph,
-.theme-glyph,
-.exit-glyph,
-.home-glyph,
 .back-glyph,
 .trash-glyph,
 .publish-glyph,
@@ -413,6 +410,17 @@ h2 {
 .chevron-glyph {
   position: relative;
   display: block;
+}
+
+.icon-svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .visibility-glyph {
@@ -432,77 +440,6 @@ h2 {
   background: currentColor;
   content: "";
   transform: translate(-50%, -50%);
-}
-
-.theme-glyph {
-  width: 15px;
-  height: 15px;
-  border: 1.8px solid currentColor;
-  border-radius: 50%;
-  box-shadow: inset -4px -1px 0 var(--admin-input);
-}
-
-.exit-glyph {
-  width: 13px;
-  height: 16px;
-  border: 1.7px solid currentColor;
-  border-left: 0;
-}
-
-.exit-glyph::before,
-.exit-glyph::after {
-  position: absolute;
-  top: 6px;
-  left: -7px;
-  width: 12px;
-  height: 1.7px;
-  background: currentColor;
-  content: "";
-}
-
-.exit-glyph::before {
-  transform: rotate(45deg);
-  transform-origin: right;
-}
-
-.exit-glyph::after {
-  transform: rotate(-45deg);
-  transform-origin: right;
-}
-
-.home-glyph {
-  width: 17px;
-  height: 14px;
-  margin-top: 4px;
-  border: 1.7px solid currentColor;
-  border-top: 0;
-  border-radius: 0 0 3px 3px;
-}
-
-.home-glyph::before,
-.home-glyph::after {
-  position: absolute;
-  content: "";
-}
-
-.home-glyph::before {
-  top: -8px;
-  left: 50%;
-  width: 13px;
-  height: 13px;
-  border-top: 1.7px solid currentColor;
-  border-left: 1.7px solid currentColor;
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.home-glyph::after {
-  right: 5px;
-  bottom: -1px;
-  width: 4px;
-  height: 7px;
-  border: 1.5px solid currentColor;
-  border-bottom: 0;
-  border-radius: 2px 2px 0 0;
 }
 
 .back-glyph {
