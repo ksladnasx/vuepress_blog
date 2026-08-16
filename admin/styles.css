@@ -404,7 +404,6 @@ h2 {
 .visibility-glyph,
 .back-glyph,
 .trash-glyph,
-.publish-glyph,
 .plus-glyph,
 .search-glyph,
 .chevron-glyph {
@@ -416,11 +415,13 @@ h2 {
   display: block;
   width: 19px;
   height: 19px;
+  color: currentColor;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.9;
   stroke-linecap: round;
   stroke-linejoin: round;
+  overflow: visible;
 }
 
 .visibility-glyph {
@@ -475,35 +476,6 @@ h2 {
   border: 1.7px solid currentColor;
   border-bottom: 0;
   content: "";
-}
-
-.publish-glyph {
-  width: 13px;
-  height: 14px;
-  border: 1.7px solid currentColor;
-  border-top: 0;
-}
-
-.publish-glyph::before {
-  position: absolute;
-  top: -2px;
-  left: 50%;
-  width: 7px;
-  height: 7px;
-  border-top: 1.7px solid currentColor;
-  border-left: 1.7px solid currentColor;
-  content: "";
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.publish-glyph::after {
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  height: 12px;
-  border-left: 1.7px solid currentColor;
-  content: "";
-  transform: translateX(-50%);
 }
 
 .plus-glyph {
@@ -634,7 +606,7 @@ h2 {
   position: relative;
 }
 
-.publish-all-button[data-busy="true"] .publish-glyph {
+.publish-all-button[data-busy="true"] .icon-svg {
   animation: publish-breathe 0.8s ease-in-out infinite alternate;
 }
 
@@ -1677,8 +1649,7 @@ html[data-theme="dark"] .draft-status.is-unsaved {
     flex-basis: 28px;
   }
 
-  .account-name,
-  #theme-toggle {
+  .account-name {
     display: none;
   }
 
