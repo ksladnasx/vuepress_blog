@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { blogPlugin } from "@vuepress/plugin-blog";
 import { defaultTheme } from "@vuepress/theme-default";
+import { mediumZoomPlugin } from "@vuepress/plugin-medium-zoom";
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { sitemapPlugin } from "@vuepress/plugin-sitemap";
@@ -550,6 +551,9 @@ export default defineUserConfig({
       },
     ],
     displayAllHeaders: false,
+    themePlugins: {
+      mediumZoom: false,
+    },
   }),
 
   plugins: [
@@ -560,6 +564,13 @@ export default defineUserConfig({
     markdownHighlightPlugin,
 
     stablePageOrderPlugin("stable-page-order-before-blog"),
+
+    mediumZoomPlugin({
+      zoomOptions: {
+        container: "#xh-medium-zoom-container",
+        margin: 0,
+      },
+    }),
 
     // Mermaid 图表：识别并渲染 ```mermaid 代码块
     markdownChartPlugin({

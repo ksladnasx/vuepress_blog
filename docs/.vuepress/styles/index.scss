@@ -1678,8 +1678,23 @@ html[data-reading-bg="black"] {
   box-shadow: var(--xh-shadow-soft);
 }
 
+#xh-medium-zoom-container {
+  position: fixed;
+  top: max(5rem, 10vh);
+  right: 10vw;
+  bottom: 10vh;
+  left: 10vw;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.medium-zoom-overlay {
+  z-index: 3000 !important;
+}
+
 .medium-zoom-image--opened,
 .medium-zoom-image--opened[style] {
+  z-index: 3001 !important;
   margin: 0 !important;
   zoom: 1 !important;
   border-radius: 10px;

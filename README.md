@@ -1,178 +1,134 @@
-# xiaohan 博客说明文档
+# xiaohan Blog
 
-这是一个基于 VuePress 构建的个人博客项目。本文档将指导你如何拉取项目、在本地启动开发环境，以及如何部署到服务器。
+一个基于 VuePress 2 的个人博客项目，支持文章分类、标签、时间线、全文搜索、评论、主题切换，以及静态化的文章管理后台。
 
-## 目录
+## 项目预览
 
-- [拉取项目](#拉取项目)
-- [安装依赖](#安装依赖)
-- [本地启动](#本地启动)
-- [构建静态文件](#构建静态文件)
-- [部署](#部署)
-  - [使用部署脚本](#使用部署脚本)
-  - [手动部署](#手动部署)
-- [目录结构](#目录结构)
-- [自定义配置](#自定义配置)
+### 文章管理后台
 
-## 拉取项目
+<img src="./docs/.vuepress/public/uploads/back_manage.png" alt="文章管理后台截图" style="width: 100%; max-width: 960px;" />
 
-首先，你需要将项目克隆到本地。打开终端，运行以下命令：
+### 博客前台展示
 
-```bash
-git clone https://github.com/ksladnasx/vuepress_blog.git
-```
+<img src="./docs/.vuepress/public/uploads/font_express.png" alt="博客前台展示截图" style="width: 100%; max-width: 960px;" />
 
-进入项目目录：
+## 主要功能
 
-```bash
-cd vuepress_blog
-```
+- VuePress 2 静态博客构建
+- 文章分类、标签、时间线归档
+- SlimSearch 站内搜索
+- Markdown 扩展：KaTeX、Mermaid、图表、标记语法
+- 明暗主题与阅读体验优化
+- GitHub Actions 自动构建并发布到 `gh-pages`
+- `/admin/` 静态文章后台
+- 后台支持新建、编辑、删除、分类标签编辑、图片上传和统一发布
+- 后台草稿保存在浏览器 IndexedDB，GitHub Token 保存在本机 localStorage
 
-## 安装依赖
+## 本地开发
 
-项目依赖 Node.js 和 npm/yarn。确保你已经安装了 Node.js（建议版本 14.x 或更高）。
-
-使用 npm 安装依赖：
+安装依赖：
 
 ```bash
 npm install
 ```
 
-或者如果你更喜欢使用 yarn：
-
-```bash
-yarn install
-```
-
-## 本地启动
-
-在开发模式下启动项目，实时预览修改：
-
-```bash
-npm run docs:dev
-```
-
-或者如果 `package.json` 中配置了 `docs` 脚本（如 `"docs": "vuepress dev docs"`）：
+启动开发服务：
 
 ```bash
 npm run docs
 ```
 
-启动成功后，终端会显示本地访问地址，通常是 `http://localhost:8080`。在浏览器中打开该地址即可查看博客。
-
-## 构建静态文件
-
-当你准备部署时，需要先构建静态文件：
+构建静态站点：
 
 ```bash
 npm run docs:build
 ```
 
-构建后的文件会生成在 `docs/.vuepress/dist` 目录中（取决于你的 VuePress 配置）。你可以将这个目录中的内容部署到任何静态服务器上。
+构建产物会生成到：
 
-## 部署
-
-项目根目录下提供了一个 `deploy.sh` 脚本，用于自动化部署到 GitHub Pages 或其他静态托管服务。
-
-### 使用部署脚本
-
-1. **确保脚本有执行权限**（Linux/macOS/gitbash）：
-
-   ```bash
-   chmod +x deploy.sh
-   ```
-
-2. **运行部署脚本**：
-
-   ```bash
-   sh ./deploy.sh
-   ```
-
-脚本内容示例（假设部署到 GitHub Pages）：
-
-```bash
-#!/usr/bin/env sh
-
-# 确保脚本抛出遇到的错误
-set -e
-
-# 生成静态文件
-npm run docs:build
-
-# 进入生成的文件夹
-cd docs/.vuepress/dist
-
-# 如果是发布到自定义域名
-# echo 'www.example.com' > CNAME
-
-git init
-git add -A
-git commit -m 'deploy'
-
-# 如果发布到 https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:ksladnasx/vuepress_blog.git master:gh-pages
-
-cd -
+```txt
+docs/.vuepress/dist
 ```
 
-根据你的实际情况修改仓库地址和分支。
+## 文章管理后台
 
-### 手动部署
+后台入口：
 
-如果你不想使用脚本，也可以手动部署：
+```txt
+/admin/
+```
 
-1. 运行 `npm run docs:build` 生成静态文件。
-2. 将 `docs/.vuepress/dist` 目录下的所有文件复制到你的服务器或托管服务的相应目录。
-3. 配置 Web 服务器（如 Nginx、Apache）或使用 GitHub Pages、Vercel、Netlify 等平台。
+后台本身仍是静态页面，不需要额外服务器。它会在浏览器中调用 GitHub API，把文章和图片提交到仓库 `main` 分支。仓库收到提交后，GitHub Actions 会自动构建并发布网站。
+
+后台支持：
+
+- GitHub Token 本机记忆
+- 文章按分类折叠浏览
+- 新建与编辑 Markdown 文章
+- 分类、标签、目录选择
+- 图片上传到 `docs/.vuepress/public/uploads/`
+- 未发布修改计数
+- 统一发布到 GitHub
+- 删除文章进入待发布队列
+
+图片在文章中的推荐写法：
+
+```html
+<img src="/uploads/2026/example.webp" alt="图片说明" style="width: 80%; height: auto;" />
+```
+
+`/uploads/...` 对应仓库中的：
+
+```txt
+docs/.vuepress/public/uploads/...
+```
+
+## 自动部署
+
+`.github/workflows/deploy.yml` 会监听 `main` 分支的相关文件变化：
+
+- `docs/**`
+- `package.json`
+- `package-lock.json`
+- `deploy.sh`
+- workflow 文件本身
+
+触发后会执行：
+
+```bash
+npm ci
+./deploy.sh
+```
+
+`deploy.sh` 会构建 VuePress，并把 `docs/.vuepress/dist` 发布到 `gh-pages` 分支。
 
 ## 目录结构
 
-```
+```txt
 vuepress_blog/
-├── docs/               # 文档目录
-│   ├── .vuepress/      # VuePress 配置目录
-│   │   ├── config.js   # 主配置文件
-│   │   ├── public/     # 静态资源（图片、favicon 等）
-│   │   └── dist/       # 构建输出目录（生成后出现）
-│   ├── README.md       # 首页文档
-│   └── 其他 Markdown 文件 # 博客文章或页面
-├── package.json        # 项目依赖和脚本
-├── deploy.sh           # 部署脚本
-└── README.md           # 项目说明文档（即本文档）
+├─ docs/
+│  ├─ posts/                    # 博客文章
+│  ├─ .vuepress/
+│  │  ├─ config.js              # VuePress 配置
+│  │  ├─ client.js              # 客户端增强
+│  │  ├─ layouts/               # 自定义布局
+│  │  ├─ styles/                # 全局样式
+│  │  └─ public/
+│  │     ├─ admin/              # 静态文章后台
+│  │     └─ uploads/            # 图片等静态资源
+├─ .github/workflows/deploy.yml # GitHub Actions 部署流程
+├─ deploy.sh                    # 构建并发布到 gh-pages
+├─ package.json
+└─ README.md
 ```
 
-## 自定义配置
+## 常用命令
 
-你可以在 `docs/.vuepress/config.js` 中修改博客的标题、主题、导航栏、侧边栏等。例如：
-
-```js
-module.exports = {
-  title: '我的博客',
-  description: '一个基于 VuePress 的个人博客',
-  themeConfig: {
-    nav: [
-      { text: '首页', link: '/' },
-      { text: '关于', link: '/about/' },
-    ],
-    sidebar: 'auto',
-  },
-};
+```bash
+npm run docs
+npm run docs:build
 ```
 
+## 说明
 
-## Star History
-
-<a href="https://www.star-history.com/?repos=ksladnasx%2Fvuepress_blog&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=ksladnasx/vuepress_blog&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=ksladnasx/vuepress_blog&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=ksladnasx/vuepress_blog&type=date&legend=top-left" />
- </picture>
-</a>
-
-
-更多配置请参考 [VuePress 官方文档](https://vuepress.vuejs.org/zh/)。
-
----
-
-如有任何问题，欢迎提交 Issue 或 Pull Request。
+这个项目的文章后台不会把文章保存到额外服务器。所有正式发布的内容最终都会变成 GitHub 仓库中的提交，因此仍然保留静态站点的部署方式，同时减少了日常写文章时手动执行部署脚本的步骤。

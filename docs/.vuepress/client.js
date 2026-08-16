@@ -291,6 +291,16 @@ const renderMath = () => {
   });
 };
 
+const ensureMediumZoomContainer = () => {
+  if (typeof window === "undefined") return;
+  if (document.getElementById("xh-medium-zoom-container")) return;
+
+  const container = document.createElement("div");
+  container.id = "xh-medium-zoom-container";
+  container.setAttribute("aria-hidden", "true");
+  document.body.appendChild(container);
+};
+
 export default defineClientConfig({
   layouts: {
     Layout,
@@ -307,11 +317,13 @@ export default defineClientConfig({
     const router = useRouter();
 
     onMounted(() => {
+      ensureMediumZoomContainer();
       nextTick(renderMath);
       nextTick(loadDifyChatbot);
     });
 
     router.afterEach(() => {
+      nextTick(ensureMediumZoomContainer);
       nextTick(renderMath);
     });
   },
