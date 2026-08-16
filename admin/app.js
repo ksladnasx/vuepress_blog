@@ -4,6 +4,7 @@ const POSTS_ROOT = "docs/posts/";
 const UPLOADS_ROOT = "docs/.vuepress/public/uploads/";
 const THEME_KEY = "vuepress-color-scheme";
 const TOKEN_KEY = "xh-blog-admin-token";
+const AUTO_SAVE_DELAY = 30 * 1000;
 const UNCATEGORISED = "未分类";
 const DB_NAME = "xh-blog-admin";
 const DB_VERSION = 1;
@@ -20,8 +21,12 @@ const state = {
   folders: [],
   expandedCategories: new Set(),
   openMulti: "",
+  folderMenuOpen: false,
+  dateMenuOpen: false,
+  calendarMonth: new Date(),
   toastTimer: 0,
   saveTimer: 0,
+  isDirty: false,
   isHydrating: false,
 };
 
@@ -50,6 +55,7 @@ const elements = {
   editorLoading: document.querySelector("#editor-loading"),
   editorPanel: document.querySelector("#editor-panel"),
   mobileBack: document.querySelector("#mobile-back"),
+  saveDraft: document.querySelector("#save-draft"),
   resetEditor: document.querySelector("#reset-editor"),
   undoDelete: document.querySelector("#undo-delete"),
   deleteArticle: document.querySelector("#delete-article"),
@@ -58,6 +64,9 @@ const elements = {
   editorMode: document.querySelector("#editor-mode"),
   filePath: document.querySelector("#file-path"),
   date: document.querySelector("#article-date"),
+  dateControl: document.querySelector("#date-control"),
+  datePicker: document.querySelector("#date-picker"),
+  dateMenu: document.querySelector("#date-menu"),
   folder: document.querySelector("#article-folder"),
   categoryControl: document.querySelector("#category-control"),
   categoryChips: document.querySelector("#category-chips"),
@@ -70,7 +79,8 @@ const elements = {
   extra: document.querySelector("#article-extra"),
   body: document.querySelector("#article-body"),
   publishStatus: document.querySelector("#publish-status"),
-  folderOptions: document.querySelector("#folder-options"),
+  folderControl: document.querySelector("#folder-control"),
+  folderMenu: document.querySelector("#folder-menu"),
   imageUpload: document.querySelector("#image-upload"),
   deleteDialog: document.querySelector("#delete-dialog"),
   deleteDescription: document.querySelector("#delete-description"),
@@ -239,6 +249,26 @@ const githubRequest = async (path, options = {}) => {
 };
 
 const today = () => new Date().toISOString().slice(0, 10);
+
+const padDatePart = (value) => String(value).padStart(2, "0");
+
+const formatLocalDate = (date) =>
+  `${date.getFullYear()}-${padDatePart(date.getMonth() + 1)}-${padDatePart(date.getDate())}`;
+
+const parseDateValue = (value) => {
+  const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const getCalendarBaseDate = () => parseDateValue(elements.date.value) || new Date();
+
+const setCalendarMonthFromValue = () => {
+  const base = getCalendarBaseDate();
+  state.calendarMonth = new Date(base.getFullYear(), base.getMonth(), 1);
+};
 
 const getTheme = () => {
   try {
@@ -481,14 +511,7 @@ const refreshFolderOptions = () => {
   state.folders = [
     ...new Set(getEffectiveArticles().map((article) => article.folder).filter(Boolean)),
   ].sort((folderA, folderB) => folderA.localeCompare(folderB, "zh-CN"));
-
-  elements.folderOptions.replaceChildren(
-    ...state.folders.map((folder) => {
-      const option = document.createElement("option");
-      option.value = folder;
-      return option;
-    }),
-  );
+  renderFolderMenu();
 };
 
 const setMobileView = (view) => {
@@ -497,7 +520,10 @@ const setMobileView = (view) => {
   }
 };
 
-const getChangeCount = () => state.drafts.size;
+const getChangeCount = () => {
+  const currentHasDraft = state.currentId && state.drafts.has(state.currentId);
+  return state.drafts.size + (state.isDirty && !currentHasDraft ? 1 : 0);
+};
 
 const updatePublishButton = () => {
   if (elements.publishAll.dataset.busy === "true") return;
@@ -520,6 +546,12 @@ const refreshAfterDraftChange = () => {
 };
 
 const setDraftStatus = (article) => {
+  if (state.isDirty && !article?.isDelete) {
+    elements.draftStatus.textContent = "未保存";
+    elements.draftStatus.className = "draft-status is-unsaved";
+    return;
+  }
+
   if (!article?.isDraft) {
     elements.draftStatus.textContent = "已同步";
     elements.draftStatus.className = "draft-status";
@@ -540,6 +572,8 @@ const setEditorDisabled = (disabled) => {
   editableFields.forEach((field) => {
     field.disabled = disabled;
   });
+  elements.saveDraft.disabled = disabled;
+  elements.datePicker.disabled = disabled;
   document.querySelectorAll(".multi-chip-remove").forEach((button) => {
     button.disabled = disabled;
   });
@@ -555,7 +589,7 @@ const updateEditorChrome = () => {
     : article.isNew
       ? "新文章"
       : "编辑文章";
-  elements.filePath.textContent = article.path;
+  elements.filePath.textContent = article.path || "选择目录和标题后生成文件路径";
   elements.deleteArticle.hidden = !isExisting || article.isDelete;
   elements.undoDelete.hidden = !article.isDelete;
   elements.deleteBanner.hidden = !article.isDelete;
@@ -680,11 +714,161 @@ const removeMetaValue = (kind, value) => {
   scheduleCurrentDraftSave();
 };
 
+const renderFolderMenu = () => {
+  const canEdit = getCurrentArticle()?.isNew && !getCurrentArticle()?.isDelete;
+  const query = normaliseFolder(elements.folder.value);
+  const availableFolders = state.folders.filter((folder) =>
+    !query || folder.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+  );
+  const hasExactMatch = state.folders.some(
+    (folder) => folder.toLocaleLowerCase() === query.toLocaleLowerCase(),
+  );
+
+  elements.folderMenu.replaceChildren(
+    ...availableFolders.map((folder) => {
+      const option = document.createElement("button");
+      const text = document.createElement("span");
+      const meta = document.createElement("span");
+
+      option.type = "button";
+      option.className = "multi-option";
+      option.dataset.folderSelect = folder;
+      text.textContent = folder;
+      meta.className = "multi-option-meta";
+      meta.textContent = "选择";
+      option.append(text, meta);
+      return option;
+    }),
+  );
+
+  if (query && !hasExactMatch) {
+    const create = document.createElement("button");
+    const text = document.createElement("span");
+    const meta = document.createElement("span");
+
+    create.type = "button";
+    create.className = "multi-option is-add";
+    create.dataset.folderAdd = query;
+    text.textContent = `新建 "${query}"`;
+    meta.className = "multi-option-meta";
+    meta.textContent = "目录";
+    create.append(text, meta);
+    elements.folderMenu.append(create);
+  }
+
+  elements.folderMenu.hidden = !state.folderMenuOpen || !canEdit;
+};
+
+const openFolderMenu = () => {
+  const current = getCurrentArticle();
+  if (!current?.isNew || current.isDelete || elements.folder.disabled) return;
+
+  state.folderMenuOpen = true;
+  renderFolderMenu();
+};
+
+const selectFolder = (value) => {
+  if (!getCurrentArticle()?.isNew) return;
+
+  elements.folder.value = normaliseFolder(value);
+  state.folderMenuOpen = false;
+  renderFolderMenu();
+  scheduleCurrentDraftSave();
+  elements.folder.focus();
+};
+
+const renderDateMenu = () => {
+  const selectedValue = elements.date.value;
+  const selectedDate = parseDateValue(selectedValue);
+  const month = state.calendarMonth;
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const firstDay = new Date(year, monthIndex, 1);
+  const firstWeekday = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  const todayValue = formatLocalDate(new Date());
+  const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
+
+  const header = document.createElement("div");
+  const prev = document.createElement("button");
+  const title = document.createElement("strong");
+  const next = document.createElement("button");
+  const weekRow = document.createElement("div");
+  const grid = document.createElement("div");
+
+  header.className = "date-menu-header";
+  prev.type = "button";
+  prev.className = "date-nav-button";
+  prev.dataset.datePrev = "true";
+  prev.setAttribute("aria-label", "上个月");
+  prev.textContent = "‹";
+  title.textContent = `${year} 年 ${monthIndex + 1} 月`;
+  next.type = "button";
+  next.className = "date-nav-button";
+  next.dataset.dateNext = "true";
+  next.setAttribute("aria-label", "下个月");
+  next.textContent = "›";
+  header.append(prev, title, next);
+
+  weekRow.className = "date-weekdays";
+  weekdays.forEach((weekday) => {
+    const item = document.createElement("span");
+    item.textContent = weekday;
+    weekRow.append(item);
+  });
+
+  grid.className = "date-grid";
+  for (let index = 0; index < firstWeekday; index += 1) {
+    const empty = document.createElement("span");
+    empty.className = "date-empty";
+    grid.append(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const value = formatLocalDate(new Date(year, monthIndex, day));
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "date-day";
+    button.dataset.dateSelect = value;
+    button.textContent = String(day);
+    if (value === todayValue) button.classList.add("is-today");
+    if (selectedDate && value === selectedValue) button.classList.add("is-selected");
+    grid.append(button);
+  }
+
+  elements.dateMenu.replaceChildren(header, weekRow, grid);
+  elements.dateMenu.hidden = !state.dateMenuOpen || getCurrentArticle()?.isDelete;
+};
+
+const openDateMenu = () => {
+  if (getCurrentArticle()?.isDelete || elements.date.disabled) return;
+  setCalendarMonthFromValue();
+  state.dateMenuOpen = true;
+  renderDateMenu();
+};
+
+const changeCalendarMonth = (offset) => {
+  state.calendarMonth = new Date(
+    state.calendarMonth.getFullYear(),
+    state.calendarMonth.getMonth() + offset,
+    1,
+  );
+  renderDateMenu();
+};
+
+const selectDate = (value) => {
+  elements.date.value = value;
+  state.dateMenuOpen = false;
+  renderDateMenu();
+  scheduleCurrentDraftSave();
+};
+
 const fillEditor = (article) => {
   state.isHydrating = true;
   state.currentId = article.id;
   elements.date.value = article.date || today();
-  elements.folder.value = article.folder || state.folders[0] || "otherlearning";
+  setCalendarMonthFromValue();
+  elements.folder.value = article.isNew ? article.folder : article.folder || state.folders[0] || "";
   elements.folder.readOnly = !article.isNew;
   elements.folder.title = article.isNew ? "" : "已有文章保留原有文件路径";
   setSelectedMetaValues("category", article.categories || []);
@@ -692,7 +876,11 @@ const fillEditor = (article) => {
   elements.extra.value = article.extra || "";
   elements.body.value = article.body || "";
   state.openMulti = "";
+  state.folderMenuOpen = false;
+  state.dateMenuOpen = false;
   renderMultiSelects();
+  renderFolderMenu();
+  renderDateMenu();
   updateEditorChrome();
   state.isHydrating = false;
 };
@@ -833,7 +1021,7 @@ const renderArticleList = () => {
       title.className = "article-item-title";
       title.textContent = article.title || articleLabel(article.path);
       path.className = "article-item-path";
-      path.textContent = article.folder || article.path.replace(POSTS_ROOT, "");
+      path.textContent = article.folder || article.path.replace(POSTS_ROOT, "") || "未选择目录";
       button.append(title, path);
 
       if (status) {
@@ -904,6 +1092,11 @@ const loadArticleIndex = async () => {
 };
 
 const loadArticle = (id) => {
+  window.clearTimeout(state.saveTimer);
+  state.saveTimer = 0;
+  state.isDirty = false;
+  state.folderMenuOpen = false;
+  state.dateMenuOpen = false;
   state.currentId = id;
   showLoadingEditor();
 
@@ -923,21 +1116,51 @@ const loadArticle = (id) => {
   }, 120);
 };
 
+const getEditorValidationError = () => {
+  if (!parseDateValue(elements.date.value)) return "请选择有效日期。";
+  if (!normaliseFolder(elements.folder.value)) return "请先选择存放目录。";
+  if (!extractTitle(elements.body.value)) {
+    return "请在正文中添加一级标题，例如 # 文章标题。";
+  }
+  return "";
+};
+
+const getDraftValidationError = (draft) => {
+  if (draft.type === "delete") return "";
+
+  const parsed = parseArticle(draft.source || "");
+  const title = parsed.title || "未命名文章";
+  if (!normaliseFolder(getFolderFromPath(draft.path))) {
+    return `“${title}”尚未选择存放目录。`;
+  }
+  if (!parsed.title) {
+    return `“${title}”缺少一级标题。`;
+  }
+  return "";
+};
+
+const getPublishValidationError = () => {
+  const draftError = [...state.drafts.values()]
+    .filter((draft) => draft.id !== state.currentId || !state.isDirty)
+    .map(getDraftValidationError)
+    .find(Boolean);
+  if (draftError) return draftError;
+
+  if (state.isDirty) return getEditorValidationError();
+  return "";
+};
+
 const createDraftFromEditor = () => {
+  const validationError = getEditorValidationError();
+  if (validationError) {
+    setStatus(elements.publishStatus, validationError, "error");
+    return null;
+  }
+
   const source = articleSourceFromEditor();
   const parsed = parseArticle(source);
   const title = parsed.title;
   const folder = normaliseFolder(elements.folder.value);
-
-  if (!folder) {
-    setStatus(elements.publishStatus, "请先填写存放目录。", "error");
-    return null;
-  }
-
-  if (!title) {
-    setStatus(elements.publishStatus, "请在正文中添加一级标题，例如 # 文章标题。", "error");
-    return null;
-  }
 
   const current = getCurrentArticle();
   const remote = current?.isNew ? null : getRemoteById(state.currentId);
@@ -964,34 +1187,81 @@ const createDraftFromEditor = () => {
   return { unchanged: false, draft };
 };
 
-const saveCurrentDraftNow = async () => {
-  if (state.isHydrating || !state.currentId || getCurrentArticle()?.isDelete) return;
+const saveCurrentDraftNow = async ({ reason = "manual", force = false } = {}) => {
+  if (state.isHydrating || !state.currentId || getCurrentArticle()?.isDelete) return true;
+  if (!state.isDirty && !force) return true;
+
+  window.clearTimeout(state.saveTimer);
+  state.saveTimer = 0;
+  elements.draftStatus.textContent = "正在保存";
+  elements.draftStatus.className = "draft-status is-unsaved";
 
   const result = createDraftFromEditor();
-  if (!result) return;
+  if (!result) return false;
 
   if (result.unchanged) {
     await removeDraftRecord(result.draft.id);
     elements.draftStatus.textContent = "已同步";
-    return;
+    elements.draftStatus.className = "draft-status";
+    state.isDirty = false;
+    updatePublishButton();
+    return true;
   }
 
   await saveDraftRecord(result.draft);
   state.currentId = result.draft.id;
   elements.filePath.textContent = result.draft.path;
-  elements.draftStatus.textContent = "已自动保存";
+  elements.draftStatus.textContent = reason === "auto" ? "已自动保存" : "已保存";
+  elements.draftStatus.className = "draft-status is-draft";
+  state.isDirty = false;
+  updatePublishButton();
+  return true;
 };
 
 const scheduleCurrentDraftSave = () => {
   if (state.isHydrating || !state.currentId || getCurrentArticle()?.isDelete) return;
 
   window.clearTimeout(state.saveTimer);
-  elements.draftStatus.textContent = "保存中";
+  state.isDirty = true;
+  elements.draftStatus.textContent = "未保存";
+  elements.draftStatus.className = "draft-status is-unsaved";
+  updatePublishButton();
   state.saveTimer = window.setTimeout(() => {
-    saveCurrentDraftNow().catch((error) => {
-      showToast(`草稿保存失败：${error.message}`, "error", 5500);
-    });
-  }, 400);
+    const validationError = getEditorValidationError();
+    if (validationError) {
+      setStatus(elements.publishStatus, validationError, "error");
+      showToast(`自动保存未执行：${validationError}`, "error", 5200);
+      return;
+    }
+
+    saveCurrentDraftNow({ reason: "auto" })
+      .catch((error) => showToast(`草稿保存失败：${error.message}`, "error", 5500));
+  }, AUTO_SAVE_DELAY);
+};
+
+const saveBeforeLeavingCurrentArticle = async () => {
+  const current = getCurrentArticle();
+  const validationError = getEditorValidationError();
+  if ((state.isDirty || current?.isNew) && validationError) {
+    showToast(`${validationError} 请先完成文章或丢弃草稿。`, "error", 5200);
+    return false;
+  }
+
+  if (!state.isDirty) return true;
+
+  try {
+    const saved = await saveCurrentDraftNow({ reason: "switch" });
+    if (saved) {
+      showToast("当前文章已自动保存到本机。", "success", 2800);
+    }
+    if (!saved) {
+      showToast("请先补全文章的一级标题和存放目录，再切换文章。", "error", 5200);
+    }
+    return saved;
+  } catch (error) {
+    showToast(`草稿保存失败：${error.message}`, "error", 5500);
+    return false;
+  }
 };
 
 const beginNewArticle = async () => {
@@ -1008,7 +1278,7 @@ const beginNewArticle = async () => {
     id,
     type: "upsert",
     isNew: true,
-    path: getArticlePath("新文章", state.folders[0] || "otherlearning"),
+    path: "",
     basePath: "",
     baseSha: "",
     source,
@@ -1026,6 +1296,9 @@ const resetCurrentArticle = async () => {
   const current = getCurrentArticle();
   if (!current) return;
 
+  window.clearTimeout(state.saveTimer);
+  state.saveTimer = 0;
+  state.isDirty = false;
   await removeDraftRecord(current.id);
   if (current.isNew) {
     state.currentId = "";
@@ -1136,7 +1409,32 @@ const deleteFile = async ({ path, sha, message }) =>
   });
 
 const publishAllDrafts = async () => {
+  const validationError = getPublishValidationError();
+  if (validationError) {
+    showToast(`无法发布：${validationError}`, "error", 5600);
+    return;
+  }
+
+  if (state.isDirty) {
+    try {
+      const saved = await saveCurrentDraftNow({ reason: "publish" });
+      if (!saved) {
+        showToast("无法发布：请先完成当前文章的目录和一级标题。", "error", 5600);
+        return;
+      }
+    } catch (error) {
+      showToast(`草稿保存失败：${error.message}`, "error", 5500);
+      return;
+    }
+  }
+
   const drafts = [...state.drafts.values()].sort((draftA, draftB) => draftA.updatedAt - draftB.updatedAt);
+  const draftError = drafts.map(getDraftValidationError).find(Boolean);
+  if (draftError) {
+    showToast(`无法发布：${draftError}`, "error", 5600);
+    return;
+  }
+
   if (!drafts.length) return;
 
   elements.publishAll.dataset.busy = "true";
@@ -1222,6 +1520,8 @@ const signOut = () => {
   state.folders = [];
   state.expandedCategories.clear();
   state.openMulti = "";
+  state.folderMenuOpen = false;
+  state.dateMenuOpen = false;
   elements.token.value = "";
   elements.workspace.hidden = true;
   elements.accessView.hidden = false;
@@ -1293,9 +1593,30 @@ elements.tokenVisibility.addEventListener("click", () => {
 elements.themeToggle.addEventListener("click", toggleTheme);
 elements.signOut.addEventListener("click", signOut);
 elements.publishAll.addEventListener("click", publishAllDrafts);
-elements.newArticle.addEventListener("click", () => beginNewArticle().catch((error) => showToast(error.message, "error", 5000)));
-elements.emptyCreate.addEventListener("click", () => beginNewArticle().catch((error) => showToast(error.message, "error", 5000)));
-elements.mobileBack.addEventListener("click", showOverview);
+elements.newArticle.addEventListener("click", async () => {
+  if (!(await saveBeforeLeavingCurrentArticle())) return;
+  beginNewArticle().catch((error) => showToast(error.message, "error", 5000));
+});
+elements.emptyCreate.addEventListener("click", async () => {
+  if (!(await saveBeforeLeavingCurrentArticle())) return;
+  beginNewArticle().catch((error) => showToast(error.message, "error", 5000));
+});
+elements.mobileBack.addEventListener("click", async () => {
+  if (await saveBeforeLeavingCurrentArticle()) showOverview();
+});
+elements.saveDraft.addEventListener("click", async () => {
+  if (!state.isDirty) {
+    showToast("当前没有未保存的修改。", "success", 2600);
+    return;
+  }
+
+  try {
+    const saved = await saveCurrentDraftNow({ reason: "manual" });
+    if (saved) showToast("草稿已保存到本机。", "success", 3200);
+  } catch (error) {
+    showToast(`草稿保存失败：${error.message}`, "error", 5500);
+  }
+});
 elements.resetEditor.addEventListener("click", () => {
   resetCurrentArticle().catch((error) => showToast(`还原失败：${error.message}`, "error", 5000));
 });
@@ -1309,7 +1630,7 @@ elements.confirmDelete.addEventListener("click", () => {
     });
 });
 elements.articleSearch.addEventListener("input", renderArticleList);
-elements.articleList.addEventListener("click", (event) => {
+elements.articleList.addEventListener("click", async (event) => {
   const categoryToggle = event.target.closest("[data-category]");
   const articleButton = event.target.closest("[data-id]");
 
@@ -1324,7 +1645,16 @@ elements.articleList.addEventListener("click", (event) => {
     return;
   }
 
-  if (articleButton) loadArticle(articleButton.dataset.id);
+  if (!articleButton) return;
+
+  if (articleButton.dataset.id === state.currentId) {
+    if (isMobile() && elements.workspace.dataset.mobileView === "library") {
+      showEditor();
+    }
+    return;
+  }
+
+  if (await saveBeforeLeavingCurrentArticle()) loadArticle(articleButton.dataset.id);
 });
 elements.imageUpload.addEventListener("change", () => {
   uploadImage(elements.imageUpload.files[0]).catch((error) =>
@@ -1335,8 +1665,30 @@ document.querySelectorAll("[data-wrap]").forEach((button) => {
   button.addEventListener("click", () => wrapSelection(button.dataset.wrap));
 });
 
-[elements.date, elements.folder, elements.extra, elements.body].forEach((field) => {
+[elements.extra, elements.body].forEach((field) => {
   field.addEventListener("input", scheduleCurrentDraftSave);
+});
+
+elements.dateControl.addEventListener("click", openDateMenu);
+elements.date.addEventListener("focus", openDateMenu);
+elements.date.addEventListener("input", () => {
+  const parsed = parseDateValue(elements.date.value);
+  if (parsed) setCalendarMonthFromValue();
+  renderDateMenu();
+  scheduleCurrentDraftSave();
+});
+elements.datePicker.addEventListener("click", openDateMenu);
+
+elements.folderControl.addEventListener("click", openFolderMenu);
+elements.folder.addEventListener("focus", openFolderMenu);
+elements.folder.addEventListener("input", () => {
+  openFolderMenu();
+  scheduleCurrentDraftSave();
+});
+elements.folder.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  selectFolder(elements.folder.value);
 });
 
 Object.entries(multiSelects).forEach(([kind, config]) => {
@@ -1354,6 +1706,11 @@ document.addEventListener("click", (event) => {
   const remove = event.target.closest("[data-multi-remove]");
   const select = event.target.closest("[data-multi-select]");
   const add = event.target.closest("[data-multi-add]");
+  const folderSelect = event.target.closest("[data-folder-select]");
+  const folderAdd = event.target.closest("[data-folder-add]");
+  const dateSelect = event.target.closest("[data-date-select]");
+  const datePrev = event.target.closest("[data-date-prev]");
+  const dateNext = event.target.closest("[data-date-next]");
 
   if (remove) {
     removeMetaValue(remove.dataset.multiRemove, remove.dataset.value);
@@ -1370,9 +1727,44 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (folderSelect) {
+    selectFolder(folderSelect.dataset.folderSelect);
+    return;
+  }
+
+  if (folderAdd) {
+    selectFolder(folderAdd.dataset.folderAdd);
+    return;
+  }
+
+  if (dateSelect) {
+    selectDate(dateSelect.dataset.dateSelect);
+    return;
+  }
+
+  if (datePrev) {
+    changeCalendarMonth(-1);
+    return;
+  }
+
+  if (dateNext) {
+    changeCalendarMonth(1);
+    return;
+  }
+
   if (!event.target.closest(".multi-field") && state.openMulti) {
     state.openMulti = "";
     renderMultiSelects();
+  }
+
+  if (!event.target.closest(".folder-field") && state.folderMenuOpen) {
+    state.folderMenuOpen = false;
+    renderFolderMenu();
+  }
+
+  if (!event.target.closest(".date-field") && state.dateMenuOpen) {
+    state.dateMenuOpen = false;
+    renderDateMenu();
   }
 });
 
