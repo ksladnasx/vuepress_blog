@@ -3,14 +3,13 @@
 一个基于 VuePress 2 的个人博客项目，支持文章分类、标签、时间线、全文搜索、评论、主题切换，以及静态化的文章管理后台。
 
 ## 项目预览
+### 博客前台展示
+
+<img src="./docs/.vuepress/public/uploads/font_express.png" alt="博客前台展示截图" style="width: 100%; max-width: 960px;" />
 
 ### 文章管理后台
 
 <img src="./docs/.vuepress/public/uploads/back_manage.png" alt="文章管理后台截图" style="width: 100%; max-width: 960px;" />
-
-### 博客前台展示
-
-<img src="./docs/.vuepress/public/uploads/font_express.png" alt="博客前台展示截图" style="width: 100%; max-width: 960px;" />
 
 ## 主要功能
 
