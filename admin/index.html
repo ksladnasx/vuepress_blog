@@ -75,7 +75,7 @@
               aria-label="切换明暗主题"
               data-tooltip="切换主题"
             >
-              <span class="theme-glyph" aria-hidden="true"></span>
+              <svg class="icon-svg" id="theme-icon" viewBox="0 0 24 24" aria-hidden="true"></svg>
             </button>
             <button class="primary-button publish-all-button" id="publish-all" type="button" disabled>
               <span class="publish-glyph" aria-hidden="true"></span>
@@ -94,7 +94,11 @@
               aria-label="退出后台"
               data-tooltip="退出"
             >
-              <span class="exit-glyph" aria-hidden="true"></span>
+              <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="M16 17l5-5-5-5" />
+                <path d="M21 12H9" />
+              </svg>
             </button>
             <a
               class="icon-button"
@@ -102,7 +106,11 @@
               aria-label="返回博客首页"
               data-tooltip="返回首页"
             >
-              <span class="home-glyph" aria-hidden="true"></span>
+              <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8" />
+                <path d="M5 10v10h14V10" />
+                <path d="M9 20v-6h6v6" />
+              </svg>
             </a>
           </div>
         </header>

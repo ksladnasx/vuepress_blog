@@ -43,6 +43,7 @@ const elements = {
   accessLoading: document.querySelector("#access-loading"),
   accessLoadingText: document.querySelector("#access-loading-text"),
   themeToggle: document.querySelector("#theme-toggle"),
+  themeIcon: document.querySelector("#theme-icon"),
   accountName: document.querySelector("#account-name"),
   signOut: document.querySelector("#sign-out"),
   publishAll: document.querySelector("#publish-all"),
@@ -301,8 +302,37 @@ const clearStoredToken = () => {
   } catch {}
 };
 
+const setThemeIcon = (theme) => {
+  const paths = theme === "dark"
+    ? [
+        "M12 3a6.6 6.6 0 0 0 9 9 9 9 0 1 1-9-9Z",
+        "M19 3v4",
+        "M21 5h-4",
+      ]
+    : [
+        "M12 1v2",
+        "M12 21v2",
+        "M4.22 4.22l1.42 1.42",
+        "M18.36 18.36l1.42 1.42",
+        "M1 12h2",
+        "M21 12h2",
+        "M4.22 19.78l1.42-1.42",
+        "M18.36 5.64l1.42-1.42",
+        "M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z",
+      ];
+
+  elements.themeIcon.replaceChildren(
+    ...paths.map((pathData) => {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", pathData);
+      return path;
+    }),
+  );
+};
+
 const applyTheme = (theme, persist = false) => {
   document.documentElement.dataset.theme = theme;
+  setThemeIcon(theme);
   elements.themeToggle.setAttribute(
     "aria-label",
     theme === "dark" ? "切换到浅色主题" : "切换到深色主题",
