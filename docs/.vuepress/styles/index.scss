@@ -1678,6 +1678,18 @@ html[data-reading-bg="black"] {
   box-shadow: var(--xh-shadow-soft);
 }
 
+.medium-zoom-image--opened,
+.medium-zoom-image--opened[style] {
+  margin: 0 !important;
+  zoom: 1 !important;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.medium-zoom-overlay ~ img.medium-zoom-image--opened {
+  display: block !important;
+}
+
 .theme-default-content hr {
   border: 0;
   border-top: 1px solid var(--vp-c-border);
