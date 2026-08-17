@@ -4,6 +4,7 @@ import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import { RouteLink, useRoutePath } from 'vuepress/client'
 import ArticleList from '../components/ArticleList.vue'
 import FontSwitcher from '../components/FontSwitcher.vue'
+import ReadingBackgroundSwitcher from '../components/ReadingBackgroundSwitcher.vue'
 
 const tagMap = useBlogCategory('tag')
 const routePath = useRoutePath()
@@ -13,6 +14,7 @@ const routePath = useRoutePath()
   <ParentLayout>
     <template #navbar-after>
       <FontSwitcher />
+      <ReadingBackgroundSwitcher />
     </template>
 
     <template #page>

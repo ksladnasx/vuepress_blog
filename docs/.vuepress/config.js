@@ -284,7 +284,6 @@ const restoreBackgroundScript = `\
 const restoreReadingBackgroundScript = `\
 (() => {
   const storageKey = "xh-reading-background";
-  const colorSchemeKey = "vuepress-color-scheme";
   const allowedBackgrounds = [
     "default",
     "paper",
@@ -297,28 +296,16 @@ const restoreReadingBackgroundScript = `\
     "graphite",
     "black",
   ];
-  const lightBackgrounds = ["paper", "green", "pearl", "linen"];
-  const darkBackgrounds = ["dusk", "ink", "midnight", "graphite", "black"];
-
-  const setColorScheme = (scheme) => {
-    document.documentElement.dataset.theme = scheme;
-
-    try {
-      localStorage.setItem(colorSchemeKey, scheme);
-    } catch {}
-  };
+  const isReadingPage =
+    location.pathname.startsWith("/posts/") &&
+    location.pathname.replace(/^\\/posts\\/?/, "").replace(/\\/$/, "").length > 0;
 
   try {
     const saved = localStorage.getItem(storageKey) || "default";
     const next = allowedBackgrounds.includes(saved) ? saved : "default";
 
-    document.documentElement.dataset.readingBg = next;
+    document.documentElement.dataset.readingBg = isReadingPage ? next : "default";
 
-    if (darkBackgrounds.includes(next)) {
-      setColorScheme("dark");
-    } else if (lightBackgrounds.includes(next)) {
-      setColorScheme("light");
-    }
   } catch {
     document.documentElement.dataset.readingBg = "default";
   }

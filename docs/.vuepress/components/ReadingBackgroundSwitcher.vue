@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
 
 const STORAGE_KEY = "xh-reading-background";
-const BRIGHTNESS_KEY = "xh-reading-brightness";
+const BRIGHTNESS_KEY = "xh-page-brightness";
 const COLOR_SCHEME_KEY = "vuepress-color-scheme";
 const PANEL_EVENT = "xh-settings-panel-open";
 const PANEL_NAME = "reading-background";
@@ -24,6 +24,10 @@ const backgrounds = [
   { key: "black", label: "极黑", name: "OLED 纯黑", scheme: "dark" },
 ];
 
+const props = defineProps({
+  isReadingPage: Boolean,
+});
+
 const isOpen = ref(false);
 const panelRef = ref(null);
 const currentKey = ref(backgrounds[0].key);
@@ -37,6 +41,15 @@ const currentBackground = computed(
     backgrounds.find((background) => background.key === currentKey.value) ??
     backgrounds[0],
 );
+
+const currentModeLabel = computed(() => (isDarkMode.value ? "暗色" : "亮色"));
+const currentColorMode = computed(() => (isDarkMode.value ? "dark" : "light"));
+const triggerLabel = computed(() =>
+  props.isReadingPage ? currentBackground.value.label : currentModeLabel.value,
+);
+const backgroundmeta = computed(()=>{
+   return props.isReadingPage ? "阅读背景" : "当前主题"
+})
 
 const normalizeKey = (key) =>
   backgrounds.some((background) => background.key === key)
@@ -60,9 +73,19 @@ const applyBrightness = (value) => {
   brightness.value = nextBrightness;
 
   if (typeof document !== "undefined") {
+    const overlayColor = nextBrightness > 100 ? "255 255 255" : "0 0 0";
+    const overlayOpacity =
+      nextBrightness === DEFAULT_BRIGHTNESS
+        ? 0
+        : Math.abs(nextBrightness - DEFAULT_BRIGHTNESS) / 100;
+
     document.documentElement.style.setProperty(
-      "--xh-reading-brightness",
-      String(nextBrightness / 100),
+      "--xh-page-brightness-overlay-color",
+      overlayColor,
+    );
+    document.documentElement.style.setProperty(
+      "--xh-page-brightness-overlay-opacity",
+      String(overlayOpacity),
     );
   }
 
@@ -125,6 +148,12 @@ const isCompatibleWithCurrentMode = (key) => {
   return scheme === (isDarkMode.value ? "dark" : "light");
 };
 
+const clearReadingBackground = () => {
+  if (typeof document !== "undefined") {
+    document.documentElement.dataset.readingBg = backgrounds[0].key;
+  }
+};
+
 const applyBackground = (
   key,
   { syncColorMode = true, notifyModeSwitch = false } = {},
@@ -159,7 +188,10 @@ const chooseBackground = (key) => {
 };
 
 const resetBackground = () => {
-  applyBackground(backgrounds[0].key);
+  if (props.isReadingPage) {
+    applyBackground(backgrounds[0].key);
+  }
+
   resetBrightness();
 };
 
@@ -205,10 +237,26 @@ const handleKeydown = (event) => {
 };
 
 watch(isDarkMode, () => {
-  if (!isCompatibleWithCurrentMode(currentKey.value)) {
+  if (props.isReadingPage && !isCompatibleWithCurrentMode(currentKey.value)) {
     applyBackground(backgrounds[0].key, { syncColorMode: false });
   }
 });
+
+watch(
+  () => props.isReadingPage,
+  (isReadingPage) => {
+    if (isReadingPage) {
+      applyBackground(
+        isCompatibleWithCurrentMode(currentKey.value)
+          ? currentKey.value
+          : backgrounds[0].key,
+        { syncColorMode: false },
+      );
+    } else {
+      clearReadingBackground();
+    }
+  },
+);
 
 onMounted(() => {
   let savedKey = backgrounds[0].key;
@@ -223,7 +271,16 @@ onMounted(() => {
     savedBrightness = DEFAULT_BRIGHTNESS;
   }
 
-  applyBackground(savedKey, { notifyModeSwitch: true });
+  if (props.isReadingPage) {
+    applyBackground(
+      isCompatibleWithCurrentMode(savedKey) ? savedKey : backgrounds[0].key,
+      { syncColorMode: false },
+    );
+  } else {
+    currentKey.value = normalizeKey(savedKey);
+    clearReadingBackground();
+  }
+
   applyBrightness(savedBrightness);
 
   document.addEventListener("click", handleDocumentClick);
@@ -243,46 +300,43 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="panelRef" class="reading-background">
-    <button
-      class="reading-background-trigger"
-      type="button"
-      :aria-expanded="isOpen"
-      aria-haspopup="dialog"
-      :aria-label="`阅读背景：${currentBackground.name}`"
-      :title="`阅读背景：${currentBackground.name}`"
-      @click.stop="togglePanel"
-    >
-      <span class="reading-mark" aria-hidden="true">阅</span>
-      <span class="reading-current">{{ currentBackground.label }}</span>
+    <button class="reading-background-trigger" type="button" :aria-expanded="isOpen" aria-haspopup="dialog"
+      :aria-label="`显示设置：${triggerLabel}`" :title="`${backgroundmeta}：${triggerLabel}`" @click.stop="togglePanel">
+      <span class="reading-mark" aria-hidden="true">显</span>
+      <span class="reading-current">{{ triggerLabel }}</span>
     </button>
 
-    <div
-      v-if="isOpen"
-      class="reading-background-panel"
-      role="dialog"
-      aria-label="阅读背景设置"
-    >
-      <div class="panel-head">
-        <span class="panel-title">阅读背景</span>
-        <button
-          class="close-button"
-          type="button"
-          aria-label="关闭阅读背景设置"
-          @click="closePanel"
-        >
+    <div v-if="isOpen" class="reading-background-panel" role="dialog" aria-label="显示设置">
+      <div class="panel-head panel-head-root">
+        <span class="panel-title panel-title-root">显示设置</span>
+        <button class="close-button" type="button" aria-label="关闭显示设置" @click="closePanel">
           ×
         </button>
       </div>
 
-      <div class="reading-options">
-        <button
-          v-for="background in backgrounds"
-          :key="background.key"
-          class="reading-option"
-          :class="[`theme-${background.key}`, { active: background.key === currentKey }]"
-          type="button"
-          @click="chooseBackground(background.key)"
-        >
+      <div class="panel-head panel-head-section">
+        <span class="panel-title panel-title-section">主题设置</span>
+      </div>
+
+      <div class="color-mode-options" aria-label="亮暗模式">
+        <button class="color-mode-option" :class="{ active: currentColorMode === 'light' }" type="button"
+          @click="setColorMode('light')">
+          亮色
+        </button>
+        <button class="color-mode-option" :class="{ active: currentColorMode === 'dark' }" type="button"
+          @click="setColorMode('dark')">
+          暗色
+        </button>
+      </div>
+
+      <div v-if="isReadingPage" class="panel-head">
+        <span class="panel-title panel-title-section">阅读背景</span>
+      </div>
+      <div v-if="isReadingPage" class="reading-options">
+
+        <button v-for="background in backgrounds" :key="background.key" class="reading-option"
+          :class="[`theme-${background.key}`, { active: background.key === currentKey }]" type="button"
+          @click="chooseBackground(background.key)">
           <span class="reading-swatch" aria-hidden="true" />
           <span>
             <span class="reading-label">{{ background.label }}</span>
@@ -296,16 +350,8 @@ onBeforeUnmount(() => {
           <span class="brightness-label">页面亮度</span>
           <span class="brightness-value">{{ brightness }}%</span>
         </div>
-        <input
-          class="brightness-slider"
-          type="range"
-          :min="MIN_BRIGHTNESS"
-          :max="MAX_BRIGHTNESS"
-          step="5"
-          :value="brightness"
-          aria-label="页面亮度"
-          @input="applyBrightness($event.target.value)"
-        />
+        <input class="brightness-slider" type="range" :min="MIN_BRIGHTNESS" :max="MAX_BRIGHTNESS" step="5"
+          :value="brightness" aria-label="页面亮度" @input="applyBrightness($event.target.value)" />
       </div>
 
       <button class="reset-button" type="button" @click="resetBackground">
@@ -314,12 +360,7 @@ onBeforeUnmount(() => {
     </div>
 
     <Transition name="reading-toast">
-      <div
-        v-if="modeToast"
-        class="reading-mode-toast"
-        role="status"
-        aria-live="polite"
-      >
+      <div v-if="modeToast" class="reading-mode-toast" role="status" aria-live="polite">
         {{ modeToast }}
       </div>
     </Transition>
@@ -382,7 +423,7 @@ onBeforeUnmount(() => {
   right: 0;
   z-index: 1000;
   box-sizing: border-box;
-  width: min(17rem, calc(100vw - 1.5rem));
+  width: min(18rem, calc(100vw - 1.5rem));
   padding: 0.72rem;
   border: 1px solid var(--vp-c-border);
   border-radius: 8px;
@@ -401,6 +442,29 @@ onBeforeUnmount(() => {
 .panel-title {
   font-size: 0.88rem;
   font-weight: 760;
+}
+
+.panel-head-root {
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--vp-c-border);
+}
+
+.panel-title-root {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.panel-head-section {
+  margin-top: 0.45rem;
+  margin-bottom: 0.42rem;
+}
+
+.panel-title-section {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--vp-c-text-mute);
 }
 
 .close-button {
@@ -422,6 +486,42 @@ onBeforeUnmount(() => {
 .close-button:hover {
   background: var(--vp-c-control);
   color: var(--vp-c-text);
+}
+
+.color-mode-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.42rem;
+  margin-bottom: 0.55rem;
+}
+
+.color-mode-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 7px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 720;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--vp-t-color),
+    border-color var(--vp-t-color),
+    color var(--vp-t-color),
+    transform var(--vp-t-transform);
+}
+
+.color-mode-option:hover,
+.color-mode-option.active {
+  border-color: var(--vp-c-accent);
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+  transform: translateY(-1px);
 }
 
 .reading-options {
@@ -626,8 +726,8 @@ onBeforeUnmount(() => {
   }
 
   .reading-background-trigger {
-    width: 2.35rem;
-    min-width: 2.35rem;
+    width: 2.15rem;
+    min-width: 2.15rem;
     padding: 0;
   }
 
@@ -637,25 +737,97 @@ onBeforeUnmount(() => {
 
   .reading-background-panel {
     position: fixed;
-    top: calc(var(--navbar-height) + 0.5rem);
-    right: 0.75rem;
+    top: calc(var(--navbar-height) + 0.4rem);
+    right: 0.6rem;
     left: auto;
-    width: min(17rem, calc(100vw - 1.5rem));
+    width: min(15.2rem, calc(100vw - 1.2rem));
+    padding: 0.58rem;
+  }
+
+  .panel-head-root {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.16rem;
+  }
+
+  .panel-title-root {
+    font-size: 0.9rem;
+  }
+
+  .panel-head-section {
+    margin-top: 0.34rem;
+    margin-bottom: 0.32rem;
+  }
+
+  .panel-title-section {
+    font-size: 0.72rem;
+  }
+
+  .color-mode-options {
+    gap: 0.32rem;
+    margin-bottom: 0.42rem;
+  }
+
+  .color-mode-option {
+    height: 1.78rem;
+    font-size: 0.74rem;
+  }
+
+  .reading-options {
+    gap: 0.32rem;
+  }
+
+  .reading-option {
+    min-height: 2.08rem;
+    padding: 0.28rem 0.34rem;
+    gap: 0.36rem;
+  }
+
+  .reading-swatch {
+    width: 1.38rem;
+    height: 1.38rem;
+  }
+
+  .reading-label {
+    font-size: 0.72rem;
+  }
+
+  .reading-name {
+    font-size: 0.58rem;
+  }
+
+  .reading-brightness-control {
+    margin-top: 0.45rem;
+    padding: 0.46rem 0.5rem;
+  }
+
+  .brightness-head {
+    margin-bottom: 0.28rem;
+  }
+
+  .brightness-label,
+  .brightness-value {
+    font-size: 0.68rem;
+  }
+
+  .reset-button {
+    height: 1.68rem;
+    margin-top: 0.45rem;
+    font-size: 0.72rem;
   }
 
   .reading-mode-toast {
-    right: 0.75rem;
-    left: 0.75rem;
+    right: 0.6rem;
+    left: 0.6rem;
     max-width: none;
-    padding: 0.66rem 0.78rem;
-    font-size: 0.78rem;
+    padding: 0.58rem 0.68rem;
+    font-size: 0.72rem;
   }
 }
 
 @media (max-width: 340px) {
   .reading-background-panel {
-    right: 0.55rem;
-    left: 0.55rem;
+    right: 0.45rem;
+    left: 0.45rem;
     width: auto;
   }
 }

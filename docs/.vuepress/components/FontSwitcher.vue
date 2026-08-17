@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
       :aria-expanded="isOpen"
       aria-haspopup="dialog"
       :aria-label="`字体设置，当前：${currentFont.name}`"
-      :title="`字体设置，当前：${currentFont.name}`"
+      :title="`当前字体：${currentFont.name}`"
       @click.stop="togglePanel"
     >
       <span class="font-mark" aria-hidden="true">Aa</span>

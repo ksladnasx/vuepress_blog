@@ -44,7 +44,8 @@
   --xh-reading-sidebar-bg: rgb(255 255 250 / 86%);
   --xh-reading-sidebar-border: rgb(47 125 99 / 18%);
   --xh-reading-sidebar-shadow: 10px 0 34px rgb(45 74 60 / 10%);
-  --xh-reading-brightness: 1;
+  --xh-page-brightness-overlay-color: 0 0 0;
+  --xh-page-brightness-overlay-opacity: 0;
   --xh-home-bg-desktop: url("https://i.ibb.co/JjyqpjsF/background0.png");
   --xh-home-bg-desktop-dark: url("https://i.ibb.co/tPPvk19J/background-dark0.jpg");
   --xh-home-bg-mobile: url("https://i.ibb.co/0pd3y8GQ/min-background0.jpg");
@@ -522,6 +523,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  background: rgb(var(--xh-page-brightness-overlay-color) / var(--xh-page-brightness-overlay-opacity));
+  transition: background-color 0.18s ease;
+}
+
 .vp-theme-container {
   min-height: 100vh;
   background: var(--xh-page-bg);
@@ -848,6 +859,10 @@ html[data-theme="dark"] .vp-theme-container:has(.vp-home) .vp-hero-description {
 .vp-navbar .vp-toggle-color-mode-button {
   width: 2.1rem;
   margin: 0 0 0 0.35rem;
+}
+
+.vp-navbar .vp-toggle-color-mode-button {
+  display: none !important;
 }
 
 .vp-navbar .slimsearch-button {
@@ -1222,9 +1237,14 @@ html[data-theme="dark"] .vp-navbar {
   .vp-navbar .font-settings-trigger {
     width: 1.3rem;
     min-width: 1.3rem;
-    height: 1.3rem;
+   height: 1.3rem;
   }
 }
+
+.vp-navbar .vp-toggle-color-mode-button {
+  display: none !important;
+}
+
 .vp-sidebar {
   border-right: 1px solid var(--vp-c-border);
   background: var(--xh-sidebar-bg) !important;
@@ -1757,18 +1777,6 @@ html[data-reading-bg="black"] {
 .vp-theme-container:has(.comment-wrapper) .vp-page,
 .vp-theme-container:has(.comment-wrapper) .page {
   background: var(--xh-reading-page-bg) !important;
-}
-
-.vp-theme-container:has(.comment-wrapper) .vp-sidebar,
-.vp-theme-container:has(.comment-wrapper) .xh-sidebar-collapse-button,
-.vp-theme-container:has(.comment-wrapper) .theme-default-content,
-.vp-theme-container:has(.comment-wrapper) [vp-content],
-.vp-theme-container:has(.comment-wrapper) .vp-page-meta,
-.vp-theme-container:has(.comment-wrapper) .vp-page-nav,
-.vp-theme-container:has(.comment-wrapper) .article-reading-links,
-.vp-theme-container:has(.comment-wrapper) .comment-wrapper {
-  filter: brightness(var(--xh-reading-brightness));
-  transition: filter 0.18s ease;
 }
 
 .vp-theme-container:has(.comment-wrapper) .vp-sidebar {

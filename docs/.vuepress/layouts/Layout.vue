@@ -4,7 +4,6 @@ import { useRoute } from "vuepress/client";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
 import { computed } from "vue";
 import FontSwitcher from "../components/FontSwitcher.vue";
-import BackgroundSwitcher from "../components/BackgroundSwitcher.vue";
 import ReadingBackgroundSwitcher from "../components/ReadingBackgroundSwitcher.vue";
 import CollapsibleSidebar from "../components/CollapsibleSidebar.vue";
 import ArticleReadingLinks from "../components/ArticleReadingLinks.vue";
@@ -34,8 +33,7 @@ const showComment = computed(() => {
         </span>
       </a>
       <FontSwitcher />
-      <ReadingBackgroundSwitcher v-if="showComment" />
-      <BackgroundSwitcher v-else />
+      <ReadingBackgroundSwitcher :is-reading-page="showComment" />
     </template>
 
     <template #sidebar>

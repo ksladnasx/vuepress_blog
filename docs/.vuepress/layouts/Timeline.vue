@@ -4,6 +4,7 @@ import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import { useRouter } from 'vuepress/client'
 import { computed, ref, watch } from 'vue'
 import FontSwitcher from '../components/FontSwitcher.vue'
+import ReadingBackgroundSwitcher from '../components/ReadingBackgroundSwitcher.vue'
 
 const router = useRouter()
 const timelines = useBlogType('timeline')
@@ -150,6 +151,7 @@ const cleanExcerpt = (excerpt) => {
   <ParentLayout>
     <template #navbar-after>
       <FontSwitcher />
+      <ReadingBackgroundSwitcher />
     </template>
 
     <template #page>

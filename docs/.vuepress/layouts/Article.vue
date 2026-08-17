@@ -3,6 +3,7 @@ import { useBlogType } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import ArticleList from '../components/ArticleList.vue'
 import FontSwitcher from '../components/FontSwitcher.vue'
+import ReadingBackgroundSwitcher from '../components/ReadingBackgroundSwitcher.vue'
 import { computed } from 'vue';
 const articles = useBlogType('article')
 
@@ -19,6 +20,7 @@ const kind = 'Article'
   <ParentLayout>
     <template #navbar-after>
       <FontSwitcher />
+      <ReadingBackgroundSwitcher />
     </template>
 
     <template #page>
