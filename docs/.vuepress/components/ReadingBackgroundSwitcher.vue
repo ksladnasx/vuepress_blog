@@ -3,9 +3,13 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
 
 const STORAGE_KEY = "xh-reading-background";
+const BRIGHTNESS_KEY = "xh-reading-brightness";
 const COLOR_SCHEME_KEY = "vuepress-color-scheme";
 const PANEL_EVENT = "xh-settings-panel-open";
 const PANEL_NAME = "reading-background";
+const DEFAULT_BRIGHTNESS = 100;
+const MIN_BRIGHTNESS = 60;
+const MAX_BRIGHTNESS = 120;
 
 const backgrounds = [
   { key: "default", label: "默认", name: "跟随主题", scheme: "auto" },
@@ -23,6 +27,7 @@ const backgrounds = [
 const isOpen = ref(false);
 const panelRef = ref(null);
 const currentKey = ref(backgrounds[0].key);
+const brightness = ref(DEFAULT_BRIGHTNESS);
 const modeToast = ref("");
 const isDarkMode = useDarkMode();
 let modeToastTimer = null;
@@ -38,9 +43,39 @@ const normalizeKey = (key) =>
     ? key
     : backgrounds[0].key;
 
+const normalizeBrightness = (value) => {
+  const nextValue = Number(value);
+
+  if (!Number.isFinite(nextValue)) return DEFAULT_BRIGHTNESS;
+
+  return Math.min(MAX_BRIGHTNESS, Math.max(MIN_BRIGHTNESS, nextValue));
+};
+
 const getScheme = (key) =>
   backgrounds.find((background) => background.key === normalizeKey(key))?.scheme ??
   backgrounds[0].scheme;
+
+const applyBrightness = (value) => {
+  const nextBrightness = normalizeBrightness(value);
+  brightness.value = nextBrightness;
+
+  if (typeof document !== "undefined") {
+    document.documentElement.style.setProperty(
+      "--xh-reading-brightness",
+      String(nextBrightness / 100),
+    );
+  }
+
+  try {
+    window.localStorage.setItem(BRIGHTNESS_KEY, String(nextBrightness));
+  } catch {
+    // Ignore storage errors in restricted browser modes.
+  }
+};
+
+const resetBrightness = () => {
+  applyBrightness(DEFAULT_BRIGHTNESS);
+};
 
 const clearModeToastTimer = () => {
   if (!modeToastTimer) return;
@@ -125,6 +160,7 @@ const chooseBackground = (key) => {
 
 const resetBackground = () => {
   applyBackground(backgrounds[0].key);
+  resetBrightness();
 };
 
 const notifyPanelOpen = () => {
@@ -176,14 +212,19 @@ watch(isDarkMode, () => {
 
 onMounted(() => {
   let savedKey = backgrounds[0].key;
+  let savedBrightness = DEFAULT_BRIGHTNESS;
 
   try {
     savedKey = window.localStorage.getItem(STORAGE_KEY) || savedKey;
+    savedBrightness =
+      window.localStorage.getItem(BRIGHTNESS_KEY) || savedBrightness;
   } catch {
     savedKey = backgrounds[0].key;
+    savedBrightness = DEFAULT_BRIGHTNESS;
   }
 
   applyBackground(savedKey, { notifyModeSwitch: true });
+  applyBrightness(savedBrightness);
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
@@ -248,6 +289,23 @@ onBeforeUnmount(() => {
             <span class="reading-name">{{ background.name }}</span>
           </span>
         </button>
+      </div>
+
+      <div class="reading-brightness-control">
+        <div class="brightness-head">
+          <span class="brightness-label">页面亮度</span>
+          <span class="brightness-value">{{ brightness }}%</span>
+        </div>
+        <input
+          class="brightness-slider"
+          type="range"
+          :min="MIN_BRIGHTNESS"
+          :max="MAX_BRIGHTNESS"
+          step="5"
+          :value="brightness"
+          aria-label="页面亮度"
+          @input="applyBrightness($event.target.value)"
+        />
       </div>
 
       <button class="reset-button" type="button" @click="resetBackground">
@@ -471,6 +529,45 @@ onBeforeUnmount(() => {
 
 .reading-option.active .reading-name {
   color: inherit;
+}
+
+.reading-brightness-control {
+  margin-top: 0.62rem;
+  padding: 0.58rem 0.62rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 7px;
+  background: var(--vp-c-bg);
+}
+
+.brightness-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.42rem;
+}
+
+.brightness-label,
+.brightness-value {
+  font-size: 0.76rem;
+  line-height: 1.25;
+}
+
+.brightness-label {
+  color: var(--vp-c-text);
+  font-weight: 720;
+}
+
+.brightness-value {
+  color: var(--vp-c-text-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.brightness-slider {
+  display: block;
+  width: 100%;
+  accent-color: var(--vp-c-accent);
+  cursor: pointer;
 }
 
 .reset-button {
