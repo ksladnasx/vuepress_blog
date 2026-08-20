@@ -485,7 +485,11 @@ const handleKeydown = (event) => {
 
 watch(isDarkMode, () => {
   if (props.isReadingPage && !isCompatibleWithCurrentMode(currentKey.value)) {
+    const incompatibleBackground = currentBackground.value;
     applyBackground(backgrounds[0].key, { syncColorMode: false });
+    showToast(
+      `“${incompatibleBackground.label}”不适配${currentModeLabel.value}模式，已切换为默认阅读背景。`,
+    );
   }
 });
 
