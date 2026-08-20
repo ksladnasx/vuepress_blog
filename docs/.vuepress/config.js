@@ -253,8 +253,9 @@ const restoreBackgroundScript = `\
 
     if (!saved || typeof saved !== "object") return;
 
-    const desktop = normalizeIndex(saved.desktop, getCount("desktop"));
-    const mobile = normalizeIndex(saved.mobile, getCount("mobile"));
+    const indexes = saved.indexes || saved;
+    const desktop = normalizeIndex(indexes.desktop, getCount("desktop"));
+    const mobile = normalizeIndex(indexes.mobile, getCount("mobile"));
     const root = document.documentElement;
 
     root.style.setProperty(
@@ -273,6 +274,24 @@ const restoreBackgroundScript = `\
       "--xh-home-bg-mobile-dark",
       toCssUrl(getUrl("mobile", "dark", mobile)),
     );
+
+    if (saved.mode === "random" && saved.random) {
+      const applyRandomWallpaper = (target, url) => {
+        if (typeof url !== "string" || !url) return;
+
+        const variables =
+          target === "mobile"
+            ? ["--xh-home-bg-mobile", "--xh-home-bg-mobile-dark"]
+            : ["--xh-home-bg-desktop", "--xh-home-bg-desktop-dark"];
+
+        variables.forEach((name) => {
+          root.style.setProperty(name, toCssUrl(url));
+        });
+      };
+
+      applyRandomWallpaper("desktop", saved.random.desktop);
+      applyRandomWallpaper("mobile", saved.random.mobile);
+    }
   } catch {
     try {
       localStorage.removeItem(storageKey);

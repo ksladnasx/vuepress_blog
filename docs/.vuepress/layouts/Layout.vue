@@ -11,6 +11,7 @@ import TextReader from "../components/TextReader.vue";
 
 const route = useRoute();
 const isDarkMode = useDarkMode();
+const isHomePage = computed(() => route.path === "/");
 
 // 仅在文章正文页显示评论区（路径以 /posts/ 开头且不是列表页）
 const showComment = computed(() => {
@@ -33,7 +34,10 @@ const showComment = computed(() => {
         </span>
       </a>
       <FontSwitcher />
-      <ReadingBackgroundSwitcher :is-reading-page="showComment" />
+      <ReadingBackgroundSwitcher
+        :is-reading-page="showComment"
+        :is-home-page="isHomePage"
+      />
     </template>
 
     <template #sidebar>

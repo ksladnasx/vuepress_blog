@@ -1,31 +1,41 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
+import {
+  getBackgroundCount,
+  getBackgroundUrl,
+  normalizeBackgroundIndex,
+} from "../backgrounds.js";
 
 const STORAGE_KEY = "xh-reading-background";
 const BRIGHTNESS_KEY = "xh-page-brightness";
 const COLOR_SCHEME_KEY = "vuepress-color-scheme";
+const HOME_WALLPAPER_KEY = "xh-background-settings";
 const PANEL_EVENT = "xh-settings-panel-open";
 const PANEL_NAME = "reading-background";
 const DEFAULT_BRIGHTNESS = 100;
 const MIN_BRIGHTNESS = 60;
 const MAX_BRIGHTNESS = 120;
+const MOBILE_QUERY = "(max-width: 719px)";
+const FIXED_WALLPAPER = "fixed";
+const RANDOM_WALLPAPER = "random";
 
 const backgrounds = [
-  { key: "default", label: "默认", name: "跟随主题", scheme: "auto" },
+  { key: "default", label: "默认", name: "跟随系统", scheme: "auto" },
   { key: "paper", label: "纸页", name: "暖白纸张", scheme: "light" },
-  { key: "green", label: "青雾", name: "护眼阅读", scheme: "light" },
-  { key: "pearl", label: "珠光", name: "柔亮清晨", scheme: "light" },
+  { key: "green", label: "青雾", name: "柔和护眼", scheme: "light" },
+  { key: "pearl", label: "珠光", name: "柔亮清餐", scheme: "light" },
   { key: "linen", label: "月白", name: "清亮书页", scheme: "light" },
-  { key: "dusk", label: "暮蓝", name: "低光夜读", scheme: "dark" },
-  { key: "ink", label: "墨色", name: "沉浸深读", scheme: "dark" },
-  { key: "midnight", label: "夜航", name: "深蓝低光", scheme: "dark" },
-  { key: "graphite", label: "石墨", name: "中性深灰", scheme: "dark" },
-  { key: "black", label: "极黑", name: "OLED 纯黑", scheme: "dark" },
+  { key: "dusk", label: "幕蓝", name: "低光哑蓝", scheme: "dark" },
+  { key: "ink", label: "墨色", name: "沉浸深度", scheme: "dark" },
+  { key: "midnight", label: "夜航", name: "深邃蓝光", scheme: "dark" },
+  { key: "graphite", label: "石墨灰", name: "中性深灰", scheme: "dark" },
+  { key: "black", label: "纯黑", name: "OLED纯黑", scheme: "dark" },
 ];
 
 const props = defineProps({
   isReadingPage: Boolean,
+  isHomePage: Boolean,
 });
 
 const isOpen = ref(false);
@@ -33,8 +43,24 @@ const panelRef = ref(null);
 const currentKey = ref(backgrounds[0].key);
 const brightness = ref(DEFAULT_BRIGHTNESS);
 const modeToast = ref("");
+const wallpaperMode = ref(FIXED_WALLPAPER);
+const isWallpaperModeMenuOpen = ref(false);
+const wallpaperIndexes = ref({
+  desktop: 0,
+  mobile: 0,
+});
+const randomWallpapers = ref({
+  desktop: "",
+  mobile: "",
+});
+const isWallpaperLoading = ref(false);
+const isMobileWallpaper = ref(false);
 const isDarkMode = useDarkMode();
+const wallpaperModeShellRef = ref(null);
+
 let modeToastTimer = null;
+let wallpaperMediaQuery = null;
+let wallpaperMediaHandler = null;
 
 const currentBackground = computed(
   () =>
@@ -47,9 +73,32 @@ const currentColorMode = computed(() => (isDarkMode.value ? "dark" : "light"));
 const triggerLabel = computed(() =>
   props.isReadingPage ? currentBackground.value.label : currentModeLabel.value,
 );
-const backgroundmeta = computed(()=>{
-   return props.isReadingPage ? "阅读背景" : "当前主题"
-})
+const backgroundMeta = computed(() =>
+  props.isReadingPage ? "当前阅读背景" : "当前主题配色",
+);
+const currentWallpaperTarget = computed(() =>
+  isMobileWallpaper.value ? "mobile" : "desktop",
+);
+const currentWallpaperModeLabel = computed(() =>
+  wallpaperMode.value === RANDOM_WALLPAPER
+    ? "随机壁纸"
+    : "固定壁纸",
+);
+const wallpaperSwitchLabel = computed(() =>
+  isWallpaperLoading.value ? "切换中...." : "切换壁纸",
+);
+const wallpaperModeOptions = [
+  {
+    value: FIXED_WALLPAPER,
+    label: "固定壁纸",
+    description: "使用固定本地壁纸资源",
+  },
+  {
+    value: RANDOM_WALLPAPER,
+    label: "随机壁纸",
+    description: "使用外部网络壁纸资源",
+  },
+];
 
 const normalizeKey = (key) =>
   backgrounds.some((background) => background.key === key)
@@ -62,6 +111,209 @@ const normalizeBrightness = (value) => {
   if (!Number.isFinite(nextValue)) return DEFAULT_BRIGHTNESS;
 
   return Math.min(MAX_BRIGHTNESS, Math.max(MIN_BRIGHTNESS, nextValue));
+};
+
+const normalizeWallpaperMode = (value) =>
+  value === RANDOM_WALLPAPER ? RANDOM_WALLPAPER : FIXED_WALLPAPER;
+
+const normalizeWallpaperIndexes = (value = {}) => ({
+  desktop: normalizeBackgroundIndex(
+    value.desktop,
+    getBackgroundCount("desktop"),
+  ),
+  mobile: normalizeBackgroundIndex(value.mobile, getBackgroundCount("mobile")),
+});
+
+const normalizeWallpaperSettings = (value = {}) => ({
+  mode: normalizeWallpaperMode(value.mode),
+  indexes: normalizeWallpaperIndexes(value.indexes || value),
+  random: {
+    desktop:
+      typeof value.random?.desktop === "string" ? value.random.desktop : "",
+    mobile: typeof value.random?.mobile === "string" ? value.random.mobile : "",
+  },
+});
+
+const toCssUrl = (url) =>
+  `url("${String(url).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+
+const getHomeWallpaperVariableNames = (target) =>
+  target === "mobile"
+    ? ["--xh-home-bg-mobile", "--xh-home-bg-mobile-dark"]
+    : ["--xh-home-bg-desktop", "--xh-home-bg-desktop-dark"];
+
+const applyWallpaperUrl = (target, url) => {
+  if (!url || typeof document === "undefined") return;
+
+  getHomeWallpaperVariableNames(target).forEach((name) => {
+    document.documentElement.style.setProperty(name, toCssUrl(url));
+  });
+};
+
+const applyFixedWallpapers = () => {
+  if (typeof document === "undefined") return;
+
+  const root = document.documentElement;
+  const desktopIndex = wallpaperIndexes.value.desktop;
+  const mobileIndex = wallpaperIndexes.value.mobile;
+
+  root.style.setProperty(
+    "--xh-home-bg-desktop",
+    toCssUrl(getBackgroundUrl("desktop", "light", desktopIndex)),
+  );
+  root.style.setProperty(
+    "--xh-home-bg-desktop-dark",
+    toCssUrl(getBackgroundUrl("desktop", "dark", desktopIndex)),
+  );
+  root.style.setProperty(
+    "--xh-home-bg-mobile",
+    toCssUrl(getBackgroundUrl("mobile", "light", mobileIndex)),
+  );
+  root.style.setProperty(
+    "--xh-home-bg-mobile-dark",
+    toCssUrl(getBackgroundUrl("mobile", "dark", mobileIndex)),
+  );
+};
+
+const createRandomWallpaperUrl = (target) => {
+  const max = target === "mobile" ? 2875 : 696;
+  const index = Math.floor(Math.random() * max) + 1;
+
+  return target === "mobile"
+    ? `https://eo-img.iloli.love/i/pe/img${index}.webp`
+    : `https://esa-img.loliapi.cn/i/pc/img${index}.webp`;
+};
+
+const applyHomeWallpapers = () => {
+  applyFixedWallpapers();
+
+  if (wallpaperMode.value !== RANDOM_WALLPAPER) return;
+
+  Object.entries(randomWallpapers.value).forEach(([target, url]) => {
+    applyWallpaperUrl(target, url);
+  });
+};
+
+const persistWallpaperSettings = () => {
+  try {
+    window.localStorage.setItem(
+      HOME_WALLPAPER_KEY,
+      JSON.stringify({
+        mode: wallpaperMode.value,
+        indexes: wallpaperIndexes.value,
+        random: randomWallpapers.value,
+      }),
+    );
+  } catch {
+    // Ignore storage errors.
+  }
+};
+
+const readWallpaperSettings = () => {
+  try {
+    const saved = JSON.parse(
+      window.localStorage.getItem(HOME_WALLPAPER_KEY) || "{}",
+    );
+    const settings = normalizeWallpaperSettings(saved);
+
+    wallpaperMode.value = settings.mode;
+    wallpaperIndexes.value = settings.indexes;
+    randomWallpapers.value = settings.random;
+  } catch {
+    wallpaperMode.value = FIXED_WALLPAPER;
+    wallpaperIndexes.value = normalizeWallpaperIndexes();
+    randomWallpapers.value = { desktop: "", mobile: "" };
+  }
+};
+
+const preloadWallpaper = (url) =>
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error("Wallpaper request failed"));
+    image.src = url;
+  });
+
+const showToast = (message) => {
+  clearModeToastTimer();
+  modeToast.value = message;
+  modeToastTimer = window.setTimeout(() => {
+    modeToast.value = "";
+    modeToastTimer = null;
+  }, 2800);
+};
+
+const clearModeToastTimer = () => {
+  if (!modeToastTimer) return;
+
+  window.clearTimeout(modeToastTimer);
+  modeToastTimer = null;
+};
+
+const closeWallpaperModeMenu = () => {
+  isWallpaperModeMenuOpen.value = false;
+};
+
+const restoreFixedWallpaper = (message) => {
+  wallpaperMode.value = FIXED_WALLPAPER;
+  applyFixedWallpapers();
+  persistWallpaperSettings();
+  showToast(message);
+};
+
+const switchHomeWallpaper = async () => {
+  if (isWallpaperLoading.value) return;
+
+  const target = currentWallpaperTarget.value;
+
+  if (wallpaperMode.value === FIXED_WALLPAPER) {
+    const count = getBackgroundCount(target);
+    wallpaperIndexes.value = {
+      ...wallpaperIndexes.value,
+      [target]: normalizeBackgroundIndex(
+        wallpaperIndexes.value[target] + 1,
+        count,
+      ),
+    };
+    applyFixedWallpapers();
+    persistWallpaperSettings();
+    return;
+  }
+
+  isWallpaperLoading.value = true;
+  const url = createRandomWallpaperUrl(target);
+
+  try {
+    await preloadWallpaper(url);
+    randomWallpapers.value = {
+      ...randomWallpapers.value,
+      [target]: url,
+    };
+    applyHomeWallpapers();
+    persistWallpaperSettings();
+  } catch {
+    restoreFixedWallpaper("Random wallpaper failed to load, switched back to fixed.");
+  } finally {
+    isWallpaperLoading.value = false;
+  }
+};
+
+const selectWallpaperMode = async (nextMode) => {
+  const nextModeValue = normalizeWallpaperMode(nextMode);
+  wallpaperMode.value = nextModeValue;
+  closeWallpaperModeMenu();
+
+  if (nextModeValue === FIXED_WALLPAPER) {
+    applyFixedWallpapers();
+    persistWallpaperSettings();
+    return;
+  }
+
+  await switchHomeWallpaper();
+};
+
+const toggleWallpaperModeMenu = () => {
+  isWallpaperModeMenuOpen.value = !isWallpaperModeMenuOpen.value;
 };
 
 const getScheme = (key) =>
@@ -92,7 +344,7 @@ const applyBrightness = (value) => {
   try {
     window.localStorage.setItem(BRIGHTNESS_KEY, String(nextBrightness));
   } catch {
-    // Ignore storage errors in restricted browser modes.
+    // Ignore storage errors.
   }
 };
 
@@ -100,22 +352,9 @@ const resetBrightness = () => {
   applyBrightness(DEFAULT_BRIGHTNESS);
 };
 
-const clearModeToastTimer = () => {
-  if (!modeToastTimer) return;
-
-  window.clearTimeout(modeToastTimer);
-  modeToastTimer = null;
-};
-
 const showModeToast = (scheme, backgroundName) => {
-  const modeName = scheme === "dark" ? "暗色" : "亮色";
-
-  clearModeToastTimer();
-  modeToast.value = `已自动切换为${modeName}模式，以适配「${backgroundName}」阅读背景`;
-  modeToastTimer = window.setTimeout(() => {
-    modeToast.value = "";
-    modeToastTimer = null;
-  }, 2800);
+  const modeName = scheme === "dark" ? "Dark" : "Light";
+  showToast(`Switched to ${modeName} mode for "${backgroundName}".`);
 };
 
 const setColorMode = (scheme, { notify = false, backgroundName = "" } = {}) => {
@@ -132,7 +371,7 @@ const setColorMode = (scheme, { notify = false, backgroundName = "" } = {}) => {
   try {
     window.localStorage.setItem(COLOR_SCHEME_KEY, scheme);
   } catch {
-    // Ignore storage errors in restricted browser modes.
+    // Ignore storage errors.
   }
 
   if (notify && hasModeChanged) {
@@ -142,9 +381,7 @@ const setColorMode = (scheme, { notify = false, backgroundName = "" } = {}) => {
 
 const isCompatibleWithCurrentMode = (key) => {
   const scheme = getScheme(key);
-
   if (scheme === "auto") return true;
-
   return scheme === (isDarkMode.value ? "dark" : "light");
 };
 
@@ -172,7 +409,7 @@ const applyBackground = (
   try {
     window.localStorage.setItem(STORAGE_KEY, nextKey);
   } catch {
-    // Ignore storage errors in restricted browser modes.
+    // Ignore storage errors.
   }
 
   if (syncColorMode) {
@@ -211,11 +448,14 @@ const togglePanel = () => {
 
   if (nextOpen) {
     notifyPanelOpen();
+  } else {
+    closeWallpaperModeMenu();
   }
 };
 
 const closePanel = () => {
   isOpen.value = false;
+  closeWallpaperModeMenu();
 };
 
 const handlePanelOpen = (event) => {
@@ -225,6 +465,13 @@ const handlePanelOpen = (event) => {
 };
 
 const handleDocumentClick = (event) => {
+  if (
+    isWallpaperModeMenuOpen.value &&
+    !wallpaperModeShellRef.value?.contains(event.target)
+  ) {
+    closeWallpaperModeMenu();
+  }
+
   if (!panelRef.value?.contains(event.target)) {
     closePanel();
   }
@@ -258,6 +505,15 @@ watch(
   },
 );
 
+watch(
+  () => props.isHomePage,
+  (isHomePage) => {
+    if (!isHomePage) return;
+
+    applyHomeWallpapers();
+  },
+);
+
 onMounted(() => {
   let savedKey = backgrounds[0].key;
   let savedBrightness = DEFAULT_BRIGHTNESS;
@@ -282,6 +538,44 @@ onMounted(() => {
   }
 
   applyBrightness(savedBrightness);
+  readWallpaperSettings();
+
+  wallpaperMediaQuery = window.matchMedia(MOBILE_QUERY);
+  isMobileWallpaper.value = wallpaperMediaQuery.matches;
+
+  wallpaperMediaHandler = (event) => {
+    isMobileWallpaper.value = event.matches;
+
+    if (wallpaperMode.value === RANDOM_WALLPAPER) {
+      const target = event.matches ? "mobile" : "desktop";
+
+      if (!randomWallpapers.value[target]) {
+        switchHomeWallpaper();
+        return;
+      }
+    }
+
+    applyHomeWallpapers();
+  };
+
+  wallpaperMediaQuery.addEventListener("change", wallpaperMediaHandler);
+
+  if (props.isHomePage) {
+    applyHomeWallpapers();
+
+    if (wallpaperMode.value === RANDOM_WALLPAPER) {
+      const target = currentWallpaperTarget.value;
+      const url = randomWallpapers.value[target];
+
+      if (url) {
+        preloadWallpaper(url).catch(() => {
+          restoreFixedWallpaper("Random wallpaper failed to load, switched back to fixed.");
+        });
+      } else {
+        switchHomeWallpaper();
+      }
+    }
+  }
 
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleKeydown);
@@ -292,6 +586,7 @@ onBeforeUnmount(() => {
   if (typeof document === "undefined") return;
 
   clearModeToastTimer();
+  wallpaperMediaQuery?.removeEventListener("change", wallpaperMediaHandler);
   document.removeEventListener("click", handleDocumentClick);
   document.removeEventListener("keydown", handleKeydown);
   document.removeEventListener(PANEL_EVENT, handlePanelOpen);
@@ -301,7 +596,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="panelRef" class="reading-background">
     <button class="reading-background-trigger" type="button" :aria-expanded="isOpen" aria-haspopup="dialog"
-      :aria-label="`显示设置：${triggerLabel}`" :title="`${backgroundmeta}：${triggerLabel}`" @click.stop="togglePanel">
+      :aria-label="`显示设置: ${triggerLabel}`" :title="`${backgroundMeta}: ${triggerLabel}`" @click.stop="togglePanel">
       <span class="reading-mark" aria-hidden="true">显</span>
       <span class="reading-current">{{ triggerLabel }}</span>
     </button>
@@ -309,16 +604,16 @@ onBeforeUnmount(() => {
     <div v-if="isOpen" class="reading-background-panel" role="dialog" aria-label="显示设置">
       <div class="panel-head panel-head-root">
         <span class="panel-title panel-title-root">显示设置</span>
-        <button class="close-button" type="button" aria-label="关闭显示设置" @click="closePanel">
-          ×
+        <button class="close-button" type="button" aria-label="Close 显示设置" @click="closePanel">
+          &times;
         </button>
       </div>
 
       <div class="panel-head panel-head-section">
-        <span class="panel-title panel-title-section">主题设置</span>
+        <span class="panel-title panel-title-section">主题切换</span>
       </div>
 
-      <div class="color-mode-options" aria-label="亮暗模式">
+      <div class="color-mode-options" aria-label="Light and dark mode">
         <button class="color-mode-option" :class="{ active: currentColorMode === 'light' }" type="button"
           @click="setColorMode('light')">
           亮色
@@ -329,11 +624,46 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
+      <div v-if="isHomePage" class="panel-head panel-head-section">
+        <span class="panel-title panel-title-section">首页壁纸</span>
+      </div>
+      <div v-if="isHomePage" class="wallpaper-control">
+        <div ref="wallpaperModeShellRef" class="wallpaper-mode-shell">
+          <button class="wallpaper-mode-button" type="button" aria-haspopup="menu"
+            :aria-expanded="isWallpaperModeMenuOpen" aria-label="Home wallpaper mode"
+            @click.stop="toggleWallpaperModeMenu">
+            <span class="wallpaper-mode-copy">
+              <span class="wallpaper-mode-label">{{ currentWallpaperModeLabel }}</span>
+            </span>
+            <svg class="wallpaper-mode-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none">
+              <path d="m4 6 4 4 4-4" />
+            </svg>
+          </button>
+          <Transition name="wallpaper-mode-menu">
+            <div v-if="isWallpaperModeMenuOpen" class="wallpaper-mode-menu" role="menu"
+              aria-label="Wallpaper source options">
+              <button v-for="option in wallpaperModeOptions" :key="option.value" class="wallpaper-mode-option"
+                :class="{ active: wallpaperMode === option.value }" type="button" role="menuitemradio"
+                :aria-checked="wallpaperMode === option.value" @click.stop="selectWallpaperMode(option.value)">
+                <span class="wallpaper-mode-option-dot" aria-hidden="true" />
+                <span class="wallpaper-mode-option-copy">
+                  <span class="wallpaper-mode-option-label">{{ option.label }}</span>
+                  <span class="wallpaper-mode-option-desc">{{ option.description }}</span>
+                </span>
+              </button>
+            </div>
+          </Transition>
+        </div>
+        <button class="wallpaper-switch-button" type="button" :disabled="isWallpaperLoading"
+          @click="switchHomeWallpaper">
+          {{ wallpaperSwitchLabel }}
+        </button>
+      </div>
+
       <div v-if="isReadingPage" class="panel-head">
         <span class="panel-title panel-title-section">阅读背景</span>
       </div>
       <div v-if="isReadingPage" class="reading-options">
-
         <button v-for="background in backgrounds" :key="background.key" class="reading-option"
           :class="[`theme-${background.key}`, { active: background.key === currentKey }]" type="button"
           @click="chooseBackground(background.key)">
@@ -351,7 +681,7 @@ onBeforeUnmount(() => {
           <span class="brightness-value">{{ brightness }}%</span>
         </div>
         <input class="brightness-slider" type="range" :min="MIN_BRIGHTNESS" :max="MAX_BRIGHTNESS" step="5"
-          :value="brightness" aria-label="页面亮度" @input="applyBrightness($event.target.value)" />
+          :value="brightness" aria-label="Page brightness" @input="applyBrightness($event.target.value)" />
       </div>
 
       <button class="reset-button" type="button" @click="resetBackground">
@@ -382,8 +712,8 @@ onBeforeUnmount(() => {
   justify-content: center;
   gap: 0.35rem;
   height: 2rem;
-  min-width: 4.1rem;
-  padding: 0 0.62rem;
+  min-width: 4.4rem;
+  padding: 0 0.65rem;
   border: 1px solid var(--vp-c-border);
   border-radius: 7px;
   background: var(--vp-c-control);
@@ -408,12 +738,12 @@ onBeforeUnmount(() => {
 }
 
 .reading-mark {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 800;
 }
 
 .reading-current {
-  min-width: 2rem;
+  min-width: 2.2rem;
   text-align: center;
 }
 
@@ -423,8 +753,8 @@ onBeforeUnmount(() => {
   right: 0;
   z-index: 1000;
   box-sizing: border-box;
-  width: min(18rem, calc(100vw - 1.5rem));
-  padding: 0.72rem;
+  width: min(19rem, calc(100vw - 1.5rem));
+  padding: 0.75rem;
   border: 1px solid var(--vp-c-border);
   border-radius: 8px;
   background: var(--vp-c-bg-elv);
@@ -453,7 +783,6 @@ onBeforeUnmount(() => {
 .panel-title-root {
   font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0;
 }
 
 .panel-head-section {
@@ -522,6 +851,225 @@ onBeforeUnmount(() => {
   background: var(--vp-c-accent-soft);
   color: var(--vp-c-accent);
   transform: translateY(-1px);
+}
+
+.wallpaper-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.wallpaper-mode-shell {
+  position: relative;
+  min-width: 0;
+}
+
+.wallpaper-mode-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.72rem;
+  width: 100%;
+  min-width: 0;
+  height: 2.2rem;
+  padding: 0 0.72rem 0 0.82rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--vp-c-bg) 0%, var(--vp-c-bg-soft) 100%);
+  color: var(--vp-c-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 720;
+  line-height: 1;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 30%);
+  transition:
+    background-color var(--vp-t-color),
+    border-color var(--vp-t-color),
+    color var(--vp-t-color),
+    transform var(--vp-t-transform);
+}
+
+.wallpaper-mode-button:hover,
+.wallpaper-mode-button[aria-expanded="true"] {
+  border-color: var(--vp-c-accent);
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+  transform: translateY(-1px);
+}
+
+.wallpaper-mode-button:focus-visible,
+.wallpaper-mode-option:focus-visible,
+.wallpaper-switch-button:focus-visible {
+  outline: 2px solid var(--vp-c-accent);
+  outline-offset: 2px;
+}
+
+.wallpaper-mode-caret {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
+  stroke: var(--vp-c-text-mute);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  pointer-events: none;
+}
+
+.wallpaper-mode-button[aria-expanded="true"] .wallpaper-mode-caret {
+  stroke: currentColor;
+  transform: rotate(180deg);
+}
+
+.wallpaper-mode-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+}
+
+.wallpaper-mode-label {
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 760;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wallpaper-mode-subtitle {
+  overflow: hidden;
+  color: var(--vp-c-text-mute);
+  font-size: 0.64rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wallpaper-mode-menu {
+  position: absolute;
+  top: calc(100% + 0.38rem);
+  right: 0;
+  left: 0;
+  z-index: 10;
+  padding: 0.28rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--vp-c-bg-elv) 96%, transparent);
+  box-shadow: 0 18px 42px var(--vp-c-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.wallpaper-mode-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.5rem 0.55rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--vp-c-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--vp-t-color),
+    color var(--vp-t-color),
+    transform var(--vp-t-transform);
+}
+
+.wallpaper-mode-option:hover,
+.wallpaper-mode-option.active {
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+  transform: translateY(-1px);
+}
+
+.wallpaper-mode-option-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-top: 0.18rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 999px;
+  background: var(--vp-c-bg);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 40%);
+}
+
+.wallpaper-mode-option.active .wallpaper-mode-option-dot {
+  border-color: var(--vp-c-accent);
+  background: var(--vp-c-accent);
+  box-shadow: 0 0 0 3px rgb(39 132 95 / 14%);
+}
+
+.wallpaper-mode-option-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.08rem;
+}
+
+.wallpaper-mode-option-label {
+  overflow: hidden;
+  font-size: 0.78rem;
+  font-weight: 760;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wallpaper-mode-option-desc {
+  overflow: hidden;
+  color: var(--vp-c-text-mute);
+  font-size: 0.62rem;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wallpaper-mode-menu-enter-active,
+.wallpaper-mode-menu-leave-active {
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+
+.wallpaper-mode-menu-enter-from,
+.wallpaper-mode-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-0.28rem);
+}
+
+.wallpaper-switch-button {
+  min-width: 5rem;
+  height: 2.2rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--vp-c-accent);
+  border-radius: 8px;
+  background: var(--vp-c-accent-soft);
+  color: var(--vp-c-accent);
+  font-weight: 760;
+  cursor: pointer;
+  transition:
+    background-color var(--vp-t-color),
+    border-color var(--vp-t-color),
+    color var(--vp-t-color),
+    transform var(--vp-t-transform),
+    box-shadow var(--vp-t-transform);
+}
+
+.wallpaper-switch-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vp-c-accent-soft) 78%, var(--vp-c-bg));
+  box-shadow: 0 10px 22px rgb(39 132 95 / 12%);
+  transform: translateY(-1px);
+}
+
+.wallpaper-switch-button:disabled {
+  cursor: wait;
+  opacity: 0.68;
 }
 
 .reading-options {
@@ -672,7 +1220,7 @@ onBeforeUnmount(() => {
 
 .reset-button {
   width: 100%;
-  height: 1.85rem;
+  height: 1.9rem;
   margin-top: 0.62rem;
   border: 1px solid var(--vp-c-border);
   border-radius: 6px;
@@ -740,8 +1288,8 @@ onBeforeUnmount(() => {
     top: calc(var(--navbar-height) + 0.4rem);
     right: 0.6rem;
     left: auto;
-    width: min(15.2rem, calc(100vw - 1.2rem));
-    padding: 0.58rem;
+    width: min(15.5rem, calc(100vw - 1.2rem));
+    padding: 0.6rem;
   }
 
   .panel-head-root {
@@ -770,6 +1318,55 @@ onBeforeUnmount(() => {
   .color-mode-option {
     height: 1.78rem;
     font-size: 0.74rem;
+  }
+
+  .wallpaper-control {
+    gap: 0.38rem;
+    margin-bottom: 0.42rem;
+  }
+
+  .wallpaper-mode-button {
+    height: 1.78rem;
+    padding: 0 0.56rem 0 0.64rem;
+    font-size: 0.74rem;
+  }
+
+  .wallpaper-mode-label {
+    font-size: 0.7rem;
+  }
+
+  .wallpaper-mode-subtitle {
+    display: none;
+  }
+
+  .wallpaper-mode-menu {
+    top: calc(100% + 0.3rem);
+    padding: 0.22rem;
+  }
+
+  .wallpaper-mode-option {
+    gap: 0.42rem;
+    padding: 0.44rem 0.48rem;
+  }
+
+  .wallpaper-mode-option-label {
+    font-size: 0.69rem;
+  }
+
+  .wallpaper-mode-option-desc {
+    font-size: 0.56rem;
+  }
+
+  .wallpaper-mode-caret {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .wallpaper-switch-button {
+    min-width: 4.6rem;
+    height: 1.78rem;
+    padding: 0 0.54rem;
+    font-size: 0.72rem;
   }
 
   .reading-options {
