@@ -26,7 +26,7 @@ const backgrounds = [
   { key: "green", label: "青雾", name: "柔和护眼", scheme: "light" },
   { key: "pearl", label: "珠光", name: "柔亮清餐", scheme: "light" },
   { key: "linen", label: "月白", name: "清亮书页", scheme: "light" },
-  { key: "dusk", label: "幕蓝", name: "低光哑蓝", scheme: "dark" },
+  { key: "dusk", label: "暮蓝", name: "低光哑蓝", scheme: "dark" },
   { key: "ink", label: "墨色", name: "沉浸深度", scheme: "dark" },
   { key: "midnight", label: "夜航", name: "深邃蓝光", scheme: "dark" },
   { key: "graphite", label: "石墨灰", name: "中性深灰", scheme: "dark" },
@@ -292,7 +292,7 @@ const switchHomeWallpaper = async () => {
     applyHomeWallpapers();
     persistWallpaperSettings();
   } catch {
-    restoreFixedWallpaper("Random wallpaper failed to load, switched back to fixed.");
+    restoreFixedWallpaper("随机壁纸请求失败，回退为固定壁纸。");
   } finally {
     isWallpaperLoading.value = false;
   }
@@ -353,8 +353,8 @@ const resetBrightness = () => {
 };
 
 const showModeToast = (scheme, backgroundName) => {
-  const modeName = scheme === "dark" ? "Dark" : "Light";
-  showToast(`Switched to ${modeName} mode for "${backgroundName}".`);
+  const modeName = scheme === "dark" ? "暗色" : "亮色";
+  showToast(`为适应"${backgroundName}"背景，已自动切换到 ${modeName} 主题 。`);
 };
 
 const setColorMode = (scheme, { notify = false, backgroundName = "" } = {}) => {
@@ -573,7 +573,7 @@ onMounted(() => {
 
       if (url) {
         preloadWallpaper(url).catch(() => {
-          restoreFixedWallpaper("Random wallpaper failed to load, switched back to fixed.");
+          restoreFixedWallpaper("随机壁纸请求失败，回退为固定壁纸。");
         });
       } else {
         switchHomeWallpaper();
