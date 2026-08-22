@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.20" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const useChoice = localStorage.getItem('vuepress-color-scheme')
+      const systemStatus =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (useChoice === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (useChoice === 'dark' || systemStatus) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <link rel="preconnect" href="https://i.ibb.co"><link rel="dns-prefetch" href="https://i.ibb.co"><script>(() => {
+  const storageKey = "xh-background-settings";
+  const backgroundGroups = {"desktop":{"light":["https://i.ibb.co/BhYnT7b/background0.webp","https://i.ibb.co/qY25pDdr/background1.webp","https://i.ibb.co/21mFb6VD/background2.webp"],"dark":["https://i.ibb.co/WvzTXWn0/background-dark0.webp","https://i.ibb.co/mVs517MG/background-dark1.webp","https://i.ibb.co/zVp6zf6V/background-dark2.webp"]},"mobile":{"light":["https://i.ibb.co/SXSvfMv6/min-background0.webp","https://i.ibb.co/RTQMH3zH/min-background1.webp","https://i.ibb.co/j9V9WfCL/min-background2.webp","https://i.ibb.co/xt6yG8pq/minbcg3.webp"],"dark":["https://i.ibb.co/8DtF8DM5/min-background-dark0.webp","https://i.ibb.co/rfqgsxTC/min-background-dark1.webp","https://i.ibb.co/8LgkC8YF/min-background2-dark.webp","https://i.ibb.co/dsTTc50T/minbcgdark3.webp"]}};
+  const toCssUrl = (url) =>
+    `url("${String(url).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+  const normalizeIndex = (value, count) => {
+    if (!count || !Number.isInteger(value)) return 0;
+    return ((value % count) + count) % count;
+  };
+  const getCount = (mode) => {
+    const group = backgroundGroups[mode] || backgroundGroups.desktop;
+
+    return Math.max(group.light.length, group.dark.length);
+  };
+  const getUrl = (mode, theme, index) => {
+    const group = backgroundGroups[mode] || backgroundGroups.desktop;
+    const primaryList = group[theme] || group.light;
+    const fallbackList = theme === "dark" ? group.light : group.dark;
+    const normalizedIndex = normalizeIndex(
+      index,
+      Math.max(primaryList.length, fallbackList.length),
+    );
+
+    return (
+      primaryList[normalizedIndex] ||
+      fallbackList[normalizedIndex] ||
+      primaryList[0] ||
+      fallbackList[0] ||
+      ""
+    );
+  };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+
+    if (!saved || typeof saved !== "object") return;
+
+    const indexes = saved.indexes || saved;
+    const desktop = normalizeIndex(indexes.desktop, getCount("desktop"));
+    const mobile = normalizeIndex(indexes.mobile, getCount("mobile"));
+    const root = document.documentElement;
+
+    root.style.setProperty(
+      "--xh-home-bg-desktop",
+      toCssUrl(getUrl("desktop", "light", desktop)),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-desktop-dark",
+      toCssUrl(getUrl("desktop", "dark", desktop)),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-mobile",
+      toCssUrl(getUrl("mobile", "light", mobile)),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-mobile-dark",
+      toCssUrl(getUrl("mobile", "dark", mobile)),
+    );
+
+    if (saved.mode === "random" && saved.random) {
+      const applyRandomWallpaper = (target, url) => {
+        if (typeof url !== "string" || !url) return;
+
+        const variables =
+          target === "mobile"
+            ? ["--xh-home-bg-mobile", "--xh-home-bg-mobile-dark"]
+            : ["--xh-home-bg-desktop", "--xh-home-bg-desktop-dark"];
+
+        variables.forEach((name) => {
+          root.style.setProperty(name, toCssUrl(url));
+        });
+      };
+
+      applyRandomWallpaper("desktop", saved.random.desktop);
+      applyRandomWallpaper("mobile", saved.random.mobile);
+    }
+  } catch {
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {}
+  }
+})();
+</script><script>(() => {
+  const storageKey = "xh-reading-background";
+  const allowedBackgrounds = [
+    "default",
+    "paper",
+    "green",
+    "pearl",
+    "linen",
+    "dusk",
+    "ink",
+    "midnight",
+    "graphite",
+    "black",
+  ];
+  const isReadingPage =
+    location.pathname.startsWith("/posts/") &&
+    location.pathname.replace(/^\/posts\/?/, "").replace(/\/$/, "").length > 0;
+
+  try {
+    const saved = localStorage.getItem(storageKey) || "default";
+    const next = allowedBackgrounds.includes(saved) ? saved : "default";
+
+    document.documentElement.dataset.readingBg = isReadingPage ? next : "default";
+
+  } catch {
+    document.documentElement.dataset.readingBg = "default";
+  }
+})();
+</script><link rel="icon" href="https://i.ibb.co/Df8Pv3Jf/myblog.png"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" defer></script><script>
+        window.difyChatbotConfig = {
+          token: 'PRFQL6hdwlirsgQK',
+          baseUrl: 'https://udify.app',
+          inputs: {},
+          systemVariables: {},
+          userVariables: {
+            avatar_url: 'https://i.ibb.co/Df8Pv3Jf/myblog.png',
+            name: '我',
+          },
+        }
+      </script><style>
+        #dify-chatbot-bubble-button {
+          position: fixed !important;
+          right: 1.5rem !important;
+          bottom: 1rem !important;
+          width: 3.625rem !important;
+          height: 3.625rem !important;
+          border: 1px solid rgb(255 255 255 / 46%) !important;
+          border-radius: 999px !important;
+          background:
+            radial-gradient(circle at 28% 20%, rgb(255 255 255 / 34%), transparent 34%),
+            linear-gradient(135deg, #2563eb 0%, #0f9f8f 100%) !important;
+          box-shadow:
+            0 18px 42px rgb(37 99 235 / 28%),
+            0 8px 18px rgb(15 23 42 / 18%),
+            inset 0 1px 0 rgb(255 255 255 / 42%) !important;
+          z-index: 10001 !important;
+          transition:
+            box-shadow 0.2s ease,
+            filter 0.2s ease,
+            transform 0.2s ease !important;
+          user-select: none !important;
+        }
+
+        #dify-chatbot-bubble-button:hover {
+          filter: saturate(1.08) brightness(1.03) !important;
+          transform: translateY(-2px) scale(1.02) !important;
+          box-shadow:
+            0 24px 54px rgb(37 99 235 / 34%),
+            0 10px 24px rgb(15 23 42 / 22%),
+            inset 0 1px 0 rgb(255 255 255 / 46%) !important;
+        }
+
+        #dify-chatbot-bubble-button:active {
+          transform: translateY(0) scale(0.98) !important;
+        }
+
+        #dify-chatbot-bubble-button:focus-visible {
+          outline: 3px solid rgb(56 189 248 / 42%) !important;
+          outline-offset: 4px !important;
+        }
+
+        #dify-chatbot-bubble-window {
+          position: fixed !important;
+          right: 1.5rem !important;
+          bottom: 5.5rem !important;
+          left: auto !important;
+          top: auto !important;
+          width: min(24rem, calc(100vw - 2rem)) !important;
+          height: min(40rem, calc(100vh - 6rem)) !important;
+          max-width: calc(100vw - 2rem) !important;
+          max-height: calc(100vh - 6rem) !important;
+          overflow: hidden !important;
+          border: 1px solid rgb(148 163 184 / 28%) !important;
+          border-radius: 16px !important;
+          background:
+            linear-gradient(180deg, rgb(255 255 255 / 98%), rgb(248 250 252 / 96%)) !important;
+          box-shadow:
+            0 28px 76px rgb(15 23 42 / 26%),
+            0 8px 24px rgb(15 23 42 / 16%),
+            inset 0 1px 0 rgb(255 255 255 / 80%) !important;
+          z-index: 10000 !important;
+          transition:
+            opacity 0.16s ease,
+            transform 0.16s ease,
+            box-shadow 0.2s ease !important;
+          transform-origin: bottom right !important;
+        }
+
+        html[data-theme="dark"] #dify-chatbot-bubble-window {
+          border-color: rgb(148 163 184 / 24%) !important;
+          background:
+            linear-gradient(180deg, rgb(30 41 59 / 98%), rgb(15 23 42 / 98%)) !important;
+          box-shadow:
+            0 30px 86px rgb(0 0 0 / 50%),
+            0 8px 26px rgb(0 0 0 / 30%),
+            inset 0 1px 0 rgb(255 255 255 / 8%) !important;
+        }
+
+        #dify-chatbot-bubble-window:not([data-xh-positioned="true"]) {
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transform: scale(0.98) !important;
+        }
+
+        #dify-chatbot-bubble-window iframe {
+          border: 0 !important;
+          border-radius: 16px !important;
+          background: transparent !important;
+        }
+
+        @media (max-width: 480px) {
+          #dify-chatbot-bubble-button {
+            right: 1rem !important;
+            bottom: 1rem !important;
+            width: 3.375rem !important;
+            height: 3.375rem !important;
+          }
+
+          #dify-chatbot-bubble-window {
+            right: 1rem !important;
+            bottom: 5.5rem !important;
+            left: auto !important;
+            top: auto !important;
+            width: calc(100vw - 2rem) !important;
+            height: min(40rem, calc(100vh - 6rem)) !important;
+          }
+        }
+      </style><meta name="google-site-verification" content="C4ZL9Ex1hjRQWnZoAkq9jJBLBmvtRbEjWveqGwgGWsc"><title>Tag RAG | xh's blog </title><meta name="description" content="A VuePress bolg Site for personal useage">
+    <link rel="preload" href="/assets/style-Dpcp_aSL.css" as="style"><link rel="stylesheet" href="/assets/style-Dpcp_aSL.css">
+    <link rel="modulepreload" href="/assets/app-AF038EZb.js"><link rel="modulepreload" href="/assets/index.html-D7W462Gn.js">
+    <link rel="prefetch" href="/assets/index.html-D0G9qnfB.js" as="script"><link rel="prefetch" href="/assets/404.html-0IBDNqck.js" as="script"><link rel="prefetch" href="/assets/index.html-BJlezB1-.js" as="script"><link rel="prefetch" href="/assets/index.html-DHeRKiXl.js" as="script"><link rel="prefetch" href="/assets/index.html-BDmyVIHC.js" as="script"><link rel="prefetch" href="/assets/index.html-DAxaiKmK.js" as="script"><link rel="prefetch" href="/assets/index.html-BylPVMNl.js" as="script"><link rel="prefetch" href="/assets/index.html-DzGggJbg.js" as="script"><link rel="prefetch" href="/assets/index.html-CNH-Mf_R.js" as="script"><link rel="prefetch" href="/assets/index.html-D-Ei5OU0.js" as="script"><link rel="prefetch" href="/assets/index.html-P5vABhWa.js" as="script"><link rel="prefetch" href="/assets/index.html-C0isqKMI.js" as="script"><link rel="prefetch" href="/assets/index.html-DGm0WzP3.js" as="script"><link rel="prefetch" href="/assets/index.html-BWGhOMyY.js" as="script"><link rel="prefetch" href="/assets/index.html-BpKZaPkT.js" as="script"><link rel="prefetch" href="/assets/get-started.html-CRzISYIS.js" as="script"><link rel="prefetch" href="/assets/初级大模型算法工程师入门入门规划.html-BSisywAF.js" as="script"><link rel="prefetch" href="/assets/测试文章.html-BLIXAuPx.js" as="script"><link rel="prefetch" href="/assets/Langchain入门指南.html-D9l04BLU.js" as="script"><link rel="prefetch" href="/assets/农担项目后端的启停.html-D0ygV3YV.js" as="script"><link rel="prefetch" href="/assets/示例环境安装文档.html-B42fidPP.js" as="script"><link rel="prefetch" href="/assets/FastAPI 全栈项目环境搭建与启动.html-kK88C_wF.js" as="script"><link rel="prefetch" href="/assets/操作系统例题讲解.html-CuLV5V3s.js" as="script"><link rel="prefetch" href="/assets/操作系统课后题目.html-CkUGmqME.js" as="script"><link rel="prefetch" href="/assets/操作系统重难点.html-D4mrG35c.js" as="script"><link rel="prefetch" href="/assets/操作系统.html-DUuceyK0.js" as="script"><link rel="prefetch" href="/assets/网络协议分析题.html-DIvEXGh0.js" as="script"><link rel="prefetch" href="/assets/网络协议分析.html-MW2s6Ybb.js" as="script"><link rel="prefetch" href="/assets/网络安全重点.html-D4OlDIx_.js" as="script"><link rel="prefetch" href="/assets/网络安全.html-CJXjgvtv.js" as="script"><link rel="prefetch" href="/assets/网络智能技术复习.html-BTmn_-Zb.js" as="script"><link rel="prefetch" href="/assets/网络规划复习.html-CF0zpCB2.js" as="script"><link rel="prefetch" href="/assets/软件定义网络重点.html-B0-tsTcy.js" as="script"><link rel="prefetch" href="/assets/软件定义网络.html-5sJYRYij.js" as="script"><link rel="prefetch" href="/assets/SSEDemoFronted.html-DtI3CDGo.js" as="script"><link rel="prefetch" href="/assets/sseDomeServer.html-CY5tBOGf.js" as="script"><link rel="prefetch" href="/assets/sseService.html-CBguVNSp.js" as="script"><link rel="prefetch" href="/assets/sseServiceWithBroadcastChannel.html-dlyff0kT.js" as="script"><link rel="prefetch" href="/assets/上拉加载下拉刷新.html-XYPFdRq8.js" as="script"><link rel="prefetch" href="/assets/全栈 RAG 系统 学习手册.html-Bbion1hy.js" as="script"><link rel="prefetch" href="/assets/全栈开发.html-Vuh_g_Zp.js" as="script"><link rel="prefetch" href="/assets/工作流调用文档.html-D1tblj9Z.js" as="script"><link rel="prefetch" href="/assets/项目经验.html-B3eppgCw.js" as="script"><link rel="prefetch" href="/assets/docker部署流程.html-l2bjTJHb.js" as="script"><link rel="prefetch" href="/assets/实习周总结1.html-BVQ9o0y4.js" as="script"><link rel="prefetch" href="/assets/实习周总结2.html-DPkm-Fk8.js" as="script"><link rel="prefetch" href="/assets/实习周总结3.html-BlcXBy_g.js" as="script"><link rel="prefetch" href="/assets/实习周总结4.html-CcG9TOz0.js" as="script"><link rel="prefetch" href="/assets/实习周总结5.html-DKvUxm6z.js" as="script"><link rel="prefetch" href="/assets/实习经验.html-C6sN1HB0.js" as="script"><link rel="prefetch" href="/assets/一些高频率考点.html-DPZfmgVt.js" as="script"><link rel="prefetch" href="/assets/从零开始的前端面试题.html-OXS469B4.js" as="script"><link rel="prefetch" href="/assets/农担重点逻辑.html-CNPhXcnQ.js" as="script"><link rel="prefetch" href="/assets/农担项目所遇问题及总结.html-pTQEeYdy.js" as="script"><link rel="prefetch" href="/assets/前端工程化面试题.html-B46YAPgZ.js" as="script"><link rel="prefetch" href="/assets/前端性能优化面试题.html-3ITPtMFl.js" as="script"><link rel="prefetch" href="/assets/前端性能优化.html-CnsXj2_w.js" as="script"><link rel="prefetch" href="/assets/前端面试八股文.html-B4Mn9sHP.js" as="script"><link rel="prefetch" href="/assets/基础算法.html-Domv2Hhh.js" as="script"><link rel="prefetch" href="/assets/收集的面试知识点.html-DWY1mnDo.js" as="script"><link rel="prefetch" href="/assets/模拟面试问题记录.html-U-f_YRNb.js" as="script"><link rel="prefetch" href="/assets/浏览器原理知识点.html-BhSnd0ie.js" as="script"><link rel="prefetch" href="/assets/知识点快速复习指南.html-xV-XiNA9.js" as="script"><link rel="prefetch" href="/assets/计算机网络面试题.html-CwAyRXtl.js" as="script"><link rel="prefetch" href="/assets/针对简历问答.html-zpp45fCr.js" as="script"><link rel="prefetch" href="/assets/问答类型面试题.html-BJOcNiJJ.js" as="script"><link rel="prefetch" href="/assets/面试知识目录索引.html-CDJIKdS2.js" as="script"><link rel="prefetch" href="/assets/面试问答.html-Cpnv547c.js" as="script"><link rel="prefetch" href="/assets/项目逻辑.html-BITzfdh6.js" as="script"><link rel="prefetch" href="/assets/React框架面试题.html-DqOWdmcw.js" as="script"><link rel="prefetch" href="/assets/Vue框架面试题.html-CCIH7owH.js" as="script"><link rel="prefetch" href="/assets/fastapi知识点.html-qN3YmS7w.js" as="script"><link rel="prefetch" href="/assets/倒货经验总结.html-BbQz5ZRP.js" as="script"><link rel="prefetch" href="/assets/硅谷甄选项目笔记.html-CLNtwJOd.js" as="script"><link rel="prefetch" href="/assets/todolist建立.html-D_PpvQvT.js" as="script"><link rel="prefetch" href="/assets/Http.html-RxgpCOK-.js" as="script"><link rel="prefetch" href="/assets/Nginx.html-DkRfxJFh.js" as="script"><link rel="prefetch" href="/assets/Nuxt4.html-2I9gM6I8.js" as="script"><link rel="prefetch" href="/assets/nuxt.html-C5S0PPAa.js" as="script"><link rel="prefetch" href="/assets/插件公式示例.html-Cwm2-epG.js" as="script"><link rel="prefetch" href="/assets/算法刷题.html-B7nq1CEL.js" as="script"><link rel="prefetch" href="/assets/组件传值与代码规范.html-C7empQ1t.js" as="script"><link rel="prefetch" href="/assets/docsify项目创建与部署.html-kQ4wn_HQ.js" as="script"><link rel="prefetch" href="/assets/农担项目所遇问题及总结.html-Cj3NZtpv.js" as="script"><link rel="prefetch" href="/assets/react入门.html-DFQgz3I9.js" as="script"><link rel="prefetch" href="/assets/react小实践.html-qZWRzdAS.js" as="script"><link rel="prefetch" href="/assets/流的处理.html-B8wsQuPq.js" as="script"><link rel="prefetch" href="/assets/BroadcastChannel方式解决sse连接数限制.html-9I1vR9Tk.js" as="script"><link rel="prefetch" href="/assets/BroadcastChannel版本sse解读.html-Bhuj4lO1.js" as="script"><link rel="prefetch" href="/assets/SSE实践测试.html-d_B8gvJy.js" as="script"><link rel="prefetch" href="/assets/SSE简介.html-D7Kqq5td.js" as="script"><link rel="prefetch" href="/assets/sseService文件解析.html-BYO-u0Dg.js" as="script"><link rel="prefetch" href="/assets/Vue探索.html-zGiXTL_-.js" as="script"><link rel="prefetch" href="/assets/Vuepress上手.html-BEmDK5_Z.js" as="script"><link rel="prefetch" href="/assets/element-plus.html-BOCVA6DU.js" as="script"><link rel="prefetch" href="/assets/vitest.html-BGzdSB5t.js" as="script"><link rel="prefetch" href="/assets/index.html-CB_khRCx.js" as="script"><link rel="prefetch" href="/assets/index.html-BLRTF8Rb.js" as="script"><link rel="prefetch" href="/assets/index.html-C0_3D_eP.js" as="script"><link rel="prefetch" href="/assets/index.html-DUE0fppM.js" as="script"><link rel="prefetch" href="/assets/index.html-DYNZyIGZ.js" as="script"><link rel="prefetch" href="/assets/index.html-B8e6Dehv.js" as="script"><link rel="prefetch" href="/assets/index.html-MbA1AdW0.js" as="script"><link rel="prefetch" href="/assets/index.html-CkmKydX8.js" as="script"><link rel="prefetch" href="/assets/index.html-BtWPp8RV.js" as="script"><link rel="prefetch" href="/assets/index.html-DnsMZXh2.js" as="script"><link rel="prefetch" href="/assets/index.html-C7IYsugh.js" as="script"><link rel="prefetch" href="/assets/index.html-CmqKjsmi.js" as="script"><link rel="prefetch" href="/assets/index.html-DIxN0PS5.js" as="script"><link rel="prefetch" href="/assets/index.html-DTM5DvMY.js" as="script"><link rel="prefetch" href="/assets/index.html-QBhzAv7Y.js" as="script"><link rel="prefetch" href="/assets/index.html-C7T1TXQ0.js" as="script"><link rel="prefetch" href="/assets/index.html-TVhTZ-lj.js" as="script"><link rel="prefetch" href="/assets/index.html-C9SVvNju.js" as="script"><link rel="prefetch" href="/assets/index.html-C-PeF2mx.js" as="script"><link rel="prefetch" href="/assets/index.html-CrVtI7Y6.js" as="script"><link rel="prefetch" href="/assets/index.html-DTWxYIGh.js" as="script"><link rel="prefetch" href="/assets/index.html-Yn362An4.js" as="script"><link rel="prefetch" href="/assets/index.html-RdLtZYoK.js" as="script"><link rel="prefetch" href="/assets/index.html-UVhhw9xS.js" as="script"><link rel="prefetch" href="/assets/index.html-CjlgYdW4.js" as="script"><link rel="prefetch" href="/assets/index.html-CjlgYdW4.js" as="script"><link rel="prefetch" href="/assets/index.html-CBDfrjD2.js" as="script"><link rel="prefetch" href="/assets/index.html-DuwzxPV2.js" as="script"><link rel="prefetch" href="/assets/index.html-C_uaBB0f.js" as="script"><link rel="prefetch" href="/assets/index.html-BK3FhZrh.js" as="script"><link rel="prefetch" href="/assets/index.html-CgZeln43.js" as="script"><link rel="prefetch" href="/assets/index.html-BX1I1JE-.js" as="script"><link rel="prefetch" href="/assets/index.html-fMDj4KQU.js" as="script"><link rel="prefetch" href="/assets/index.html-KqS91vYM.js" as="script"><link rel="prefetch" href="/assets/index.html-BgiSqi53.js" as="script"><link rel="prefetch" href="/assets/index.html-CITJktMV.js" as="script"><link rel="prefetch" href="/assets/index.html-DkhLP5x_.js" as="script"><link rel="prefetch" href="/assets/index.html-B0VXInbg.js" as="script"><link rel="prefetch" href="/assets/index.html-DuuZhEFJ.js" as="script"><link rel="prefetch" href="/assets/index.html-DxM5p4e3.js" as="script"><link rel="prefetch" href="/assets/index.html-Bp0lbFnI.js" as="script"><link rel="prefetch" href="/assets/mermaid.esm.min-niCRBKs8.js" as="script"><link rel="prefetch" href="/assets/SearchResult-Brsttr4f.js" as="script"><link rel="prefetch" href="/assets/browser-B92KtQ1J.js" as="script"><link rel="prefetch" href="/assets/social-share-l0sNRNKZ.js" as="script"><link rel="prefetch" href="/assets/giscus-CBACGeKQ.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container no-sidebar external-link-icon" vp-container><!--[--><header class="vp-navbar" vp-navbar><div class="vp-toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a class="route-link" href="/"><!----><span class="vp-site-name vp-hide-mobile" aria-hidden="true">xh&#39;s blog </span></a></span><div class="vp-navbar-items-wrapper" style=""><!--[--><!--]--><nav class="vp-navbar-items vp-hide-mobile" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--[--><div class="font-settings" data-v-0ae1dece><button class="font-settings-trigger" type="button" aria-expanded="false" aria-haspopup="dialog" aria-label="字体设置，当前：系统字体" title="当前字体：系统字体" data-v-0ae1dece><span class="font-mark" aria-hidden="true" data-v-0ae1dece>Aa</span><span class="font-current" data-v-0ae1dece>系统</span></button><!----></div><div class="reading-background" data-v-ad4c5cd3><button class="reading-background-trigger" type="button" aria-expanded="false" aria-haspopup="dialog" aria-label="显示设置: 亮色" title="当前主题配色: 亮色" data-v-ad4c5cd3><span class="reading-mark" aria-hidden="true" data-v-ad4c5cd3>显</span><span class="reading-current" data-v-ad4c5cd3>亮色</span></button><!----><!----></div><!--]--><!--]--><button type="button" class="vp-toggle-color-mode-button" title="toggle color mode"><svg class="light-icon" viewbox="0 0 32 32" style=""><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg class="dark-icon" viewbox="0 0 32 32" style="display:none;"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><!--[--><button type="button" class="slimsearch-button" aria-label="搜索"><svg xmlns="http://www.w3.org/2000/svg" class="icon search-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="search icon"><path d="M192 480a256 256 0 1 1 512 0 256 256 0 0 1-512 0m631.776 362.496-143.2-143.168A318.464 318.464 0 0 0 768 480c0-176.736-143.264-320-320-320S128 303.264 128 480s143.264 320 320 320a318.016 318.016 0 0 0 184.16-58.592l146.336 146.368c12.512 12.48 32.768 12.48 45.28 0 12.48-12.512 12.48-32.768 0-45.28"></path></svg><div class="slimsearch-placeholder">搜索</div><div class="slimsearch-key-hints"><kbd class="slimsearch-key">Ctrl</kbd><kbd class="slimsearch-key">K</kbd></div></button><!--]--></div></header><!--]--><div class="vp-sidebar-mask"></div><!--[--><aside class="vp-sidebar" vp-sidebar><nav class="vp-navbar-items" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link route-link-active auto-link" href="/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--]--><!----><!--[--><!--]--></aside><!--]--><!--[--><main class="page"><div class="tag-wrapper"><div class="tag-header"><h1 class="tag-title">标签</h1><p class="tag-count">共 40 个标签</p></div><div class="tag-cloud"><!--[--><a class="route-link tag" href="/tag/ai/"><span class="tag-name">AI</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80/"><span class="tag-name">大模型基础</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/python/"><span class="tag-name">Python</span><span class="tag-num">4</span></a><a class="route-link tag" href="/tag/fastapi/"><span class="tag-name">FastAPI</span><span class="tag-num">3</span></a><a class="route-link tag" href="/tag/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag-name">操作系统</span><span class="tag-num">4</span></a><a class="route-link tag" href="/tag/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90/"><span class="tag-name">网络协议分析</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"><span class="tag-name">网络安全</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/%E7%BD%91%E7%BB%9C%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF/"><span class="tag-name">网络智能技术</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E4%B9%89%E7%BD%91%E7%BB%9C/"><span class="tag-name">软件定义网络</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/sse/"><span class="tag-name">SSE</span><span class="tag-num">12</span></a><a class="route-link tag" href="/tag/broadcastchannel/"><span class="tag-name">BroadcastChannel</span><span class="tag-num">4</span></a><a class="route-link tag" href="/tag/javascript/"><span class="tag-name">JavaScript</span><span class="tag-num">3</span></a><a class="route-link tag" href="/tag/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BA%A4%E4%BA%92/"><span class="tag-name">移动端交互</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E5%89%8D%E7%AB%AF%E5%AE%9E%E8%B7%B5/"><span class="tag-name">前端实践</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E9%9D%A2%E8%AF%95%E9%A2%98/"><span class="tag-name">面试题</span><span class="tag-num">19</span></a><a class="route-link route-link-active tag" href="/tag/rag/"><span class="tag-name">RAG</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/vue3/"><span class="tag-name">Vue3</span><span class="tag-num">13</span></a><a class="route-link tag" href="/tag/elementplus/"><span class="tag-name">ElementPlus</span><span class="tag-num">5</span></a><a class="route-link tag" href="/tag/typescript/"><span class="tag-name">TypeScript</span><span class="tag-num">9</span></a><a class="route-link tag" href="/tag/mongodb/"><span class="tag-name">MongoDB</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/vue/"><span class="tag-name">Vue</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/"><span class="tag-name">网络请求</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/react/"><span class="tag-name">React</span><span class="tag-num">7</span></a><a class="route-link tag" href="/tag/docker/"><span class="tag-name">docker</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/nginx/"><span class="tag-name">nginx</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E5%AE%9E%E4%B9%A0/"><span class="tag-name">实习</span><span class="tag-num">6</span></a><a class="route-link tag" href="/tag/vitest/"><span class="tag-name">Vitest</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/javascript/"><span class="tag-name">Javascript</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/"><span class="tag-name">目录索引</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/cs2/"><span class="tag-name">CS2</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/"><span class="tag-name">网络基础</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/nignx/"><span class="tag-name">Nignx</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/"><span class="tag-name">前端部署</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/nuxt/"><span class="tag-name">Nuxt</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/ssr/"><span class="tag-name">SSR</span><span class="tag-num">2</span></a><a class="route-link tag" href="/tag/latex/"><span class="tag-name">Latex</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/docsify/"><span class="tag-name">Docsify</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/fetchapi/"><span class="tag-name">fetchApi</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/"><span class="tag-name">代码解读</span><span class="tag-num">1</span></a><a class="route-link tag" href="/tag/vuepress/"><span class="tag-name">Vuepress</span><span class="tag-num">1</span></a><!--]--></div></div><div class="article-wrapper" data-v-979d3940><!----><div class="article-list" data-v-979d3940><!--[--><article class="article-card" data-v-979d3940><div class="article-content" data-v-979d3940><header class="article-header" data-v-979d3940><div class="title-wrapper" data-v-979d3940><h2 class="article-title" data-v-979d3940>全栈 RAG 系统 学习手册</h2><div class="title-underline" data-v-979d3940></div></div><div class="meta-tags" data-v-979d3940><!----><span class="meta-tag date" data-v-979d3940><svg class="tag-icon" viewBox="0 0 24 24" width="16" height="16" data-v-979d3940><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 6v2h14V6H5zm2 7h10v2H7zm0 4h7v2H7z" data-v-979d3940></path></svg> 8/16/2026</span><span class="meta-tag category" data-v-979d3940><svg class="tag-icon" viewBox="0 0 24 24" width="16" height="16" data-v-979d3940><path fill="currentColor" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" data-v-979d3940></path></svg> 项目笔记</span><span class="meta-tag tag-list" data-v-979d3940><svg class="tag-icon" viewBox="0 0 24 24" width="16" height="16" data-v-979d3940><path fill="currentColor" d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z" data-v-979d3940></path></svg><span class="tags" data-v-979d3940><!--[--><span class="tag-item" data-v-979d3940><span class="tag-text" data-v-979d3940>面试题</span></span><span class="tag-item" data-v-979d3940><span class="tag-text" data-v-979d3940>RAG</span></span><!--]--><!----></span></span></div></header><div class="article-excerpt" data-v-979d3940>
+<blockquote>
+<p>模拟面试官视角，按主题分类的深挖问题与参考回答。所有答案均基于本项目的<strong>真实实现</strong>，数字可当场在代码里指认。
+配套文档：<code>项目说明-简历版.md</code>（项目构成与运行逻辑）。</p>
+</blockquote>
+<hr>
+<h2>基础概念表</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>是什么</th>
+<th>作用</th>
+<th>重点理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RAG</strong></td>
+<td>Retrieval-Augmented Generation，检索增强生成</td>
+<td>让 LLM 先查资料，再回答</td>
+<td><strong>检索 + 生成</strong></td>
+</tr>
+<tr>
+<td><strong>Embedding 模型</strong></td>
+<td>把文本转换成数字向量的模型</td>
+<td>将文档和用户问题转换成可比较的向量</td>
+<td><strong>文本 → 向量</strong></td>
+</tr>
+<tr>
+<td><strong>向量 Embedding</strong></td>
+<td>一串浮点数，例如 <code>[0.12, -0.38, ...]</code></td>
+<td>表示文本的语义特征</td>
+<td>语义相近的文本，向量通常也更接近</td>
+</tr>
+<tr>
+<td><strong>向量维度</strong></td>
+<td>一个 Embedding 向量有多少个数字</td>
+<td>决定向量空间的维度</td>
+<td>1536 维 ≠ 文本有 1536 个字</td>
+</tr>
+<tr>
+<td><strong>向量数据库</strong></td>
+<td>专门存储和检索向量的数据库</td>
+<td>快速找到和问题最相似的 Chunk</td>
+<td>如 Milvus、Qdrant、pgvector、Chroma</td>
+</tr>
+<tr>
+<td><strong>相似度</strong></td>
+<td>衡量两个向量有多接近</td>
+<td>判断哪些 Chunk 与问题最相关</td>
+<td>常见：Cosine Similarity、Dot Product、Euclidean Distance</td>
+</tr>
+<tr>
+<td><strong>Cosine Similarity</strong></td>
+<td>通过两个向量夹角计算相似程度</td>
+<td>RAG 中非常常见的相似度计算方式</td>
+<td>越接近 1，通常表示越相似</td>
+</tr>
+<tr>
+<td><strong>Chunk</strong></td>
+<td>文档切分后的文本片段</td>
+<td>避免一次把整篇文档塞进模型</td>
+<td>RAG 检索的基本单位</td>
+</tr>
+<tr>
+<td><strong>chunk_size</strong></td>
+<td>每个 Chunk 的大小</td>
+<td>控制每段文本包含多少内容</td>
+<td>太小容易丢上下文，太大检索不精准</td>
+</tr>
+<tr>
+<td><strong>chunk_overlap</strong></td>
+<td>相邻 Chunk 重叠的内容大小</td>
+<td>防止切分位置导致上下文丢失</td>
+<td>例如 size=500，overlap=50</td>
+</tr>
+<tr>
+<td><strong>Top-K</strong></td>
+<td>检索最相似的 K 个 Chunk</td>
+<td>控制第一次召回多少结果</td>
+<td>Top-K=5 就是取最相关的 5 个</td>
+</tr>
+<tr>
+<td><strong>召回 Recall</strong></td>
+<td>从知识库中找出相关内容</td>
+<td>RAG 的第一阶段</td>
+<td><strong>宁可多找一些候选</strong></td>
+</tr>
+<tr>
+<td><strong>Rerank 重排</strong></td>
+<td>对召回结果再次进行精确排序</td>
+<td>提高最终相关性</td>
+<td><strong>从候选中挑最好的</strong></td>
+</tr>
+<tr>
+<td><strong>Reranker 模型</strong></td>
+<td>专门判断 Query 和文本相关性的模型</td>
+<td>给 Query-Chunk 对重新打分</td>
+<td>比单纯向量相似度更精细</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>最终提供给 LLM 的相关文本</td>
+<td>给 LLM 提供外部知识</td>
+<td>通常来自 Top-K / Rerank 结果</td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>发送给 LLM 的提示词</td>
+<td>告诉模型如何利用检索结果回答</td>
+<td>常包含 Context + Question</td>
+</tr>
+<tr>
+<td><strong>LLM</strong></td>
+<td>大语言模型</td>
+<td>根据问题和检索内容生成最终答案</td>
+<td>GPT、Claude 等</td>
+</tr>
+<tr>
+<td><strong>Metadata</strong></td>
+<td>Chunk 附带的额外信息</td>
+<td>方便过滤和追踪来源</td>
+<td>如文件名、页码、文档 ID</td>
+</tr>
+<tr>
+<td><strong>Metadata Filtering</strong></td>
+<td>根据 metadata 进行过滤</td>
+<td>缩小搜索范围</td>
+<td>例如只搜索 <code>department=技术部</code></td>
+</tr>
+<tr>
+<td><strong>Vector Search</strong></td>
+<td>向量搜索</td>
+<td>根据向量相似度查找 Chunk</td>
+<td>RAG 的核心检索方式之一</td>
+</tr>
+<tr>
+<td><strong>Hybrid Search</strong></td>
+<td>向量搜索 + 关键词搜索</td>
+<td>同时考虑语义和关键词</td>
+<td>对专业术语、编号等场景很有用</td>
+</tr>
+<tr>
+<td><strong>Query Rewrite</strong></td>
+<td>改写用户问题</td>
+<td>把用户问题转换成更适合检索的 Query</td>
+<td>提高召回效果</td>
+</tr>
+<tr>
+<td><strong>Query Expansion</strong></td>
+<td>一个问题扩展成多个查询</td>
+<td>从不同角度检索</td>
+<td>提高召回覆盖率</td>
+</tr>
+<tr>
+<td><strong>Context Window</strong></td>
+<td>LLM 一次能够处理的最大 Token 数</td>
+<td>限制最终能塞多少 Context</td>
+<td>不是越多越好</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>LLM 处理文本的基本单位</td>
+<td>衡量输入输出长度</td>
+<td>Token ≠ 字符 ≠ 单词</td>
+</tr>
+<tr>
+<td><strong>Grounding</strong></td>
+<td>让回答基于检索到的真实资料</td>
+<td>降低模型胡编乱造</td>
+<td>RAG 的核心目标之一</td>
+</tr>
+<tr>
+<td><strong>Hallucination</strong></td>
+<td>模型生成不存在或错误的信息</td>
+<td>RAG 希望尽量降低的问题</td>
+<td>检索不到正确资料时尤其明显</td>
+</tr>
+</tbody>
+</table></div><div class="read-more" data-v-979d3940><span class="read-more-text" data-v-979d3940>阅读全文</span><svg class="read-more-icon" viewBox="0 0 24 24" width="20" height="20" data-v-979d3940><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" data-v-979d3940></path></svg></div></div></article><!--]--></div></div></main><!--]--></div><!--[--><!----><!----><div class="social-share-global"><!----><button class="social-share-btn social-share-trigger" type="button" role="button" aria-label="Toggle global social share"><span class="social-share-icon-svg"><svg viewBox="0 0 1040 1024" xmlns="http://www.w3.org/2000/svg">
+  <path d="M823.506 631.474c0-7.192-3.783-12.397-11.352-15.71-6.816-2.838-13.154-1.419-18.925 4.352-9.37 8.612-19.116 15.33-29.24 19.968-6.529 3.594-9.745 8.801-9.745 15.71V771.53c0 23.753-8.516 44.195-25.455 61.132-16.938 16.936-37.283 25.455-61.132 25.455H217.765c-23.753 0-44.195-8.517-61.131-25.455-16.937-16.939-25.455-37.284-25.455-61.132V321.639c0-23.753 8.516-44.195 25.455-61.132s37.283-25.455 61.131-25.455h60.565c2.175 0 5.016-.757 8.612-2.174 20.156-12.304 44.195-23.091 71.921-32.459 9.37-1.799 14.1-7.57 14.1-17.317 0-4.734-1.703-8.708-5.108-12.208-3.407-3.407-7.476-5.108-12.208-5.108h-137.88c-42.87 0-79.588 15.235-110.06 45.707S62 278.683 62 321.553V771.54c0 42.87 15.234 79.588 45.707 110.06s67.19 45.707 110.06 45.707H667.66c42.87 0 79.589-15.234 110.06-45.707 30.472-30.473 45.708-67.19 45.708-110.06l.095-140.06-.016-.006zm138.454-292.52c0-9.369-3.408-17.506-10.315-24.32L744.016 107.005c-6.815-6.815-14.953-10.315-24.32-10.315-4.353 0-8.802.945-13.535 2.745-14.1 6.15-21.106 16.75-21.106 31.891v103.812h-86.497c-38.235 0-73.625 1.986-106.273 5.962-32.648 3.976-61.42 9.465-86.215 16.468-24.887 7.004-47.315 15.805-67.282 26.214-19.967 10.41-37 21.576-51.104 33.217-14.103 11.64-26.403 25.077-37 40.03-10.598 14.953-19.117 29.62-25.456 44.097-6.34 14.387-11.352 30.285-15.142 47.604-3.783 17.317-6.341 33.5-7.571 48.64-1.229 15.143-1.893 31.514-1.893 49.212 0 20.157 3.125 42.208 9.465 65.959 6.34 23.753 13.25 44.384 20.818 61.608 7.571 17.317 16.468 35.207 26.784 53.848 10.315 18.55 17.413 30.945 21.387 37.001 3.977 6.15 7.76 11.736 11.353 16.75 3.595 4.733 8.327 7.004 14.1 7.004 1.42 0 3.595-.381 6.529-1.042 8.327-3.977 11.925-10.126 10.787-18.358-16.184-121.134-2.838-206.4 40.03-255.797 41.452-47.222 120.376-70.88 236.868-70.88h86.497v103.81c0 15.143 7.004 25.742 21.106 31.892 4.734 1.799 9.18 2.745 13.534 2.745 9.745 0 17.887-3.408 24.321-10.316L951.83 363.178c6.716-6.815 10.126-14.858 10.126-24.227l.004.004z" />
+</svg></span></button></div><!--]--><!--]--></div>
+    <script type="module" src="/assets/app-AF038EZb.js" defer></script>
+  </body>
+</html>
