@@ -69,7 +69,7 @@ const quickLinks = [
         <section class="xh-not-found-shell">
           <div class="xh-not-found-main">
             <p class="xh-not-found-label">404 / PAGE NOT FOUND</p>
-            <h1 id="xh-not-found-title">????????</h1>
+            <h1 id="xh-not-found-title">啊噢，页面走丢了</h1>
             <p class="xh-not-found-desc">
               可能是链接已更新、文章被移动，或者地址输入有误。你可以回到首页，
               也可以从文章、分类、标签里重新查找。
@@ -302,23 +302,8 @@ const quickLinks = [
     color-mix(in srgb, var(--vp-c-bg-alt) 70%, transparent);
 }
 
-.xh-not-found-mark::before,
-.xh-not-found-mark::after {
-  display: none;
-}
 
-.xh-not-found-mark::before {
-  width: min(14rem, 78%);
-  height: min(14rem, 78%);
-  border: 1px solid rgb(var(--xh-accent-rgb) / 18%);
-}
 
-.xh-not-found-mark::after {
-  width: min(7.5rem, 46%);
-  height: min(7.5rem, 46%);
-  background: rgb(var(--xh-accent-rgb) / 10%);
-  filter: blur(10px);
-}
 
 .xh-not-found-mark img {
   position: relative;
@@ -427,15 +412,7 @@ const quickLinks = [
     padding: 0.75rem;
   }
 
-  .xh-not-found-mark::before {
-    width: 7.5rem;
-    height: 7.5rem;
-  }
 
-  .xh-not-found-mark::after {
-    width: 4.5rem;
-    height: 4.5rem;
-  }
 
   .xh-not-found-mark img {
     width: min(100%, 13rem);
