@@ -4,6 +4,7 @@ import Article from "./layouts/Article.vue";
 import Category from "./layouts/Category.vue";
 import Tag from "./layouts/Tag.vue";
 import Timeline from "./layouts/Timeline.vue";
+import NotFound from "./layouts/NotFound.vue";
 import HomeDashboard from "./components/HomeDashboard.vue";
 import ResumeExperienceList from "./components/ResumeExperienceList.vue";
 import { nextTick, onMounted } from "vue";
@@ -308,6 +309,7 @@ export default defineClientConfig({
     Category,
     Tag,
     Timeline,
+    NotFound,
   },
   enhance({ app }) {
     app.component("HomeDashboard", HomeDashboard);
