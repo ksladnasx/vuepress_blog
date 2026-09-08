@@ -1,8 +1,8 @@
 <script setup>
 import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
+import { computed } from "vue";
 import { useRoute } from "vuepress/client";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
-import { computed } from "vue";
 import FontSwitcher from "../components/FontSwitcher.vue";
 import ReadingBackgroundSwitcher from "../components/ReadingBackgroundSwitcher.vue";
 import CollapsibleSidebar from "../components/CollapsibleSidebar.vue";

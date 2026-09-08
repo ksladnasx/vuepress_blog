@@ -6,17 +6,11 @@
           <p class="section-kicker">近期</p>
           <h2>最近在写</h2>
         </div>
-        <a class="section-link" href="/article/" style="text-decoration: none;">全部文章</a>
+        <a class="section-link" href="/article/" style="text-decoration: none !important;;">全部文章</a>
       </div>
 
       <div class="update-list">
-        <button
-          v-for="item in recentItems"
-          :key="item.path"
-          class="update-item"
-          type="button"
-          @click="goTo(item.path)"
-        >
+        <button v-for="item in recentItems" :key="item.path" class="update-item" type="button" @click="goTo(item.path)">
           <span class="update-date">{{ formatDate(item.info?.date) }}</span>
           <span class="update-main">
             <span class="update-title">{{ item.info?.title || "未命名文章" }}</span>
@@ -32,6 +26,24 @@
         <span class="stat-value">{{ stat.value }}</span>
         <span class="stat-label">{{ stat.label }}</span>
       </div>
+    </section>
+
+    <section class="home-section exam-section">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">练习</p>
+          <h2>前端面试刷题系统</h2>
+        </div>
+      </div>
+
+      <a class="exam-entry" :href="testExamUrl" aria-label="进入前端面试刷题系统">
+        <span class="exam-entry-copy">
+          <span class="exam-entry-tag">专题练习</span>
+          <strong>进入前端面试刷题系统</strong>
+          <span>用于前端面试准备的专题练习系统，方便按知识点反复刷题和回看。</span>
+        </span>
+        <span class="exam-entry-action" aria-hidden="true">打开</span>
+      </a>
     </section>
 
     <section class="home-section focus-section">
@@ -60,15 +72,9 @@
       </div>
 
       <div class="tech-list">
-        <a
-          v-for="tech in techStack"
-          :key="tech.name"
-          class="tech-tag"
-          :href="tech.url"
-          :target="tech.external ? '_blank' : '_self'"
-          :rel="tech.external ? 'noopener noreferrer' : undefined"
-          style="text-decoration: none;"
-        >
+        <a v-for="tech in techStack" :key="tech.name" class="tech-tag" :href="tech.url"
+          :target="tech.external ? '_blank' : '_self'" :rel="tech.external ? 'noopener noreferrer' : undefined"
+          style="text-decoration: none !important;;">
           <img :src="tech.icon" :alt="tech.name" class="tech-icon" />
           <span>{{ tech.name }}</span>
         </a>
@@ -79,10 +85,11 @@
 
 <script setup>
 import { useBlogCategory, useBlogType } from "@vuepress/plugin-blog/client";
-import { useRouter } from "vuepress/client";
+import { useRouter, withBase } from "vuepress/client";
 import { computed } from "vue";
 
 const router = useRouter();
+const testExamUrl = withBase("/testexam/index.html");
 
 const techStack = [
   {
@@ -210,7 +217,6 @@ const cleanExcerpt = (excerpt) => {
 </script>
 
 <style scoped>
-
 .home-dashboard {
   --home-surface: #ffffff;
   --home-surface-soft: #f7f8f8;
@@ -254,7 +260,7 @@ const cleanExcerpt = (excerpt) => {
   border-bottom: 1px solid var(--home-border);
 }
 
-.section-heading > div {
+.section-heading>div {
   min-width: 0;
 }
 
@@ -282,7 +288,8 @@ const cleanExcerpt = (excerpt) => {
   color: var(--home-muted);
   font-size: 0.9rem;
   font-weight: 600;
-  text-decoration: none;
+  text-decoration: none !important;
+  ;
   white-space: nowrap;
 }
 
@@ -365,10 +372,102 @@ const cleanExcerpt = (excerpt) => {
   white-space: nowrap;
 }
 
-.stats-section {
+.exam-entry {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.85rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+  width: 100%;
+  padding: 1.25rem 1.35rem 1.25rem 1.5rem;
+  border: 1px solid var(--home-border);
+  border-radius: 8px;
+  background: linear-gradient(100deg, var(--home-accent-soft), var(--home-surface) 38%);
+  color: inherit;
+  text-decoration: none !important;
+  ;
+  box-shadow: none;
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.exam-entry::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 8px 0 0 8px;
+  background: var(--home-accent);
+}
+
+.exam-entry,
+.exam-entry * {
+  text-decoration: none !important;
+  ;
+}
+
+.exam-entry:hover {
+  border-color: var(--home-accent);
+  background: linear-gradient(100deg, var(--home-accent-soft), var(--home-surface-soft) 48%);
+  box-shadow: var(--home-shadow);
+  transform: translateY(-2px);
+}
+
+.exam-entry-copy {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.exam-entry-tag {
+  color: var(--home-accent);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+}
+
+.exam-entry-copy strong {
+  overflow: hidden;
+  color: var(--home-text);
+  font-size: 1.08rem;
+  font-weight: 750;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exam-entry-copy span:last-child {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--home-muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.exam-entry-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--home-accent);
+  font-size: 0.88rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.exam-entry-action::after {
+  content: "→";
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.exam-entry:hover .exam-entry-action::after {
+  transform: translateX(3px);
 }
 
 .stat-card {
@@ -507,11 +606,18 @@ const cleanExcerpt = (excerpt) => {
   color: var(--home-text);
   font-size: 0.9rem;
   font-weight: 650;
-  text-decoration: none;
+  text-decoration: none !important;
+  ;
   transition:
     color 0.18s ease,
     transform 0.18s ease,
     background-color 0.18s ease;
+}
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
 }
 
 .tech-tag:hover {
@@ -545,6 +651,15 @@ const cleanExcerpt = (excerpt) => {
   .update-item {
     grid-template-columns: 1fr;
     gap: 0.55rem;
+  }
+
+  .exam-entry {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .exam-entry-action {
+    justify-self: start;
   }
 
   .update-tag {
