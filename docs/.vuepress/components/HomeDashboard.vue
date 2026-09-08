@@ -89,7 +89,7 @@ import { useRouter, withBase } from "vuepress/client";
 import { computed } from "vue";
 
 const router = useRouter();
-const testExamUrl = withBase("/testexam/index.html");
+const testExamUrl = withBase("/testexam/");
 
 const techStack = [
   {
