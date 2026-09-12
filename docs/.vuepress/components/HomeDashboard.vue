@@ -378,7 +378,7 @@ const cleanExcerpt = (excerpt) => {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 1.25rem;
   align-items: center;
-  width: 100%;
+  width: auto;
   padding: 1.25rem 1.35rem 1.25rem 1.5rem;
   border: 1px solid var(--home-border);
   border-radius: 8px;
