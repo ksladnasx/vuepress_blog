@@ -170,7 +170,8 @@ const filteredItems = computed(() =>
       item?.info &&
       !item.path.includes("/posts/codes/") &&
       !item.path.includes("/posts/meaningless/") &&
-      !item.path.includes("/posts/classlearning/"),
+      !item.path.includes("/posts/classlearning/")&&
+      !item.path.includes("/posts/interview"),
   ),
 );
 
