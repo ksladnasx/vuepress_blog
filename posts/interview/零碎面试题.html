@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.20" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const useChoice = localStorage.getItem('vuepress-color-scheme')
+      const systemStatus =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (useChoice === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (useChoice === 'dark' || systemStatus) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <link rel="preconnect" href="https://i.ibb.co"><link rel="dns-prefetch" href="https://i.ibb.co"><script>(() => {
+  const storageKey = "xh-background-settings";
+  const backgroundGroups = {"desktop":{"light":["https://i.ibb.co/BhYnT7b/background0.webp","https://i.ibb.co/qY25pDdr/background1.webp","https://i.ibb.co/21mFb6VD/background2.webp"],"dark":["https://i.ibb.co/WvzTXWn0/background-dark0.webp","https://i.ibb.co/mVs517MG/background-dark1.webp","https://i.ibb.co/zVp6zf6V/background-dark2.webp"]},"mobile":{"light":["https://i.ibb.co/SXSvfMv6/min-background0.webp","https://i.ibb.co/RTQMH3zH/min-background1.webp","https://i.ibb.co/j9V9WfCL/min-background2.webp","https://i.ibb.co/xt6yG8pq/minbcg3.webp"],"dark":["https://i.ibb.co/8DtF8DM5/min-background-dark0.webp","https://i.ibb.co/rfqgsxTC/min-background-dark1.webp","https://i.ibb.co/8LgkC8YF/min-background2-dark.webp","https://i.ibb.co/dsTTc50T/minbcgdark3.webp"]}};
+  const toCssUrl = (url) =>
+    `url("${String(url).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`;
+  const normalizeIndex = (value, count) => {
+    if (!count || !Number.isInteger(value)) return 0;
+    return ((value % count) + count) % count;
+  };
+  const getCount = (mode) => {
+    const group = backgroundGroups[mode] || backgroundGroups.desktop;
+
+    return Math.max(group.light.length, group.dark.length);
+  };
+  const getUrl = (mode, theme, index) => {
+    const group = backgroundGroups[mode] || backgroundGroups.desktop;
+    const primaryList = group[theme] || group.light;
+    const fallbackList = theme === "dark" ? group.light : group.dark;
+    const normalizedIndex = normalizeIndex(
+      index,
+      Math.max(primaryList.length, fallbackList.length),
+    );
+
+    return (
+      primaryList[normalizedIndex] ||
+      fallbackList[normalizedIndex] ||
+      primaryList[0] ||
+      fallbackList[0] ||
+      ""
+    );
+  };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+
+    if (!saved || typeof saved !== "object") return;
+
+    const indexes = saved.indexes || saved;
+    const desktop = normalizeIndex(indexes.desktop, getCount("desktop"));
+    const mobile = normalizeIndex(indexes.mobile, getCount("mobile"));
+    const root = document.documentElement;
+
+    root.style.setProperty(
+      "--xh-home-bg-desktop",
+      toCssUrl(getUrl("desktop", "light", desktop)),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-desktop-dark",
+      toCssUrl(getUrl("desktop", "dark", desktop)),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-mobile",
+      toCssUrl(getUrl("mobile", "light", mobile)),
+    );
+    root.style.setProperty(
+      "--xh-home-bg-mobile-dark",
+      toCssUrl(getUrl("mobile", "dark", mobile)),
+    );
+
+    if (saved.mode === "random" && saved.random) {
+      const applyRandomWallpaper = (target, url) => {
+        if (typeof url !== "string" || !url) return;
+
+        const variables =
+          target === "mobile"
+            ? ["--xh-home-bg-mobile", "--xh-home-bg-mobile-dark"]
+            : ["--xh-home-bg-desktop", "--xh-home-bg-desktop-dark"];
+
+        variables.forEach((name) => {
+          root.style.setProperty(name, toCssUrl(url));
+        });
+      };
+
+      applyRandomWallpaper("desktop", saved.random.desktop);
+      applyRandomWallpaper("mobile", saved.random.mobile);
+    }
+  } catch {
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {}
+  }
+})();
+</script><script>(() => {
+  const storageKey = "xh-reading-background";
+  const allowedBackgrounds = [
+    "default",
+    "paper",
+    "green",
+    "pearl",
+    "linen",
+    "dusk",
+    "ink",
+    "midnight",
+    "graphite",
+    "black",
+  ];
+  const isReadingPage =
+    location.pathname.startsWith("/posts/") &&
+    location.pathname.replace(/^\/posts\/?/, "").replace(/\/$/, "").length > 0;
+
+  try {
+    const saved = localStorage.getItem(storageKey) || "default";
+    const next = allowedBackgrounds.includes(saved) ? saved : "default";
+
+    document.documentElement.dataset.readingBg = isReadingPage ? next : "default";
+
+  } catch {
+    document.documentElement.dataset.readingBg = "default";
+  }
+})();
+</script><link rel="icon" href="https://i.ibb.co/Df8Pv3Jf/myblog.png"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" defer></script><script>
+        window.difyChatbotConfig = {
+          token: 'PRFQL6hdwlirsgQK',
+          baseUrl: 'https://udify.app',
+          inputs: {},
+          systemVariables: {},
+          userVariables: {
+            avatar_url: 'https://i.ibb.co/Df8Pv3Jf/myblog.png',
+            name: '我',
+          },
+        }
+      </script><style>
+        #dify-chatbot-bubble-button {
+          position: fixed !important;
+          right: 1.5rem !important;
+          bottom: 1rem !important;
+          width: 3.625rem !important;
+          height: 3.625rem !important;
+          border: 1px solid rgb(255 255 255 / 46%) !important;
+          border-radius: 999px !important;
+          background:
+            radial-gradient(circle at 28% 20%, rgb(255 255 255 / 34%), transparent 34%),
+            linear-gradient(135deg, #2563eb 0%, #0f9f8f 100%) !important;
+          box-shadow:
+            0 18px 42px rgb(37 99 235 / 28%),
+            0 8px 18px rgb(15 23 42 / 18%),
+            inset 0 1px 0 rgb(255 255 255 / 42%) !important;
+          z-index: 10001 !important;
+          transition:
+            box-shadow 0.2s ease,
+            filter 0.2s ease,
+            transform 0.2s ease !important;
+          user-select: none !important;
+        }
+
+        #dify-chatbot-bubble-button:hover {
+          filter: saturate(1.08) brightness(1.03) !important;
+          transform: translateY(-2px) scale(1.02) !important;
+          box-shadow:
+            0 24px 54px rgb(37 99 235 / 34%),
+            0 10px 24px rgb(15 23 42 / 22%),
+            inset 0 1px 0 rgb(255 255 255 / 46%) !important;
+        }
+
+        #dify-chatbot-bubble-button:active {
+          transform: translateY(0) scale(0.98) !important;
+        }
+
+        #dify-chatbot-bubble-button:focus-visible {
+          outline: 3px solid rgb(56 189 248 / 42%) !important;
+          outline-offset: 4px !important;
+        }
+
+        #dify-chatbot-bubble-window {
+          position: fixed !important;
+          right: 1.5rem !important;
+          bottom: 5.5rem !important;
+          left: auto !important;
+          top: auto !important;
+          width: min(24rem, calc(100vw - 2rem)) !important;
+          height: min(40rem, calc(100vh - 6rem)) !important;
+          max-width: calc(100vw - 2rem) !important;
+          max-height: calc(100vh - 6rem) !important;
+          overflow: hidden !important;
+          border: 1px solid rgb(148 163 184 / 28%) !important;
+          border-radius: 16px !important;
+          background:
+            linear-gradient(180deg, rgb(255 255 255 / 98%), rgb(248 250 252 / 96%)) !important;
+          box-shadow:
+            0 28px 76px rgb(15 23 42 / 26%),
+            0 8px 24px rgb(15 23 42 / 16%),
+            inset 0 1px 0 rgb(255 255 255 / 80%) !important;
+          z-index: 10000 !important;
+          transition:
+            opacity 0.16s ease,
+            transform 0.16s ease,
+            box-shadow 0.2s ease !important;
+          transform-origin: bottom right !important;
+        }
+
+        html[data-theme="dark"] #dify-chatbot-bubble-window {
+          border-color: rgb(148 163 184 / 24%) !important;
+          background:
+            linear-gradient(180deg, rgb(30 41 59 / 98%), rgb(15 23 42 / 98%)) !important;
+          box-shadow:
+            0 30px 86px rgb(0 0 0 / 50%),
+            0 8px 26px rgb(0 0 0 / 30%),
+            inset 0 1px 0 rgb(255 255 255 / 8%) !important;
+        }
+
+        #dify-chatbot-bubble-window:not([data-xh-positioned="true"]) {
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transform: scale(0.98) !important;
+        }
+
+        #dify-chatbot-bubble-window iframe {
+          border: 0 !important;
+          border-radius: 16px !important;
+          background: transparent !important;
+        }
+
+        @media (max-width: 480px) {
+          #dify-chatbot-bubble-button {
+            right: 1rem !important;
+            bottom: 1rem !important;
+            width: 3.375rem !important;
+            height: 3.375rem !important;
+          }
+
+          #dify-chatbot-bubble-window {
+            right: 1rem !important;
+            bottom: 5.5rem !important;
+            left: auto !important;
+            top: auto !important;
+            width: calc(100vw - 2rem) !important;
+            height: min(40rem, calc(100vh - 6rem)) !important;
+          }
+        }
+      </style><meta name="google-site-verification" content="C4ZL9Ex1hjRQWnZoAkq9jJBLBmvtRbEjWveqGwgGWsc"><title>零碎面试题 | xh's blog </title><meta name="description" content="A VuePress bolg Site for personal useage">
+    <link rel="preload" href="/assets/style-B7ySQvyw.css" as="style"><link rel="stylesheet" href="/assets/style-B7ySQvyw.css">
+    <link rel="modulepreload" href="/assets/app-DMx4fFlR.js"><link rel="modulepreload" href="/assets/零碎面试题.html-O9ujY-FA.js">
+    <link rel="prefetch" href="/assets/index.html-BYRPRDbZ.js" as="script"><link rel="prefetch" href="/assets/404.html-DdkrWPI6.js" as="script"><link rel="prefetch" href="/assets/index.html-bjcQqQX1.js" as="script"><link rel="prefetch" href="/assets/index.html-BaMnbI5j.js" as="script"><link rel="prefetch" href="/assets/index.html-BOV_vaPI.js" as="script"><link rel="prefetch" href="/assets/index.html-B1XU24Ff.js" as="script"><link rel="prefetch" href="/assets/index.html-C1Es2dyU.js" as="script"><link rel="prefetch" href="/assets/index.html-CXtoEV_S.js" as="script"><link rel="prefetch" href="/assets/index.html-NipBoXnK.js" as="script"><link rel="prefetch" href="/assets/index.html-BIJD4_VK.js" as="script"><link rel="prefetch" href="/assets/index.html-66aNZEpY.js" as="script"><link rel="prefetch" href="/assets/index.html-DXmjs_wz.js" as="script"><link rel="prefetch" href="/assets/index.html-ylQa3KK_.js" as="script"><link rel="prefetch" href="/assets/index.html-CIxZCB4L.js" as="script"><link rel="prefetch" href="/assets/index.html-zVl9jQir.js" as="script"><link rel="prefetch" href="/assets/get-started.html-QTwM0jyg.js" as="script"><link rel="prefetch" href="/assets/初级大模型算法工程师入门入门规划.html-XX7tosog.js" as="script"><link rel="prefetch" href="/assets/测试文章.html-GHTjAlBT.js" as="script"><link rel="prefetch" href="/assets/Langchain入门指南.html-RfvG5fuf.js" as="script"><link rel="prefetch" href="/assets/农担项目后端的启停.html-BYrXKrj_.js" as="script"><link rel="prefetch" href="/assets/示例环境安装文档.html-De8Qz5HQ.js" as="script"><link rel="prefetch" href="/assets/FastAPI 全栈项目环境搭建与启动.html-BNFdUErm.js" as="script"><link rel="prefetch" href="/assets/操作系统例题讲解.html-9ei4q3a8.js" as="script"><link rel="prefetch" href="/assets/操作系统课后题目.html-aaiO-xUh.js" as="script"><link rel="prefetch" href="/assets/操作系统重难点.html-YgTk99Gh.js" as="script"><link rel="prefetch" href="/assets/操作系统.html-QWh7Pug-.js" as="script"><link rel="prefetch" href="/assets/网络协议分析题.html-D-cvpnUn.js" as="script"><link rel="prefetch" href="/assets/网络协议分析.html-qXc1xfZP.js" as="script"><link rel="prefetch" href="/assets/网络安全重点.html-Lrmt2ovQ.js" as="script"><link rel="prefetch" href="/assets/网络安全.html-AMrXRYmT.js" as="script"><link rel="prefetch" href="/assets/网络智能技术复习.html-o8CGcOd1.js" as="script"><link rel="prefetch" href="/assets/网络规划复习.html-Dfoi60fg.js" as="script"><link rel="prefetch" href="/assets/软件定义网络重点.html-DhGKwsj7.js" as="script"><link rel="prefetch" href="/assets/软件定义网络.html-Dugf9bFK.js" as="script"><link rel="prefetch" href="/assets/SSEDemoFronted.html-C_qM0AVj.js" as="script"><link rel="prefetch" href="/assets/sseDomeServer.html-DE9ApxAu.js" as="script"><link rel="prefetch" href="/assets/sseService.html-D0qiHyzh.js" as="script"><link rel="prefetch" href="/assets/sseServiceWithBroadcastChannel.html-Bt7Gs05j.js" as="script"><link rel="prefetch" href="/assets/上拉加载下拉刷新.html-I604NJOn.js" as="script"><link rel="prefetch" href="/assets/全栈 RAG 系统 学习手册.html-BICFetML.js" as="script"><link rel="prefetch" href="/assets/全栈开发.html-C3v1wNvo.js" as="script"><link rel="prefetch" href="/assets/工作流调用文档.html-DgiQLYpe.js" as="script"><link rel="prefetch" href="/assets/智能体开发平台节点配置逻辑.html-Dixxkds6.js" as="script"><link rel="prefetch" href="/assets/项目经验.html-C5VxxVYS.js" as="script"><link rel="prefetch" href="/assets/docker部署流程.html-QDN6Nobh.js" as="script"><link rel="prefetch" href="/assets/实习周总结1.html-DC3bak-r.js" as="script"><link rel="prefetch" href="/assets/实习周总结2.html-7BvrJ9Zn.js" as="script"><link rel="prefetch" href="/assets/实习周总结3.html-BkMegTeG.js" as="script"><link rel="prefetch" href="/assets/实习周总结4.html-BtVuk8HN.js" as="script"><link rel="prefetch" href="/assets/实习周总结5.html-FZIhJebM.js" as="script"><link rel="prefetch" href="/assets/实习经验.html-BEYllLWC.js" as="script"><link rel="prefetch" href="/assets/一些高频率考点.html-DEU4IoSN.js" as="script"><link rel="prefetch" href="/assets/从零开始的前端面试题.html-6fEOn3Nf.js" as="script"><link rel="prefetch" href="/assets/农担重点逻辑.html-DWrbsmbP.js" as="script"><link rel="prefetch" href="/assets/农担项目所遇问题及总结.html-BncmaxQ-.js" as="script"><link rel="prefetch" href="/assets/前端工程化面试题.html-B_L4f95T.js" as="script"><link rel="prefetch" href="/assets/前端性能优化面试题.html-ohFDTxaM.js" as="script"><link rel="prefetch" href="/assets/前端性能优化.html-DjSlzXPh.js" as="script"><link rel="prefetch" href="/assets/前端面试八股文.html-DbrTcs7U.js" as="script"><link rel="prefetch" href="/assets/基于简历的问题.html-B4FHWzc0.js" as="script"><link rel="prefetch" href="/assets/基础算法.html-bILFubb6.js" as="script"><link rel="prefetch" href="/assets/收集的前端知识点.html-7bAqcBFA.js" as="script"><link rel="prefetch" href="/assets/浏览器原理知识点.html-DCvNRlvd.js" as="script"><link rel="prefetch" href="/assets/知识点快速复习指南.html-D1S24dRF.js" as="script"><link rel="prefetch" href="/assets/计算机网络面试题.html-C0CxqMBJ.js" as="script"><link rel="prefetch" href="/assets/针对简历问答.html-BdL0dhPU.js" as="script"><link rel="prefetch" href="/assets/问答类型面试题.html-Bo9aYGbh.js" as="script"><link rel="prefetch" href="/assets/面试知识目录索引.html-CfLdBHqS.js" as="script"><link rel="prefetch" href="/assets/面试问答.html-CIRrKj8A.js" as="script"><link rel="prefetch" href="/assets/项目逻辑.html-ZLpc_eDF.js" as="script"><link rel="prefetch" href="/assets/LeetCode-Hot100-JavaScript算法方法论.html-V78mYMIN.js" as="script"><link rel="prefetch" href="/assets/React框架面试题.html-DI7VZ61w.js" as="script"><link rel="prefetch" href="/assets/Vue框架面试题.html-Dg4vdpCp.js" as="script"><link rel="prefetch" href="/assets/fastapi知识点.html-0gi7nNQA.js" as="script"><link rel="prefetch" href="/assets/倒货经验总结.html-6oz0hQdA.js" as="script"><link rel="prefetch" href="/assets/硅谷甄选项目笔记.html-CSa6zatT.js" as="script"><link rel="prefetch" href="/assets/todolist建立.html-DsoaLcfK.js" as="script"><link rel="prefetch" href="/assets/Http.html-DBdyb53p.js" as="script"><link rel="prefetch" href="/assets/Nginx.html-CQBLrCGF.js" as="script"><link rel="prefetch" href="/assets/Nuxt4.html-W1W3SS0r.js" as="script"><link rel="prefetch" href="/assets/nuxt.html-CyyzLa4e.js" as="script"><link rel="prefetch" href="/assets/插件公式示例.html-BMMBhQxx.js" as="script"><link rel="prefetch" href="/assets/算法刷题.html-DTLPzoAN.js" as="script"><link rel="prefetch" href="/assets/组件传值与代码规范.html-2nofHNlz.js" as="script"><link rel="prefetch" href="/assets/docsify项目创建与部署.html-DJ3WbTJR.js" as="script"><link rel="prefetch" href="/assets/农担项目所遇问题及总结.html-nqduWHTR.js" as="script"><link rel="prefetch" href="/assets/react入门.html-NDO05nM5.js" as="script"><link rel="prefetch" href="/assets/react小实践.html-B77FPBlZ.js" as="script"><link rel="prefetch" href="/assets/流的处理.html-DwZjj3CI.js" as="script"><link rel="prefetch" href="/assets/BroadcastChannel方式解决sse连接数限制.html-xgjDrkRY.js" as="script"><link rel="prefetch" href="/assets/BroadcastChannel版本sse解读.html-T3T6fGOo.js" as="script"><link rel="prefetch" href="/assets/SSE实践测试.html-G0PgmlVS.js" as="script"><link rel="prefetch" href="/assets/SSE简介.html-yEZu3mFG.js" as="script"><link rel="prefetch" href="/assets/sseService文件解析.html-ElD-0-vY.js" as="script"><link rel="prefetch" href="/assets/Vue探索.html-DranL9RB.js" as="script"><link rel="prefetch" href="/assets/Vuepress上手.html-DvEfV2e5.js" as="script"><link rel="prefetch" href="/assets/element-plus.html-DzaPLxLw.js" as="script"><link rel="prefetch" href="/assets/vitest.html-BLDEaD_k.js" as="script"><link rel="prefetch" href="/assets/index.html-C-Ck8C2X.js" as="script"><link rel="prefetch" href="/assets/index.html-CHgCA9jw.js" as="script"><link rel="prefetch" href="/assets/index.html-CRoHBIxR.js" as="script"><link rel="prefetch" href="/assets/index.html-CQHTvGlw.js" as="script"><link rel="prefetch" href="/assets/index.html-LpMviosW.js" as="script"><link rel="prefetch" href="/assets/index.html-DWTjCGmw.js" as="script"><link rel="prefetch" href="/assets/index.html-BFxeupfn.js" as="script"><link rel="prefetch" href="/assets/index.html-BuNOEwEW.js" as="script"><link rel="prefetch" href="/assets/index.html-CDd4Vg2r.js" as="script"><link rel="prefetch" href="/assets/index.html-DfvKQjvh.js" as="script"><link rel="prefetch" href="/assets/index.html-C3wfoV5e.js" as="script"><link rel="prefetch" href="/assets/index.html-CJWDZDmi.js" as="script"><link rel="prefetch" href="/assets/index.html-5vfDUYvh.js" as="script"><link rel="prefetch" href="/assets/index.html-CuLMkRWz.js" as="script"><link rel="prefetch" href="/assets/index.html-BOxes7Dw.js" as="script"><link rel="prefetch" href="/assets/index.html-BY-eh_gq.js" as="script"><link rel="prefetch" href="/assets/index.html-9-vyf5xB.js" as="script"><link rel="prefetch" href="/assets/index.html-BwADR9hT.js" as="script"><link rel="prefetch" href="/assets/index.html-BDRvBGP4.js" as="script"><link rel="prefetch" href="/assets/index.html-hYHEgZHP.js" as="script"><link rel="prefetch" href="/assets/index.html-BOzuipV5.js" as="script"><link rel="prefetch" href="/assets/index.html-BVmI_s_r.js" as="script"><link rel="prefetch" href="/assets/index.html-CsZte5IW.js" as="script"><link rel="prefetch" href="/assets/index.html-BezGwZgD.js" as="script"><link rel="prefetch" href="/assets/index.html-Dpn9pxJE.js" as="script"><link rel="prefetch" href="/assets/index.html-oAu-FUjV.js" as="script"><link rel="prefetch" href="/assets/index.html-oAu-FUjV.js" as="script"><link rel="prefetch" href="/assets/index.html-SM7ku84l.js" as="script"><link rel="prefetch" href="/assets/index.html-Dy1UCrHv.js" as="script"><link rel="prefetch" href="/assets/index.html-BJuBnEaV.js" as="script"><link rel="prefetch" href="/assets/index.html-C91jKHp_.js" as="script"><link rel="prefetch" href="/assets/index.html-CQjZXbGp.js" as="script"><link rel="prefetch" href="/assets/index.html-BaHu9d1O.js" as="script"><link rel="prefetch" href="/assets/index.html-D3eK3cjB.js" as="script"><link rel="prefetch" href="/assets/index.html-Ce5lY8q1.js" as="script"><link rel="prefetch" href="/assets/index.html-D8o-wuFb.js" as="script"><link rel="prefetch" href="/assets/index.html-Clv2F8pi.js" as="script"><link rel="prefetch" href="/assets/index.html-C0eU-nq7.js" as="script"><link rel="prefetch" href="/assets/index.html-Z6gYNbc0.js" as="script"><link rel="prefetch" href="/assets/index.html-D_yBc_po.js" as="script"><link rel="prefetch" href="/assets/index.html-BjTSS8M5.js" as="script"><link rel="prefetch" href="/assets/index.html-KeKtI1cU.js" as="script"><link rel="prefetch" href="/assets/index.html-nbBJkRKJ.js" as="script"><link rel="prefetch" href="/assets/mermaid.esm.min-CCuTDXHi.js" as="script"><link rel="prefetch" href="/assets/SearchResult-w8nF8Eqv.js" as="script"><link rel="prefetch" href="/assets/browser-B92KtQ1J.js" as="script"><link rel="prefetch" href="/assets/social-share-l0sNRNKZ.js" as="script"><link rel="prefetch" href="/assets/giscus-CBACGeKQ.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container external-link-icon" vp-container data-v-67e9b9d5><!--[--><header class="vp-navbar" vp-navbar><div class="vp-toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a class="route-link" href="/"><!----><span class="vp-site-name vp-hide-mobile" aria-hidden="true">xh&#39;s blog </span></a></span><div class="vp-navbar-items-wrapper" style=""><!--[--><!--]--><nav class="vp-navbar-items vp-hide-mobile" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><!--[--><!--[--><a class="xh-admin-entry" href="/admin/" aria-label="打开文章后台" title="文章后台" data-v-67e9b9d5><span class="xh-admin-entry-icon" aria-hidden="true" data-v-67e9b9d5><i data-v-67e9b9d5></i><i data-v-67e9b9d5></i><i data-v-67e9b9d5></i><i data-v-67e9b9d5></i></span></a><div class="font-settings" data-v-67e9b9d5 data-v-0ae1dece><button class="font-settings-trigger" type="button" aria-expanded="false" aria-haspopup="dialog" aria-label="字体设置，当前：系统字体" title="当前字体：系统字体" data-v-0ae1dece><span class="font-mark" aria-hidden="true" data-v-0ae1dece>Aa</span><span class="font-current" data-v-0ae1dece>系统</span></button><!----></div><div class="reading-background" data-v-67e9b9d5 data-v-ad4c5cd3><button class="reading-background-trigger" type="button" aria-expanded="false" aria-haspopup="dialog" aria-label="显示设置: 默认" title="当前阅读背景: 默认" data-v-ad4c5cd3><span class="reading-mark" aria-hidden="true" data-v-ad4c5cd3>显</span><span class="reading-current" data-v-ad4c5cd3>默认</span></button><!----><!----></div><!--]--><!--]--><button type="button" class="vp-toggle-color-mode-button" title="toggle color mode"><svg class="light-icon" viewbox="0 0 32 32" style=""><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg class="dark-icon" viewbox="0 0 32 32" style="display:none;"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><!--[--><button type="button" class="slimsearch-button" aria-label="搜索"><svg xmlns="http://www.w3.org/2000/svg" class="icon search-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="search icon"><path d="M192 480a256 256 0 1 1 512 0 256 256 0 0 1-512 0m631.776 362.496-143.2-143.168A318.464 318.464 0 0 0 768 480c0-176.736-143.264-320-320-320S128 303.264 128 480s143.264 320 320 320a318.016 318.016 0 0 0 184.16-58.592l146.336 146.368c12.512 12.48 32.768 12.48 45.28 0 12.48-12.512 12.48-32.768 0-45.28"></path></svg><div class="slimsearch-placeholder">搜索</div><div class="slimsearch-key-hints"><kbd class="slimsearch-key">Ctrl</kbd><kbd class="slimsearch-key">K</kbd></div></button><!--]--></div></header><!--]--><div class="vp-sidebar-mask"></div><!--[--><!--[--><aside id="xh-article-sidebar" class="vp-sidebar xh-collapsible-sidebar" vp-sidebar><nav class="vp-navbar-items" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/article/" aria-label="文章"><!--[--><!--[--><!--]--><!--]-->文章<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/category/" aria-label="分类"><!--[--><!--[--><!--]--><!--]-->分类<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/tag/" aria-label="标签"><!--[--><!--[--><!--]--><!--]-->标签<!--[--><!--[--><!--]--><!--]--></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/timeline/" aria-label="时间线"><!--[--><!--[--><!--]--><!--]-->时间线<!--[--><!--[--><!--]--><!--]--></a></div><!--]--></nav><ul class="vp-sidebar-items xh-sidebar-items" data-v-c37d8597><!--[--><li class="xh-sidebar-node" data-v-c37d8597 data-v-fc35d374><div class="xh-sidebar-row depth-0" data-v-fc35d374><button type="button" class="vp-sidebar-item vp-sidebar-heading" title="零碎面试题" data-v-fc35d374><span class="xh-sidebar-title" data-v-fc35d374>零碎面试题</span></button><!----></div><ul class="vp-sidebar-children xh-sidebar-children" style="display:none;" data-v-fc35d374><!--[--><!--]--></ul></li><!--]--></ul></aside><button class="xh-sidebar-collapse-button" type="button" aria-controls="xh-article-sidebar" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar"><span aria-hidden="true">&lt;</span></button><!--]--><!--]--><!--[--><main class="vp-page"><!--[--><!--]--><div vp-content><!--[--><!--]--><div><h1 id="零碎面试题" tabindex="-1"><a class="header-anchor" href="#零碎面试题"><span>零碎面试题</span></a></h1><h2 id="_1-如果让你优化携程一个核心列表页-如酒店列表-的加载速度和渲染性能-你会从哪些方面入手" tabindex="-1"><a class="header-anchor" href="#_1-如果让你优化携程一个核心列表页-如酒店列表-的加载速度和渲染性能-你会从哪些方面入手"><span>1. 如果让你优化携程一个核心列表页（如酒店列表）的加载速度和渲染性能，你会从哪些方面入手？</span></a></h2><h3 id="面试官题干" tabindex="-1"><a class="header-anchor" href="#面试官题干"><span>面试官题干</span></a></h3><blockquote><p>如果让你优化携程一个核心列表页，比如酒店列表的加载速度和渲染性能，你会从哪些方面入手？</p></blockquote><h3 id="面试回答" tabindex="-1"><a class="header-anchor" href="#面试回答"><span>面试回答</span></a></h3><p>所以整体来说，我会先通过性能工具定位瓶颈。然后从 <strong>网络和资源层，接口和数据层，渲染层，用户体验层</strong>这四个层面进行入手优化，而不是只关注某一个点。</p><p>首先是<strong>网络和资源层</strong>。</p><p>比如对 JS、CSS、图片等静态资源进行压缩和拆分，使用 CDN，图片根据展示尺寸进行压缩和懒加载，同时通过 HTTP 缓存减少重复请求。</p><p>第二是<strong>接口和数据层的优化</strong>。</p><p>比如减少不必要的接口请求，对酒店列表这种数据量比较大的接口，可以进行分页或者增量加载，同时对一些不会频繁变化的数据进行缓存。</p><p>第三是渲染层<strong>渲染性能优化</strong>。</p><p>如果酒店列表有几百甚至上千条数据，我会考虑使用<strong>虚拟列表</strong>，只渲染当前视口附近的数据，避免一次性创建大量 DOM。</p><p>在 React 中，我还会通过 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code> 等手段减少不必要的组件重新渲染，但我不会滥用，而是结合 React DevTools 或 Performance 面板定位真正的性能瓶颈。</p><p>最后是<strong>用户体验层</strong>。</p><p>这一层面主要是给用户感知与反馈并优化用户体验。首屏可以优先加载核心内容，使用 Skeleton 骨架屏，图片懒加载，并且在数据加载过程中给用户明确反馈。</p><h3 id="面试官追问-你怎么定位到底是哪一部分慢" tabindex="-1"><a class="header-anchor" href="#面试官追问-你怎么定位到底是哪一部分慢"><span>面试官追问：你怎么定位到底是哪一部分慢？</span></a></h3><p>可以回答：</p><blockquote><p>我一般会先使用 Chrome DevTools 的 Network 和 Performance 面板。</p><p>Network 主要看接口耗时、资源大小、请求数量以及是否存在阻塞。</p><p>Performance 主要看具体是 JavaScript 执行时间长、Layout/Reflow 比较多，还是 Paint、Composite 比较耗时。</p><p>React 项目还可以结合 React DevTools Profiler 查看具体是哪些组件频繁重新渲染。</p><p>这样可以先定位瓶颈，再针对性优化，而不是凭经验优化。</p></blockquote><hr><h2 id="_2-在-react-项目中-你是如何管理组件状态的" tabindex="-1"><a class="header-anchor" href="#_2-在-react-项目中-你是如何管理组件状态的"><span>2. 在 React 项目中，你是如何管理组件状态的？</span></a></h2><h3 id="面试回答-1" tabindex="-1"><a class="header-anchor" href="#面试回答-1"><span>面试回答</span></a></h3><p>我一般会根据<strong>状态的作用范围</strong>来决定使用什么方式。</p><p>对于组件内部使用的状态，比如表单输入、弹窗开关、Tab 状态，我会优先使用 <code>useState</code> 或 <code>useReducer</code>。</p><p>如果是多个组件之间需要共享，但是状态本身比较简单，比如主题色、语言等，我会考虑使用 <code>Context API</code>。</p><p>如果是跨页面、跨模块共享的复杂业务状态，比如用户信息、权限、购物车、复杂的全局业务状态，我会考虑使用 Redux、Zustand 这类状态管理方案。</p><p>我的原则是：</p><blockquote><p><strong>状态影响范围越小，越倾向于组件内部管理；共享范围越大、业务逻辑越复杂，就越需要专门的状态管理方案。</strong></p></blockquote><h3 id="追问-为什么不用-context-api-解决所有问题" tabindex="-1"><a class="header-anchor" href="#追问-为什么不用-context-api-解决所有问题"><span>追问：为什么不用 Context API 解决所有问题？</span></a></h3><p>可以回答：</p><blockquote><p>Context 更适合解决“数据需要跨层级 传递”的问题，但它本身并不是一个完整的状态管理方案。</p><p>如果整个应用的大量业务状态都放进 Context，随着项目变大，状态之间的依赖关系会越来越复杂，而且 Context Provider 中的 <code>value</code> 发生变化时，消费这个 Context 的组件可能会产生重新渲染。</p><p>所以简单的全局状态可以用 Context，但复杂业务状态我更倾向于使用 Redux、Zustand 这类方案，通过更细粒度的状态订阅降低不必要的渲染，同时也方便管理状态更新逻辑。</p></blockquote><hr><h3 id="追问-你提到用-context-api-管理主题色。如果主题色需要在几十个深层组件中使用-而且可能频繁更新-你还坚持只用-context-吗" tabindex="-1"><a class="header-anchor" href="#追问-你提到用-context-api-管理主题色。如果主题色需要在几十个深层组件中使用-而且可能频繁更新-你还坚持只用-context-吗"><span>追问：你提到用 Context API 管理主题色。如果主题色需要在几十个深层组件中使用，而且可能频繁更新，你还坚持只用 Context 吗？</span></a></h3><h3 id="面试回答-2" tabindex="-1"><a class="header-anchor" href="#面试回答-2"><span>面试回答</span></a></h3><p>如果主题色只是偶尔切换，比如用户手动切换一次深色模式，我觉得 Context 完全可以。</p><p>但是如果这个主题色<strong>更新非常频繁</strong>，我就不会简单地把整个主题对象放到 Context 中。</p><p>因为 Context 的更新可能导致大量消费这个 Context 的组件重新渲染。</p><p>我会考虑两种方式：</p><p>第一种是<strong>拆分 Context</strong>，把频繁变化和不频繁变化的数据拆开。</p><p>第二种是使用更细粒度的状态管理方案，比如 Zustand、Redux，或者使用专门的 Context Selector 思路，让组件只订阅自己真正需要的数据。</p><p>所以核心问题不是“Context 能不能用”，而是：</p><blockquote><p><strong>状态更新频率 + 影响范围 + 消费组件数量</strong>共同决定是否适合使用 Context。</p></blockquote><hr><h2 id="_3-如何实现一个支持无限滚动加载的列表组件" tabindex="-1"><a class="header-anchor" href="#_3-如何实现一个支持无限滚动加载的列表组件"><span>3. 如何实现一个支持无限滚动加载的列表组件？</span></a></h2><h3 id="面试回答-3" tabindex="-1"><a class="header-anchor" href="#面试回答-3"><span>面试回答</span></a></h3><p>我一般会把无限滚动拆成<strong>触发加载、请求管理、数据合并和用户体验</strong>几个部分。</p><p>首先可以使用 <code>IntersectionObserver</code> 监听列表底部的一个 sentinel 元素。</p><p>当这个元素进入可视区域时，就触发下一页数据请求。</p><p>然后需要维护几个状态：</p><div class="language-javascript line-numbers-mode" data-highlighter="prismjs" data-ext="js"><pre><code><span class="line">list</span>
+<span class="line">loading</span>
+<span class="line">hasMore</span>
+<span class="line">page</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>请求成功后，把新的数据追加到原来的列表中。</p><p>同时要避免重复请求，所以在 <code>loading === true</code> 的时候不再触发请求。</p><p>如果后端返回了 <code>hasMore</code> 或者 <code>total</code>，还可以判断是否已经加载完毕。</p><h3 id="简单实现思路" tabindex="-1"><a class="header-anchor" href="#简单实现思路"><span>简单实现思路</span></a></h3><div class="language-javascript line-numbers-mode" data-highlighter="prismjs" data-ext="js"><pre><code><span class="line"><span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntersectionObserver</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>entry<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span></span>
+<span class="line">  <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>isIntersecting <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>loading <span class="token operator">&amp;&amp;</span> hasMore<span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token function">loadMore</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">  <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>我更倾向于使用 <code>IntersectionObserver</code>，而不是监听 <code>scroll</code> 后不断计算位置，因为后者容易产生大量事件回调。</p><h3 id="需要考虑哪些用户体验问题" tabindex="-1"><a class="header-anchor" href="#需要考虑哪些用户体验问题"><span>需要考虑哪些用户体验问题？</span></a></h3><p>我会考虑：</p><ul><li>首次加载 Skeleton</li><li>加载更多时显示 Loading</li><li>没有更多数据显示“没有更多了”</li><li>请求失败提供重试</li><li>防止重复请求</li><li>防止快速滚动造成请求竞态</li><li>列表数据量特别大时使用虚拟列表</li><li>图片使用懒加载</li></ul><p>如果数据存在排序要求，还需要考虑<strong>分页数据重复或者顺序错乱</strong>的问题。</p><hr><h2 id="_4-如何处理前端应用中的跨域问题" tabindex="-1"><a class="header-anchor" href="#_4-如何处理前端应用中的跨域问题"><span>4. 如何处理前端应用中的跨域问题？</span></a></h2><h3 id="面试回答-4" tabindex="-1"><a class="header-anchor" href="#面试回答-4"><span>面试回答</span></a></h3><p>跨域本质上是浏览器的<strong>同源策略</strong>导致的。</p><p>常见解决方案主要有：</p><p><strong>第一，后端配置 CORS。</strong></p><p>这是生产环境比较常见的方式，由服务器通过响应头允许指定的 Origin 访问。</p><p><strong>第二，开发环境使用代理。</strong></p><p>比如 Vite 可以配置：</p><div class="language-javascript line-numbers-mode" data-highlighter="prismjs" data-ext="js"><pre><code><span class="line"><span class="token literal-property property">server</span><span class="token operator">:</span> <span class="token punctuation">{</span></span>
+<span class="line">  <span class="token literal-property property">proxy</span><span class="token operator">:</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token string-property property">&#39;/api&#39;</span><span class="token operator">:</span> <span class="token punctuation">{</span></span>
+<span class="line">      <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token string">&#39;http://localhost:8080&#39;</span><span class="token punctuation">,</span></span>
+<span class="line">      <span class="token literal-property property">changeOrigin</span><span class="token operator">:</span> <span class="token boolean">true</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line">  <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>这样浏览器实际上请求的是当前前端服务，由开发服务器再转发到后端。</p><p><strong>第三，生产环境通过 Nginx 做反向代理。</strong></p><p>比如：</p><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">浏览器</span>
+<span class="line">  ↓</span>
+<span class="line">Nginx</span>
+<span class="line">  ↓</span>
+<span class="line">/api → 后端服务</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>这样从浏览器角度看，前后端属于同源。</p><h3 id="追问-生产环境除了-cors-还需要注意哪些安全问题" tabindex="-1"><a class="header-anchor" href="#追问-生产环境除了-cors-还需要注意哪些安全问题"><span>追问：生产环境除了 CORS，还需要注意哪些安全问题？</span></a></h3><p>可以回答：</p><blockquote><p>CORS 只是解决跨域访问控制，并不等于完整的安全方案。</p><p>我还会关注 XSS、CSRF、SQL 注入、点击劫持、敏感信息泄露等问题。</p><p>前端层面比如避免直接使用 <code>innerHTML</code> 插入不可信内容，对用户输入进行校验。</p><p>Cookie 如果用于身份认证，可以合理设置 <code>HttpOnly</code>、<code>Secure</code>、<code>SameSite</code> 等属性。</p><p>同时生产环境还应该使用 HTTPS，并通过 CSP 等安全策略进一步降低 XSS 风险。</p></blockquote><hr><h2 id="_5-请描述一次你解决过的复杂-css-布局问题或浏览器兼容性问题。" tabindex="-1"><a class="header-anchor" href="#_5-请描述一次你解决过的复杂-css-布局问题或浏览器兼容性问题。"><span>5. 请描述一次你解决过的复杂 CSS 布局问题或浏览器兼容性问题。</span></a></h2><p>这个问题你<strong>不要硬编一个特别复杂的 CSS Bug</strong>。</p><p>你可以结合你实际项目中的后台系统，说一个比较真实的布局问题。</p><h3 id="面试回答-5" tabindex="-1"><a class="header-anchor" href="#面试回答-5"><span>面试回答</span></a></h3><p>我之前在做 React 后台管理系统的时候，遇到过一个比较典型的布局问题。</p><p>当时页面采用的是比较复杂的<strong>左右布局 + 中间内容区域</strong>，中间区域需要自适应剩余空间，同时内部还有列表和滚动区域。</p><p>一开始直接使用 <code>width: 100%</code> 和一些固定高度，结果在不同分辨率下会出现内容区域溢出或者滚动条不符合预期的问题。</p><p>后来我重新梳理了整个布局结构，把页面拆成：</p><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">页面</span>
+<span class="line">├── Header</span>
+<span class="line">└── Content</span>
+<span class="line">    ├── Sidebar</span>
+<span class="line">    └── Main</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>外层使用 Flex 布局，让 <code>Main</code> 自动占据剩余空间。</p><p>同时对于需要滚动的 Flex 子元素，设置：</p><div class="language-css line-numbers-mode" data-highlighter="prismjs" data-ext="css"><pre><code><span class="line"><span class="token property">min-width</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span></span>
+<span class="line"><span class="token property">min-height</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span></span>
+<span class="line"><span class="token property">overflow</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>解决 Flex 子元素因为默认 <code>min-width: auto</code> 导致内容撑开的问题。</p><p>这个问题让我比较深地理解了 Flex 布局中<strong>尺寸计算和滚动容器之间的关系</strong>，后来遇到类似后台页面布局时，我会优先从布局层级和尺寸计算入手排查。</p><h3 id="面试官可能追问" tabindex="-1"><a class="header-anchor" href="#面试官可能追问"><span>面试官可能追问</span></a></h3><blockquote><p><code>min-width: 0</code> 为什么有用？</p></blockquote><p>回答：</p><blockquote><p>Flex 子元素默认的 <code>min-width</code> 是 <code>auto</code>，它可能根据内容的最小尺寸撑开容器。</p><p>设置 <code>min-width: 0</code> 后，相当于允许这个 Flex 子元素缩小到容器允许的尺寸，超出的内容再通过 <code>overflow</code> 处理。</p></blockquote><p>这个回答很加分。</p><hr><h2 id="_6-你如何理解前端工程化" tabindex="-1"><a class="header-anchor" href="#_6-你如何理解前端工程化"><span>6. 你如何理解前端工程化？</span></a></h2><h3 id="面试回答-6" tabindex="-1"><a class="header-anchor" href="#面试回答-6"><span>面试回答</span></a></h3><p>我理解前端工程化就是：</p><blockquote><p><strong>通过工具、规范和自动化流程，把前端开发从依赖个人经验，变成一套可持续、可维护、可协作的工程体系。</strong></p></blockquote><p>它不仅仅是 Webpack 或 Vite。</p><p>我一般会从几个方面理解：</p><ol><li><strong>项目规范</strong>：ESLint、Prettier、TypeScript</li><li><strong>依赖管理</strong>：锁定版本、依赖去重、安全扫描</li><li><strong>构建打包</strong>：Vite、Webpack</li><li><strong>代码质量</strong>：Lint、Type Check、Test</li><li><strong>Git 协作</strong>：分支管理、Code Review</li><li><strong>CI/CD</strong>：自动构建、测试和部署</li><li><strong>性能优化</strong>：代码分割、Tree Shaking、资源压缩、缓存等</li></ol><h3 id="追问-你项目中怎么优化打包" tabindex="-1"><a class="header-anchor" href="#追问-你项目中怎么优化打包"><span>追问：你项目中怎么优化打包？</span></a></h3><h3 id="面试回答-7" tabindex="-1"><a class="header-anchor" href="#面试回答-7"><span>面试回答</span></a></h3><p>我主要会从几个方面考虑。</p><p>首先是<strong>代码分割</strong>，比如路由级别使用懒加载：</p><div class="language-javascript line-numbers-mode" data-highlighter="prismjs" data-ext="js"><pre><code><span class="line"><span class="token keyword">const</span> User <span class="token operator">=</span> <span class="token function">lazy</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">&#39;./User&#39;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div></div></div><p>这样用户访问首页的时候不需要一次性加载所有页面代码。</p><p>其次是 <strong>Tree Shaking</strong>，尽量使用支持 ESM 的依赖，并避免无必要的全量引入。</p><p>然后是资源压缩，比如 JS、CSS 压缩，图片压缩。</p><p>另外还会关注第三方依赖，如果发现某个依赖体积比较大，我会考虑是否可以替换成更轻量的方案。</p><p>最后会通过构建产物分析工具查看 Bundle，到底是哪些依赖占用了大量体积。</p><hr><h2 id="_7-移动端-h5-如何保证不同尺寸和分辨率设备体验" tabindex="-1"><a class="header-anchor" href="#_7-移动端-h5-如何保证不同尺寸和分辨率设备体验"><span>7. 移动端 H5 如何保证不同尺寸和分辨率设备体验？</span></a></h2><h3 id="面试回答-8" tabindex="-1"><a class="header-anchor" href="#面试回答-8"><span>面试回答</span></a></h3><p>移动端 H5 我一般会从<strong>布局、尺寸适配、图片、交互和兼容性</strong>几个方面考虑。</p><p>首先布局尽量使用响应式方案，比如 Flex、Grid、百分比、<code>vw/vh</code> 等，避免大量固定像素。</p><p>对于字体和间距等尺寸，可以根据设计方案选择 <code>rem</code> 或 <code>vw</code> 进行适配。</p><p>图片要根据设备尺寸进行适配，避免低分辨率设备加载过大的图片。</p><p>另外还要考虑：</p><ul><li>viewport 配置</li><li>iOS 安全区域</li><li>刘海屏</li><li>横竖屏</li><li>软键盘弹出</li><li>点击区域大小</li><li>不同浏览器兼容性</li></ul><p>比如底部固定导航，就需要考虑：</p><div class="language-css line-numbers-mode" data-highlighter="prismjs" data-ext="css"><pre><code><span class="line"><span class="token property">padding-bottom</span><span class="token punctuation">:</span> <span class="token function">env</span><span class="token punctuation">(</span>safe-area-inset-bottom<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div></div></div><p>避免内容被 iPhone 的 Home Indicator 遮挡。</p><p>所以我的思路不是针对某一个设备单独写 CSS，而是尽量建立<strong>响应式布局 + 统一适配方案</strong>。</p><hr><h2 id="_8-如何看待-typescript-的价值" tabindex="-1"><a class="header-anchor" href="#_8-如何看待-typescript-的价值"><span>8. 如何看待 TypeScript 的价值？</span></a></h2><h3 id="面试回答-9" tabindex="-1"><a class="header-anchor" href="#面试回答-9"><span>面试回答</span></a></h3><p>我认为 TypeScript 最大的价值是：</p><blockquote><p><strong>把很多运行时才能发现的问题提前到开发阶段发现。</strong></p></blockquote><p>尤其是在中大型项目中，组件之间、前后端接口之间的数据结构比较复杂，如果全部依赖 JavaScript，很容易因为参数类型或者字段错误产生问题。</p><p>TS 可以通过接口和类型定义明确数据结构，比如：</p><div class="language-typescript line-numbers-mode" data-highlighter="prismjs" data-ext="ts"><pre><code><span class="line"><span class="token keyword">interface</span> <span class="token class-name">User</span> <span class="token punctuation">{</span></span>
+<span class="line">  id<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span></span>
+<span class="line">  name<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>这样在开发阶段 IDE 就能提供类型提示和错误检查。</p><p>另外 TS 对重构也比较友好，比如修改一个接口字段时，可以通过类型检查快速找到受到影响的代码。</p><h3 id="追问-ts-有什么缺点" tabindex="-1"><a class="header-anchor" href="#追问-ts-有什么缺点"><span>追问：TS 有什么缺点？</span></a></h3><p>回答：</p><blockquote><p>第一是学习成本，需要理解泛型、联合类型、类型推导等概念。</p><p>第二是会增加一定的开发成本，需要维护类型定义。</p><p>第三是 TypeScript 类型主要存在于编译阶段，运行时还是 JavaScript，所以不能完全替代运行时的数据校验。</p><p>因此我认为 TS 的价值在中大型项目里比较明显，但也要避免为了类型而类型，类型设计应该服务于业务。</p></blockquote><hr><h2 id="_9-请谈谈你对前端测试的理解。" tabindex="-1"><a class="header-anchor" href="#_9-请谈谈你对前端测试的理解。"><span>9. 请谈谈你对前端测试的理解。</span></a></h2><h3 id="面试回答-10" tabindex="-1"><a class="header-anchor" href="#面试回答-10"><span>面试回答</span></a></h3><p>我理解前端测试主要是为了保证代码修改之后，<strong>原来的功能不会被意外破坏</strong>。</p><p>我一般会把测试分成几个层次：</p><h3 id="第一层-单元测试" tabindex="-1"><a class="header-anchor" href="#第一层-单元测试"><span>第一层：单元测试</span></a></h3><p>针对一个函数或者比较独立的组件进行测试。</p><p>比如：</p><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">输入数据 → 函数 → 输出结果</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div></div></div><h3 id="第二层-组件测试" tabindex="-1"><a class="header-anchor" href="#第二层-组件测试"><span>第二层：组件测试</span></a></h3><p>比如测试一个 React 组件：</p><ul><li>是否正确渲染</li><li>点击按钮后状态是否改变</li><li>输入框输入内容后是否正确</li><li>接口返回数据后是否展示正确</li></ul><h3 id="第三层-e2e-测试" tabindex="-1"><a class="header-anchor" href="#第三层-e2e-测试"><span>第三层：E2E 测试</span></a></h3><p>模拟真实用户操作。</p><p>比如：</p><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">打开页面</span>
+<span class="line">→ 登录</span>
+<span class="line">→ 搜索酒店</span>
+<span class="line">→ 点击某个酒店</span>
+<span class="line">→ 查看详情</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>对于 React 项目，我比较常见的组合会是：</p><blockquote><p><strong>Vitest/Jest + React Testing Library</strong></p></blockquote><p>组件测试的时候，我更关注<strong>用户行为和最终结果</strong>，而不是测试组件内部具体调用了哪个函数。</p><p>例如不要过度测试：</p><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">useState 被调用了几次</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div></div></div><p>而应该测试：</p><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code><span class="line">点击按钮之后页面是否显示正确结果</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div></div></div><p>这样测试对实现细节依赖更小，后续重构组件也不容易导致大量测试失效。</p><hr><h2 id="_10-为什么选择前端开发-平时怎么跟进前端技术" tabindex="-1"><a class="header-anchor" href="#_10-为什么选择前端开发-平时怎么跟进前端技术"><span>10. 为什么选择前端开发？平时怎么跟进前端技术？</span></a></h2><p>这个问题属于<strong>必问的自我认知题</strong>。</p><p>不要回答：</p><blockquote><p>“因为我喜欢写代码。”</p></blockquote><p>太空泛。</p><h3 id="面试回答-11" tabindex="-1"><a class="header-anchor" href="#面试回答-11"><span>面试回答</span></a></h3><p>我选择前端主要有两个原因。</p><p>第一，我比较喜欢<strong>能够直接看到开发结果</strong>的工作。</p><p>前端开发的特点是从需求、交互到最终页面都能够比较直观地看到结果，这个反馈过程让我比较有成就感。</p><p>第二，我觉得前端本身是一个需要持续学习的方向。</p><p>从最开始的 HTML、CSS、JavaScript，到 React、Vue、TypeScript，再到现在 AI 应用和前端工程化，前端技术变化比较快，我比较喜欢这种持续学习和解决问题的过程。</p><p>我平时主要通过几个方式跟进技术：</p><p>一是看官方文档，比如 React、Vue、TypeScript 等官方文档；</p><p>二是通过 GitHub、技术社区关注实际项目和开源方案；</p><p>三是通过技术文章和视频了解别人解决问题的思路；</p><p>但我比较重视的一点是：</p><blockquote><p><strong>不会单纯为了追新技术而学习，而是遇到实际问题的时候，再去深入研究对应的技术。</strong></p></blockquote><p>比如之前项目中遇到 SSE 多标签页连接复用的问题，我就进一步研究了浏览器连接限制以及 <code>BroadcastChannel</code>，最后设计了多标签页之间复用连接的方案。</p><hr><h2 id="「面试回答套路」" tabindex="-1"><a class="header-anchor" href="#「面试回答套路」"><span>「面试回答套路」</span></a></h2><p>这 10 道题其实可以归纳成一个固定模板。</p><p>面试官问：</p><blockquote><p><strong>“你怎么优化 XXX？”</strong></p></blockquote><p>你可以：</p><p><strong>① 先说总体思路</strong></p><blockquote><p>我一般会从 A、B、C、D 几个方面考虑。</p></blockquote><p><strong>② 具体展开 2～3 个重点</strong></p><blockquote><p>首先是……</p><p>其次是……</p><p>最后是……</p></blockquote><p><strong>③ 讲项目经历</strong></p><blockquote><p>我之前在 XX 项目中也遇到过类似问题，当时……</p></blockquote><p><strong>④ 最后总结原则</strong></p><blockquote><p>所以我的思路是先定位问题，再针对瓶颈进行优化，而不是直接套用某一种技术。</p></blockquote><p>比如第一题，你不要背成几十个性能优化知识点。</p><p>你只需要记住：</p><blockquote><p><strong>网络 → 数据 → 渲染 → 体验 → 工具定位</strong></p></blockquote><p>然后现场展开。</p><hr><h3 id="这-10-道题建议你重点背这几个-关键词" tabindex="-1"><a class="header-anchor" href="#这-10-道题建议你重点背这几个-关键词"><span>这 10 道题建议你重点背这几个“关键词”</span></a></h3><table><thead><tr><th>题目</th><th>面试核心关键词</th></tr></thead><tbody><tr><td>酒店列表性能</td><td><strong>Network → 数据 → 虚拟列表 → React 渲染 → UX</strong></td></tr><tr><td>React 状态管理</td><td><strong>局部状态 → Context → Zustand/Redux</strong></td></tr><tr><td>Context 追问</td><td><strong>Provider 更新 → 重渲染 → 状态拆分/Selector</strong></td></tr><tr><td>无限列表</td><td><strong>IntersectionObserver → loading → hasMore → 竞态 → 虚拟列表</strong></td></tr><tr><td>跨域</td><td><strong>同源策略 → CORS → Proxy → Nginx → XSS/CSRF</strong></td></tr><tr><td>CSS</td><td><strong>Flex → min-width:0 → overflow → 响应式</strong></td></tr><tr><td>工程化</td><td><strong>规范 → 构建 → 依赖 → 测试 → CI/CD → 性能</strong></td></tr><tr><td>移动 H5</td><td><strong>viewport → vw/rem → Flex → safe-area → 兼容性</strong></td></tr><tr><td>TypeScript</td><td><strong>类型安全 → IDE → 重构 → 成本 → 运行时校验</strong></td></tr><tr><td>前端测试</td><td><strong>Unit → Component → E2E → 用户行为</strong></td></tr><tr><td>为什么前端</td><td><strong>即时反馈 → 持续学习 → 实际问题驱动</strong></td></tr></tbody></table><p>如果你是准备<strong>携程这类大厂前端实习面试<strong>，建议不要把这些答案背成“八股文”。面试官很可能会沿着你的回答继续追问，比如“虚拟列表怎么实现”“为什么 IntersectionObserver 性能更好”“React Context 为什么会导致重渲染”“Nginx 反向代理和 CORS 有什么区别”。真正需要准备的是这些</strong>二级追问</strong>。</p></div><!--[--><!--]--></div><footer class="vp-page-meta"><!----><div class="vp-meta-item git-info"><div class="vp-meta-item last-updated"><span class="meta-item-label">最近更新：: </span><time class="meta-item-info" datetime="2026-09-25T06:21:04.000Z" data-allow-mismatch>2026/9/25 06:21</time></div><div class="vp-meta-item contributors"><span class="meta-item-label">Contributors: </span><span class="meta-item-info"><!--[--><!--[--><span class="contributor" title="email: wh8261408@126.com">ksldnasx</span><!----><!--]--><!--]--></span></div></div></footer><!----><!--[--><!--[--><aside class="xh-text-reader" style="" data-v-67e9b9d5 data-v-44e4994f><button class="reader-toggle" type="button" aria-expanded="false" aria-label="展开或拖动朗读控件" data-v-44e4994f><span class="reader-mark" aria-hidden="true" data-v-44e4994f></span><span class="reader-toggle-text" data-v-44e4994f>朗读</span></button><div class="panel-down panel-right reader-panel" data-v-44e4994f><div class="reader-head" data-v-44e4994f><div class="reader-heading" data-v-44e4994f><p class="reader-title" data-v-44e4994f>文本朗读</p></div><div class="reader-head-actions" data-v-44e4994f><button class="reader-reset" type="button" aria-label="重置朗读位置" data-v-44e4994f> 刷新 </button><button class="reader-close" type="button" aria-label="收起朗读控件" data-v-44e4994f> × </button></div></div><div class="reader-meta" data-v-44e4994f><div class="reader-meta-row" data-v-44e4994f><span data-v-44e4994f>状态</span><strong data-v-44e4994f>当前浏览器不支持朗读</strong></div><div class="reader-meta-row" data-v-44e4994f><span data-v-44e4994f>起点</span><strong data-v-44e4994f>当前位置</strong></div></div><p class="reader-note" data-v-44e4994f><span style="color:darkorange;" data-v-44e4994f>注意：</span> 起点随阅读内容变化，需在刷新后生效。 </p><div class="reader-control-row" data-v-44e4994f><button class="reader-play" type="button" aria-label="播放" disabled data-v-44e4994f><span class="reader-play-icon" aria-hidden="true" data-v-44e4994f></span></button><div class="reader-rate-select" data-v-44e4994f><span data-v-44e4994f>语速</span><button class="reader-rate-button" type="button" aria-expanded="false" disabled data-v-44e4994f><span data-v-44e4994f>1.0x 标准</span></button><!----></div></div><div class="reader-start-row" aria-label="朗读起点" data-v-44e4994f><span data-v-44e4994f>起点</span><!--[--><button type="button" class="active" data-v-44e4994f>当前位置</button><button type="button" class="" data-v-44e4994f>从头开始</button><!--]--></div><div class="reader-settings" data-v-44e4994f><div class="reader-voice" data-v-44e4994f><span data-v-44e4994f>音色</span><button class="reader-voice-button" type="button" aria-expanded="false" disabled data-v-44e4994f><span data-v-44e4994f>系统默认</span><small data-v-44e4994f>默认</small></button><!----></div><div class="reader-sliders" data-v-44e4994f><label data-v-44e4994f><span data-v-44e4994f>音调</span><input value="1" type="range" min="0.75" max="1.35" step="0.05" data-v-44e4994f></label><label data-v-44e4994f><span data-v-44e4994f>音量</span><input value="1" type="range" min="0.45" max="1" step="0.05" data-v-44e4994f></label></div></div></div></aside><nav class="article-reading-links" aria-label="文章阅读导航" data-v-67e9b9d5 data-v-11642c1f><div class="article-reading-links-inner" data-v-11642c1f><span class="article-reading-link previous disabled" aria-disabled="true" data-v-11642c1f><span class="article-reading-link-kicker" data-v-11642c1f>上一篇</span><span class="article-reading-link-title" data-v-11642c1f>暂无更新文章</span></span><a href="/posts/interview/%E6%94%B6%E9%9B%86%E7%9A%84%E5%89%8D%E7%AB%AF%E7%9F%A5%E8%AF%86%E7%82%B9.html" class="article-reading-link next" data-v-11642c1f><span class="article-reading-link-kicker" data-v-11642c1f>下一篇</span><span class="article-reading-link-title" data-v-11642c1f>收集的前端知识点</span></a></div></nav><div class="comment-wrapper" data-v-67e9b9d5><div id="vp-comment" class="giscus-wrapper input-top" style="display:block;" data-v-67e9b9d5><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><circle cx="28" cy="75" r="11" fill="currentColor"><animate attributeName="fill-opacity" begin="0s" dur="1s" keyTimes="0;0.2;1" repeatCount="indefinite" values="0;1;1"></animate></circle><path fill="none" stroke="#88baf0" stroke-width="10" d="M28 47a28 28 0 0 1 28 28"><animate attributeName="stroke-opacity" begin="0.1s" dur="1s" keyTimes="0;0.2;1" repeatCount="indefinite" values="0;1;1"></animate></path><path fill="none" stroke="#88baf0" stroke-width="10" d="M28 25a50 50 0 0 1 50 50"><animate attributeName="stroke-opacity" begin="0.2s" dur="1s" keyTimes="0;0.2;1" repeatCount="indefinite" values="0;1;1"></animate></path></svg></div></div><!--]--><!--]--></main><!--]--></div><!--[--><!----><!----><div class="social-share-global"><!----><button class="social-share-btn social-share-trigger" type="button" role="button" aria-label="Toggle global social share"><span class="social-share-icon-svg"><svg viewBox="0 0 1040 1024" xmlns="http://www.w3.org/2000/svg">
+  <path d="M823.506 631.474c0-7.192-3.783-12.397-11.352-15.71-6.816-2.838-13.154-1.419-18.925 4.352-9.37 8.612-19.116 15.33-29.24 19.968-6.529 3.594-9.745 8.801-9.745 15.71V771.53c0 23.753-8.516 44.195-25.455 61.132-16.938 16.936-37.283 25.455-61.132 25.455H217.765c-23.753 0-44.195-8.517-61.131-25.455-16.937-16.939-25.455-37.284-25.455-61.132V321.639c0-23.753 8.516-44.195 25.455-61.132s37.283-25.455 61.131-25.455h60.565c2.175 0 5.016-.757 8.612-2.174 20.156-12.304 44.195-23.091 71.921-32.459 9.37-1.799 14.1-7.57 14.1-17.317 0-4.734-1.703-8.708-5.108-12.208-3.407-3.407-7.476-5.108-12.208-5.108h-137.88c-42.87 0-79.588 15.235-110.06 45.707S62 278.683 62 321.553V771.54c0 42.87 15.234 79.588 45.707 110.06s67.19 45.707 110.06 45.707H667.66c42.87 0 79.589-15.234 110.06-45.707 30.472-30.473 45.708-67.19 45.708-110.06l.095-140.06-.016-.006zm138.454-292.52c0-9.369-3.408-17.506-10.315-24.32L744.016 107.005c-6.815-6.815-14.953-10.315-24.32-10.315-4.353 0-8.802.945-13.535 2.745-14.1 6.15-21.106 16.75-21.106 31.891v103.812h-86.497c-38.235 0-73.625 1.986-106.273 5.962-32.648 3.976-61.42 9.465-86.215 16.468-24.887 7.004-47.315 15.805-67.282 26.214-19.967 10.41-37 21.576-51.104 33.217-14.103 11.64-26.403 25.077-37 40.03-10.598 14.953-19.117 29.62-25.456 44.097-6.34 14.387-11.352 30.285-15.142 47.604-3.783 17.317-6.341 33.5-7.571 48.64-1.229 15.143-1.893 31.514-1.893 49.212 0 20.157 3.125 42.208 9.465 65.959 6.34 23.753 13.25 44.384 20.818 61.608 7.571 17.317 16.468 35.207 26.784 53.848 10.315 18.55 17.413 30.945 21.387 37.001 3.977 6.15 7.76 11.736 11.353 16.75 3.595 4.733 8.327 7.004 14.1 7.004 1.42 0 3.595-.381 6.529-1.042 8.327-3.977 11.925-10.126 10.787-18.358-16.184-121.134-2.838-206.4 40.03-255.797 41.452-47.222 120.376-70.88 236.868-70.88h86.497v103.81c0 15.143 7.004 25.742 21.106 31.892 4.734 1.799 9.18 2.745 13.534 2.745 9.745 0 17.887-3.408 24.321-10.316L951.83 363.178c6.716-6.815 10.126-14.858 10.126-24.227l.004.004z" />
+</svg></span></button></div><!--]--><!--]--></div>
+    <script type="module" src="/assets/app-DMx4fFlR.js" defer></script>
+  </body>
+</html>
