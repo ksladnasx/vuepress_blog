@@ -48,6 +48,7 @@
               <span>面向前端面试准备的专题练习与复盘入口。</span>
             </span>
             <span class="exam-entry-arrow" aria-hidden="true" v-html="projectIcons.arrow"></span>
+            
           </a>
         </article>
 
@@ -65,6 +66,9 @@
           <span class="exam-entry-actions">
             <a class="exam-entry-action exam-entry-action-github" href="https://github.com/ksladnasx/vuepress_blog_plus" aria-label="查看 GitHub 仓库" title="GitHub">
               <span aria-hidden="true" v-html="projectIcons.github"></span>
+            </a>
+            <a class="exam-entry-action exam-entry-action-release" href="https://github.com/ksladnasx/vuepress_blog_plus/releases" aria-label="查看 Release" title="Release">
+              <span aria-hidden="true" v-html="projectIcons.release"></span>
             </a>
           </span>
         </article>
@@ -84,7 +88,7 @@
             <a class="exam-entry-action exam-entry-action-github" href="https://github.com/ksladnasx/Scrollark" aria-label="查看 GitHub 仓库" title="GitHub">
               <span aria-hidden="true" v-html="projectIcons.github"></span>
             </a>
-            <a class="exam-entry-action exam-entry-action-release" href="https://github.com/ksladnasx/Scrollark/releases/tag/v0.1.0_arm64" aria-label="查看 Release" title="Release">
+            <a class="exam-entry-action exam-entry-action-release" href="https://github.com/ksladnasx/Scrollark/releases" aria-label="查看 Release" title="Release">
               <span aria-hidden="true" v-html="projectIcons.release"></span>
             </a>
           </span>
@@ -270,6 +274,9 @@ const cleanExcerpt = (excerpt) => {
 </script>
 
 <style scoped>
+img {
+  pointer-events: none;
+}
 .home-dashboard {
   --home-surface: #ffffff;
   --home-surface-soft: #f7f8f8;
