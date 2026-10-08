@@ -11,7 +11,9 @@ const fonts = [
   { key: "lxgw", label: "霞鹜", name: "霞鹜文楷" },
   { key: "simkai", label: "楷体", name: "华文楷体" },
   { key: "fangsong", label: "仿宋", name: "华文仿宋" },
-  { key: "fzstk", label: "方舒", name: "方正舒体" },
+  { key: "fzstk", label: "汉舒", name: "汉仪舒体" },
+  { key: "hypixel", label: "像素", name: "汉仪像素" },
+  { key: "maoken", label: "圆珠", name: "猫啃圆珠" },
   { key: "qingfeng", label: "清风", name: "清风手体" },
 ];
 
@@ -19,26 +21,37 @@ const customFontFaces = {
   lxgw: {
     family: "XH LXGW WenKai",
     source:
-      'local("LXGW WenKai"), url("/LXGWWENKAI-REGULAR.woff2") format("woff2")',
+      'local("LXGW WenKai"), url("/fonts/LXGWWENKAI-REGULAR.woff2") format("woff2")',
   },
   simkai: {
     family: "XH SimKai",
     source:
-      'local("KaiTi"), local("STKaiti"), url("/SIMKAI.woff2") format("woff2")',
+      'local("KaiTi"), local("STKaiti"), url("/fonts/SIMKAI.woff2") format("woff2")',
   },
   fangsong: {
     family: "XH FangSong",
     source:
-      'local("FangSong"), local("STFangsong"), url("/STFANGSO.woff2") format("woff2")',
+      'local("FangSong"), local("STFangsong"), url("/fonts/STFANGSO.woff2") format("woff2")',
   },
   fzstk: {
     family: "XH FZSTK",
-    source: 'local("FZShuTi"), local("FZSTK"), url("/FZSTK.woff2") format("woff2")',
+    source:
+      'local("FZShuTi"), local("FZSTK"), url("/fonts/FZSTK.woff2") format("woff2")',
+  },
+  hypixel: {
+    family: "XH HYPixel 9px",
+    source:
+      'local("HYPixel9pxJ"), local("HYPixel 9pxJ"), url("/fonts/HYPixel9pxJ-2.woff2") format("woff2")',
+  },
+  maoken: {
+    family: "XH MaoKen ZhuYuan",
+    source:
+      'local("MaoKen ZhuYuanTi"), local("MaokenZhuyuanTi"), url("/fonts/MaoKenZhuYuanTi-MaokenZhuyuanTi-2.woff2") format("woff2")',
   },
   qingfeng: {
     family: "XH QingFeng ShouXie",
     source:
-      'local("KaiXinJiuXiaoLinYuJiuZou"), url("/KaiXinJiuXiaoLinYuJiuZou-2.woff2") format("woff2")',
+      'local("KaiXinJiuXiaoLinYuJiuZou"), url("/fonts/KaiXinJiuXiaoLinYuJiuZou-2.woff2") format("woff2")',
   },
 };
 
@@ -431,15 +444,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="panelRef" class="font-settings">
-    <button
-      class="font-settings-trigger"
-      type="button"
-      :aria-expanded="isOpen"
-      aria-haspopup="dialog"
-      :aria-label="`字体设置，当前：${currentFont.name}`"
-      :title="`当前字体：${currentFont.name}`"
-      @click.stop="togglePanel"
-    >
+    <button class="font-settings-trigger" type="button" :aria-expanded="isOpen" aria-haspopup="dialog"
+      :aria-label="`字体设置，当前：${currentFont.name}`" :title="`当前字体：${currentFont.name}`" @click.stop="togglePanel">
       <span class="font-mark" aria-hidden="true">Aa</span>
       <span class="font-current">{{ currentFont.label }}</span>
     </button>
@@ -453,16 +459,9 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="font-options" role="listbox" :aria-label="`当前字体：${currentFont.name}`">
-        <button
-          v-for="font in fonts"
-          :key="font.key"
-          class="font-option"
-          :class="{ active: font.key === settings.font }"
-          type="button"
-          role="option"
-          :aria-selected="font.key === settings.font"
-          @click="updateSetting('font', font.key)"
-        >
+        <button v-for="font in fonts" :key="font.key" class="font-option"
+          :class="{ active: font.key === settings.font }" type="button" role="option"
+          :aria-selected="font.key === settings.font" @click="updateSetting('font', font.key)">
           <span class="font-option-label">{{ font.label }}</span>
           <span class="font-option-name">{{ font.name }}</span>
         </button>
@@ -470,65 +469,37 @@ onBeforeUnmount(() => {
 
       <label class="setting-row">
         <span class="setting-label">字号</span>
-        <input
-          :value="settings.size"
-          type="range"
-          min="14"
-          max="30"
-          step="1"
-          @input="updateSetting('size', Number($event.target.value))"
-        />
+        <input :value="settings.size" type="range" min="14" max="30" step="1"
+          @input="updateSetting('size', Number($event.target.value))" />
         <span class="setting-value">{{ settings.size }}px</span>
       </label>
 
       <label class="setting-row">
         <span class="setting-label">行高</span>
-        <input
-          :value="settings.lineHeight"
-          type="range"
-          min="1.4"
-          max="2"
-          step="0.05"
-          @input="updateSetting('lineHeight', Number($event.target.value))"
-        />
+        <input :value="settings.lineHeight" type="range" min="1.4" max="2" step="0.05"
+          @input="updateSetting('lineHeight', Number($event.target.value))" />
         <span class="setting-value">{{ settings.lineHeight.toFixed(2) }}</span>
       </label>
 
       <label class="setting-row">
         <span class="setting-label">字距</span>
-        <input
-          :value="settings.letterSpacing"
-          type="range"
-          min="0"
-          max="2"
-          step="0.1"
-          @input="updateSetting('letterSpacing', Number($event.target.value))"
-        />
+        <input :value="settings.letterSpacing" type="range" min="0" max="2" step="0.1"
+          @input="updateSetting('letterSpacing', Number($event.target.value))" />
         <span class="setting-value">{{ settings.letterSpacing.toFixed(1) }}px</span>
       </label>
 
       <label class="setting-row">
         <span class="setting-label">字重</span>
-        <input
-          :value="settings.weight"
-          type="range"
-          min="300"
-          max="700"
-          step="100"
-          @input="updateSetting('weight', Number($event.target.value))"
-        />
+        <input :value="settings.weight" type="range" min="300" max="700" step="100"
+          @input="updateSetting('weight', Number($event.target.value))" />
         <span class="setting-value">{{ settings.weight }}</span>
       </label>
 
       <label class="setting-row color-setting-row">
         <span class="setting-label">颜色</span>
         <span class="color-control">
-          <input
-            :value="colorPickerValue"
-            type="color"
-            aria-label="选择字体颜色"
-            @input="updatePendingColor($event.target.value)"
-          />
+          <input :value="colorPickerValue" type="color" aria-label="选择字体颜色"
+            @input="updatePendingColor($event.target.value)" />
           <span class="setting-value color-value">{{ pendingColor || settings.color || "默认" }}</span>
         </span>
         <button class="apply-button" type="button" @click="applyPendingColor">
@@ -537,12 +508,7 @@ onBeforeUnmount(() => {
       </label>
 
       <div class="color-actions">
-        <button
-          v-if="settings.color || pendingColor"
-          class="plain-button"
-          type="button"
-          @click="resetColor"
-        >
+        <button v-if="settings.color || pendingColor" class="plain-button" type="button" @click="resetColor">
           使用主题默认文字色
         </button>
       </div>
@@ -552,11 +518,8 @@ onBeforeUnmount(() => {
           <span class="setting-label">代码字体</span>
           <span class="setting-note">跟随正文</span>
         </span>
-        <input
-          :checked="settings.codeFont"
-          type="checkbox"
-          @change="updateSetting('codeFont', $event.target.checked)"
-        />
+        <input :checked="settings.codeFont" type="checkbox"
+          @change="updateSetting('codeFont', $event.target.checked)" />
       </label>
 
       <button class="reset-button" type="button" @click="resetSettings">

@@ -375,7 +375,7 @@ localStorage：
 - `lxgw`：霞鹜文楷，使用 `/LXGWWENKAI-REGULAR.woff2`。
 - `simkai`：楷体，使用 `/SIMKAI.woff2`。
 - `fangsong`：仿宋，使用 `/STFANGSO.woff2`。
-- `fzstk`：方舒，使用 `/FZSTK.woff2`。
+- `fzstk`：汉舒，使用 `/FZSTK.woff2`。
 - `qingfeng`：清风手体，使用 `/KaiXinJiuXiaoLinYuJiuZou-2.woff2`。
 
 默认设置：
