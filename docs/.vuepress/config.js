@@ -309,10 +309,12 @@ const restoreReadingBackgroundScript = `\
     "green",
     "pearl",
     "linen",
+    "sakura",
     "dusk",
     "ink",
     "midnight",
     "graphite",
+    "mocha",
     "black",
   ];
   const isReadingPage =

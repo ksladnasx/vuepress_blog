@@ -222,6 +222,24 @@ html[data-reading-bg="linen"] {
   --xh-reading-sidebar-shadow: 10px 0 34px rgb(93 105 73 / 10%);
 }
 
+html[data-reading-bg="sakura"] {
+  --xh-reading-page-bg:
+    linear-gradient(120deg, rgb(192 128 148 / 16%), transparent 33rem),
+    radial-gradient(circle at 84% 12%, rgb(240 184 198 / 20%), transparent 26rem),
+    linear-gradient(180deg, #fbeef1 0%, #fff8f9 48%, #f2dee4 100%);
+  --xh-reading-content-bg: rgb(255 250 251 / 86%);
+  --xh-reading-content-border: rgb(178 106 128 / 22%);
+  --xh-reading-content-shadow: 0 22px 58px rgb(140 82 100 / 13%);
+  --xh-reading-text: #3c2a31;
+  --xh-reading-muted: rgb(60 42 49 / 74%);
+  --xh-reading-code-bg: rgb(178 106 128 / 14%);
+  --xh-reading-code-block-bg: rgb(66 44 53 / 92%);
+  --xh-reading-code-block-text: rgb(253 244 246 / 93%);
+  --xh-reading-sidebar-bg: rgb(253 244 247 / 88%);
+  --xh-reading-sidebar-border: rgb(178 106 128 / 22%);
+  --xh-reading-sidebar-shadow: 10px 0 34px rgb(140 82 100 / 11%);
+}
+
 html[data-reading-bg="dusk"] {
   --xh-reading-page-bg:
     linear-gradient(125deg, rgb(58 96 122 / 28%), transparent 38rem),
@@ -293,6 +311,24 @@ html[data-reading-bg="graphite"] {
   --xh-reading-sidebar-shadow: 10px 0 34px rgb(0 0 0 / 30%);
 }
 
+html[data-reading-bg="mocha"] {
+  --xh-reading-page-bg:
+    linear-gradient(122deg, rgb(146 104 66 / 22%), transparent 36rem),
+    radial-gradient(circle at 86% 10%, rgb(120 82 60 / 16%), transparent 28rem),
+    linear-gradient(180deg, #1c1410 0%, #2a1f17 48%, #231810 100%);
+  --xh-reading-content-bg: rgb(41 30 23 / 85%);
+  --xh-reading-content-border: rgb(210 172 132 / 18%);
+  --xh-reading-content-shadow: 0 24px 60px rgb(10 6 3 / 36%);
+  --xh-reading-text: rgb(243 234 224 / 90%);
+  --xh-reading-muted: rgb(243 234 224 / 68%);
+  --xh-reading-code-bg: rgb(210 172 132 / 12%);
+  --xh-reading-code-block-bg: rgb(26 18 12 / 86%);
+  --xh-reading-code-block-text: rgb(243 234 224 / 92%);
+  --xh-reading-sidebar-bg: rgb(34 24 18 / 88%);
+  --xh-reading-sidebar-border: rgb(210 172 132 / 18%);
+  --xh-reading-sidebar-shadow: 10px 0 34px rgb(10 6 3 / 30%);
+}
+
 html[data-reading-bg="black"] {
   --xh-reading-page-bg: #000;
   --xh-reading-content-bg: rgb(0 0 0 / 94%);
@@ -306,6 +342,61 @@ html[data-reading-bg="black"] {
   --xh-reading-sidebar-bg: #000;
   --xh-reading-sidebar-border: rgb(255 255 255 / 12%);
   --xh-reading-sidebar-shadow: none;
+}
+
+/* 阅读背景色卡（设置页与导航栏悬浮菜单共用，theme-xxx 挂在色卡按钮上） */
+.xh-reading-swatch {
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 7px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 28%);
+}
+
+.theme-default .xh-reading-swatch {
+  background: linear-gradient(135deg, var(--vp-c-bg), var(--vp-c-bg-alt));
+}
+
+.theme-paper .xh-reading-swatch {
+  background: linear-gradient(135deg, #fff9ea, #f3dfb8);
+}
+
+.theme-green .xh-reading-swatch {
+  background: linear-gradient(135deg, #e5f6dc, #b8d7b2);
+}
+
+.theme-pearl .xh-reading-swatch {
+  background: linear-gradient(135deg, #f8fbff, #dbe8ff 55%, #f5dedb);
+}
+
+.theme-linen .xh-reading-swatch {
+  background: linear-gradient(135deg, #fffef4, #e8ead8 55%, #d9dfca);
+}
+
+.theme-sakura .xh-reading-swatch {
+  background: linear-gradient(135deg, #fff8f9, #f4dde4 55%, #ecc3cf);
+}
+
+.theme-dusk .xh-reading-swatch {
+  background: linear-gradient(135deg, #1c3144, #3a496d 54%, #684c6a);
+}
+
+.theme-ink .xh-reading-swatch {
+  background: linear-gradient(135deg, #172427, #243b38 52%, #243044);
+}
+
+.theme-midnight .xh-reading-swatch {
+  background: linear-gradient(135deg, #08111f, #13284d 55%, #171b3a);
+}
+
+.theme-graphite .xh-reading-swatch {
+  background: linear-gradient(135deg, #181818, #2b2b2b 55%, #3a3935);
+}
+
+.theme-mocha .xh-reading-swatch {
+  background: linear-gradient(135deg, #20160f, #3a2b1e 55%, #52402d);
+}
+
+.theme-black .xh-reading-swatch {
+  background: linear-gradient(135deg, #000, #050505 62%, #111);
 }
 
 html[data-font="lxgw"] {
@@ -1632,6 +1723,13 @@ html[data-reading-bg="linen"] {
   --xh-strong-text: #68783f;
 }
 
+html[data-reading-bg="sakura"] {
+  --xh-mark-bg: linear-gradient(104deg, rgb(238 178 197 / 34%), rgb(214 140 166 / 42%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(178 106 128 / 12%);
+  --xh-mark-text: #43222e;
+  --xh-strong-text: #a04a68;
+}
+
 html[data-reading-bg="dusk"] {
   --xh-mark-bg: linear-gradient(104deg, rgb(112 87 128 / 48%), rgb(78 119 147 / 38%));
   --xh-mark-shadow: inset 0 -0.05em 0 rgb(156 128 176 / 14%);
@@ -1658,6 +1756,13 @@ html[data-reading-bg="graphite"] {
   --xh-mark-shadow: inset 0 -0.05em 0 rgb(178 158 112 / 12%);
   --xh-mark-text: rgb(238 235 225 / 94%);
   --xh-strong-text: #d0c49e;
+}
+
+html[data-reading-bg="mocha"] {
+  --xh-mark-bg: linear-gradient(104deg, rgb(122 86 56 / 52%), rgb(99 74 62 / 42%));
+  --xh-mark-shadow: inset 0 -0.05em 0 rgb(196 156 112 / 14%);
+  --xh-mark-text: rgb(243 233 219 / 94%);
+  --xh-strong-text: #d9b98c;
 }
 
 html[data-reading-bg="black"] {
@@ -2010,47 +2115,6 @@ html[data-reading-bg="black"] {
   color: var(--vp-c-accent-text);
 }
 
-.xh-admin-entry {
-  display: inline-grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  padding: 0;
-  color: var(--vp-c-text-mute);
-  border: 1px solid transparent;
-  border-radius: 6px;
-  text-decoration: none;
-  transition:
-    border-color 0.16s ease,
-    color 0.16s ease,
-    background-color 0.16s ease;
-}
-
-.xh-admin-entry:hover {
-  color: var(--vp-c-accent);
-  border-color: rgb(var(--xh-accent-rgb) / 24%);
-  background: var(--vp-c-accent-soft);
-}
-
-.xh-admin-entry:focus-visible {
-  outline: 3px solid rgb(var(--xh-accent-rgb) / 34%);
-  outline-offset: 2px;
-}
-
-.xh-admin-entry-icon {
-  display: grid;
-  width: 0.82rem;
-  height: 0.82rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.12rem;
-}
-
-.xh-admin-entry-icon i {
-  display: block;
-  border-radius: 1px;
-  background: currentColor;
-}
-
 
 html[data-font-color="custom"]
   :where(
@@ -2116,4 +2180,15 @@ html[data-font-color="custom"]
     .timeline-tags span
   ):not(:where(code, code *, pre, pre *, kbd, samp, svg, svg *, .katex, .katex *, a:not(.header-anchor))) {
   color: var(--xh-font-color) !important;
+}
+
+/* ==========================================================================
+   悬浮组件开关：设置页关闭 Dify AI 悬浮球后，通过 <html> 属性隐藏第三方注入元素
+   （元素由 embed.min.js 动态插入，脚本卸载不可行，CSS 兜底最稳妥）
+   ========================================================================== */
+html[data-xh-dify-chatbot-off] {
+  #dify-chatbot-bubble-button,
+  #dify-chatbot-bubble-window {
+    display: none !important;
+  }
 }

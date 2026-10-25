@@ -5,9 +5,14 @@ import Category from "./layouts/Category.vue";
 import Tag from "./layouts/Tag.vue";
 import Timeline from "./layouts/Timeline.vue";
 import NotFound from "./layouts/NotFound.vue";
+import Settings from "./layouts/Settings.vue";
 import HomeDashboard from "./components/HomeDashboard.vue";
 import ResumeExperienceList from "./components/ResumeExperienceList.vue";
 import { nextTick, onMounted } from "vue";
+import {
+  DIFY_TOGGLE_EVENT,
+  toggles as featureToggles,
+} from "./composables/useFeatureToggles.js";
 import "./styles/index.scss";
 
 const DIFY_CHATBOT_TOKEN = "PRFQL6hdwlirsgQK";
@@ -310,6 +315,7 @@ export default defineClientConfig({
     Tag,
     Timeline,
     NotFound,
+    Settings,
   },
   enhance({ app }) {
     app.component("HomeDashboard", HomeDashboard);
@@ -318,10 +324,22 @@ export default defineClientConfig({
   setup() {
     const router = useRouter();
 
+    // 设置页开启 AI 悬浮球时动态加载 Dify 脚本；关闭时由 <html> 属性 + CSS 隐藏
+    const handleDifyToggle = (event) => {
+      if (event.detail) {
+        loadDifyChatbot();
+      }
+    };
+
     onMounted(() => {
       ensureMediumZoomContainer();
       nextTick(renderMath);
-      nextTick(loadDifyChatbot);
+
+      if (featureToggles.value.difyChatbot) {
+        nextTick(loadDifyChatbot);
+      }
+
+      document.addEventListener(DIFY_TOGGLE_EVENT, handleDifyToggle);
     });
 
     router.afterEach(() => {

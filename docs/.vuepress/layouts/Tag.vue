@@ -3,8 +3,9 @@ import { useBlogCategory } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import { RouteLink, useRoutePath } from 'vuepress/client'
 import ArticleList from '../components/ArticleList.vue'
-import FontSwitcher from '../components/FontSwitcher.vue'
-import ReadingBackgroundSwitcher from '../components/ReadingBackgroundSwitcher.vue'
+import SettingsEntry from '../components/SettingsEntry.vue'
+import SiteSettingsEngine from '../components/SiteSettingsEngine.vue'
+import ColorModeToggle from '../components/ColorModeToggle.vue'
 
 const tagMap = useBlogCategory('tag')
 const routePath = useRoutePath()
@@ -13,8 +14,9 @@ const routePath = useRoutePath()
 <template>
   <ParentLayout>
     <template #navbar-after>
-      <FontSwitcher />
-      <ReadingBackgroundSwitcher />
+      <ColorModeToggle />
+      <SettingsEntry />
+      <SiteSettingsEngine />
     </template>
 
     <template #page>

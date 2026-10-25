@@ -120,12 +120,12 @@ npm run docs:build
 
 职责：
 
-- 注册自定义布局：`Layout`、`Article`、`Category`、`Tag`、`Timeline`。
+- 注册自定义布局：`Layout`、`Article`、`Category`、`Tag`、`Timeline`、`NotFound`、`Settings`（站点设置页）。
 - 全局注册 Markdown 可直接使用的组件：
   - `HomeDashboard`
   - `ResumeExperienceList`
 - 引入全局样式：`./styles/index.scss`。
-- 加载并增强 Dify Chatbot：
+- 加载并增强 Dify Chatbot（受设置页「AI 助手悬浮球」开关控制，`xh-feature-toggles` 为 false 时不加载；关闭时通过 `<html data-xh-dify-chatbot-off>` + CSS 隐藏已注入元素）：
   - 插入 `https://udify.app/embed.min.js`。
   - 让聊天气泡可拖拽。
   - 将气泡位置保存到 localStorage：`xh-dify-chatbot-position`。
@@ -144,12 +144,13 @@ npm run docs:build
 用途：
 
 - 给所有普通页面的 navbar 后面增加：
-  - `/admin/` 文章后台入口。
-  - `FontSwitcher` 字体设置。
-  - `ReadingBackgroundSwitcher` 显示设置。
+  - `ColorModeToggle` 亮暗模式切换按钮（太阳/月亮图标）。
+  - `SettingsEntry` 站点设置入口（齿轮图标，链接到 `/settings/` 设置页）。
+  - `SiteSettingsEngine` 无头设置引擎（读取 localStorage 并把字体/显示设置应用到 `<html>`，渲染全局 toast）。
+  - 文章后台入口已移至设置页的「管理后台」卡片。
 - 替换默认 sidebar 为 `CollapsibleSidebar`。
 - 在文章正文页底部增加：
-  - `TextReader` 文本朗读。
+  - `TextReader` 文本朗读（受设置页「朗读悬浮球」开关控制）。
   - `ArticleReadingLinks` 同分类上一篇 / 下一篇导航。
   - Giscus `CommentService` 评论区。
 

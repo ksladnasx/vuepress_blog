@@ -3,15 +3,19 @@ import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
 import { computed } from "vue";
 import { useRoute } from "vuepress/client";
 import { useDarkMode } from "@vuepress/theme-default/lib/client/composables/useDarkMode.js";
-import FontSwitcher from "../components/FontSwitcher.vue";
-import ReadingBackgroundSwitcher from "../components/ReadingBackgroundSwitcher.vue";
+import SettingsEntry from "../components/SettingsEntry.vue";
+import SiteSettingsEngine from "../components/SiteSettingsEngine.vue";
+import ColorModeToggle from "../components/ColorModeToggle.vue";
+import ReadingBackgroundMenu from "../components/ReadingBackgroundMenu.vue";
 import CollapsibleSidebar from "../components/CollapsibleSidebar.vue";
 import ArticleReadingLinks from "../components/ArticleReadingLinks.vue";
 import TextReader from "../components/TextReader.vue";
+import { useFeatureToggles } from "../composables/useFeatureToggles.js";
 
 const route = useRoute();
 const isDarkMode = useDarkMode();
 const isHomePage = computed(() => route.path === "/");
+const { toggles: featureToggles } = useFeatureToggles();
 
 // 仅在文章正文页显示评论区（路径以 /posts/ 开头且不是列表页）
 const showComment = computed(() => {
@@ -25,19 +29,11 @@ const showComment = computed(() => {
 <template>
   <ParentLayout>
     <template #navbar-after>
-      <a class="xh-admin-entry" href="/admin/" aria-label="打开文章后台" title="文章后台">
-        <span class="xh-admin-entry-icon" aria-hidden="true">
-          <i></i>
-          <i></i>
-          <i></i>
-          <i></i>
-        </span>
-      </a>
-      <FontSwitcher />
-      <ReadingBackgroundSwitcher
-        :is-reading-page="showComment"
-        :is-home-page="isHomePage"
-      />
+      <!-- 阅读页：亮暗切换按钮换成阅读背景菜单入口 -->
+      <ReadingBackgroundMenu v-if="showComment" />
+      <ColorModeToggle v-else />
+      <SettingsEntry />
+      <SiteSettingsEngine />
     </template>
 
     <template #sidebar>
@@ -45,7 +41,7 @@ const showComment = computed(() => {
     </template>
 
     <template #page-bottom>
-      <TextReader v-if="showComment" />
+      <TextReader v-if="showComment && featureToggles.textReader" />
       <ArticleReadingLinks v-if="showComment" />
       <div v-if="showComment" class="comment-wrapper">
         <!-- 评论插件：传入 darkmode 以跟随站点明/暗主题 -->

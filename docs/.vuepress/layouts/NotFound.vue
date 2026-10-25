@@ -2,8 +2,9 @@
 import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
 import { computed } from "vue";
 import { RouteLink, useRoute } from "vuepress/client";
-import FontSwitcher from "../components/FontSwitcher.vue";
-import ReadingBackgroundSwitcher from "../components/ReadingBackgroundSwitcher.vue";
+import SettingsEntry from "../components/SettingsEntry.vue";
+import SiteSettingsEngine from "../components/SiteSettingsEngine.vue";
+import ColorModeToggle from "../components/ColorModeToggle.vue";
 
 const route = useRoute();
 
@@ -47,16 +48,9 @@ const quickLinks = [
 <template>
   <ParentLayout>
     <template #navbar-after>
-      <a class="xh-admin-entry" href="/admin/" aria-label="打开文章后台" title="文章后台">
-        <span class="xh-admin-entry-icon" aria-hidden="true">
-          <i></i>
-          <i></i>
-          <i></i>
-          <i></i>
-        </span>
-      </a>
-      <FontSwitcher />
-      <ReadingBackgroundSwitcher :is-reading-page="false" :is-home-page="false" />
+      <ColorModeToggle />
+      <SettingsEntry />
+      <SiteSettingsEngine />
     </template>
 
     <!-- 404 页面不渲染默认侧边栏，避免 vp-sidebar 遮挡内容 -->

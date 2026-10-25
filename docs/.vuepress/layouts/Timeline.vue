@@ -3,8 +3,9 @@ import { useBlogType } from '@vuepress/plugin-blog/client'
 import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
 import { useRouter } from 'vuepress/client'
 import { computed, ref, watch } from 'vue'
-import FontSwitcher from '../components/FontSwitcher.vue'
-import ReadingBackgroundSwitcher from '../components/ReadingBackgroundSwitcher.vue'
+import SettingsEntry from '../components/SettingsEntry.vue'
+import SiteSettingsEngine from '../components/SiteSettingsEngine.vue'
+import ColorModeToggle from '../components/ColorModeToggle.vue'
 
 const router = useRouter()
 const timelines = useBlogType('timeline')
@@ -150,8 +151,9 @@ const cleanExcerpt = (excerpt) => {
 <template>
   <ParentLayout>
     <template #navbar-after>
-      <FontSwitcher />
-      <ReadingBackgroundSwitcher />
+      <ColorModeToggle />
+      <SettingsEntry />
+      <SiteSettingsEngine />
     </template>
 
     <template #page>
