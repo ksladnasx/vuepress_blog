@@ -16,6 +16,11 @@ export const MAX_BRIGHTNESS = 120;
 const MOBILE_QUERY = "(max-width: 719px)";
 export const FIXED_WALLPAPER = "fixed";
 export const RANDOM_WALLPAPER = "random";
+// 随机壁纸 API 地址；localStorage 中早期版本保存的其他域名 URL 一律视为失效
+const RANDOM_WALLPAPER_ORIGIN = "https://www.loliapi.com/acg/";
+
+const isValidRandomWallpaperUrl = (url) =>
+  typeof url === "string" && url.startsWith(RANDOM_WALLPAPER_ORIGIN);
 
 export const readingBackgrounds = [
   { key: "default", label: "默认", name: "跟随系统", scheme: "auto" },
@@ -99,9 +104,12 @@ const normalizeWallpaperSettings = (value = {}) => ({
   mode: normalizeWallpaperMode(value.mode),
   indexes: normalizeWallpaperIndexes(value.indexes || value),
   random: {
-    desktop:
-      typeof value.random?.desktop === "string" ? value.random.desktop : "",
-    mobile: typeof value.random?.mobile === "string" ? value.random.mobile : "",
+    desktop: isValidRandomWallpaperUrl(value.random?.desktop)
+      ? value.random.desktop
+      : "",
+    mobile: isValidRandomWallpaperUrl(value.random?.mobile)
+      ? value.random.mobile
+      : "",
   },
 });
 

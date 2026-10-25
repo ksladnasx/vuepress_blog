@@ -278,6 +278,8 @@ const restoreBackgroundScript = `\
     if (saved.mode === "random" && saved.random) {
       const applyRandomWallpaper = (target, url) => {
         if (typeof url !== "string" || !url) return;
+        // 仅接受当前随机壁纸 API 的地址，历史版本保存的旧域名 URL 一律忽略
+        if (!url.startsWith("https://www.loliapi.com/acg/")) return;
 
         const variables =
           target === "mobile"
